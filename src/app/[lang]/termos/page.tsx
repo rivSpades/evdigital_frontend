@@ -1,0 +1,76 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { Nav } from "@/components/layout/nav";
+import { Footer } from "@/components/layout/footer";
+import { PaginaLegal, Acordeao } from "@/components/legal/pagina-legal";
+import LocaleLink from "@/i18n/locale-link";
+import { hasLocale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
+import { pageMetadata } from "@/i18n/metadata";
+
+// RASCUNHO — precisa de validação antes de publicar (PRD-backend.md D-B3).
+// Cobre o que é verdade hoje: um site informativo com um formulário de contacto.
+// Não inventa condições comerciais (preços, prazos, garantias), que dependem de
+// cada proposta e não devem ser fixadas aqui sem validação.
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[lang]/termos">): Promise<Metadata> {
+  const { lang } = await params;
+  if (!hasLocale(lang)) notFound();
+  const { institucional } = await getDictionary(lang);
+  return { ...institucional.termos.metadata, ...pageMetadata(lang, "/termos") };
+}
+
+export default async function Termos({ params }: PageProps<"/[lang]/termos">) {
+  const { lang } = await params;
+  if (!hasLocale(lang)) notFound();
+  const { institucional } = await getDictionary(lang);
+  const t = institucional.termos;
+
+  return (
+    <>
+      <Nav />
+      <PaginaLegal
+        titulo={t.title}
+        atualizado={`${institucional.legal.updatedPrefix} ${t.updatedAt}.`}
+        intro={t.intro}
+      >
+        <Acordeao titulo={t.about.title}>
+          <p>{t.about.p1}</p>
+          <p className="text-text-tertiary">{t.about.pending}</p>
+        </Acordeao>
+
+        <Acordeao titulo={t.content.title}>
+          <p>{t.content.p1}</p>
+          <p>{t.content.p2}</p>
+        </Acordeao>
+
+        <Acordeao titulo={t.form.title}>
+          <p>
+            {t.form.p1Before}
+            <LocaleLink href="/privacidade" className="underline underline-offset-4">
+              {t.form.privacyLinkLabel}
+            </LocaleLink>
+            {t.form.p1After}
+          </p>
+          <p>{t.form.p2}</p>
+        </Acordeao>
+
+        <Acordeao titulo={t.ownership.title}>
+          <p>{t.ownership.text}</p>
+        </Acordeao>
+
+        <Acordeao titulo={t.availability.title}>
+          <p>{t.availability.text}</p>
+        </Acordeao>
+
+        <Acordeao titulo={t.law.title}>
+          <p>{t.law.p1}</p>
+          <p className="text-text-tertiary">{t.law.pending}</p>
+        </Acordeao>
+      </PaginaLegal>
+      <Footer />
+    </>
+  );
+}
