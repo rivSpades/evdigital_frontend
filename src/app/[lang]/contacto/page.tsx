@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Calendar } from "lucide-react";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Formulario } from "@/components/contacto/formulario";
+import { CalendarioEmbed, CAL_BOOKING_URL } from "@/components/contacto/calendario-embed";
 import { getServiceBySlug } from "@/lib/content";
 import { getDictionary } from "@/i18n/dictionaries";
 import { hasLocale } from "@/i18n/config";
@@ -75,22 +74,19 @@ export default async function Contacto({
                 {t.page.agendaText}
               </p>
 
-              {/* TODO(Fase 4.5): embed do Cal.com neste espaço reservado. */}
-              <div className="flex h-[200px] flex-col items-center justify-center gap-sm rounded-[var(--radius-md)] border border-border-default bg-bg-surface-sunken lg:h-[240px]">
-                <Calendar
-                  size={32}
-                  strokeWidth={2}
-                  aria-hidden
-                  className="text-text-tertiary"
-                />
-                <p className="font-body text-caption tracking-[var(--letter-spacing-caption)] text-text-tertiary">
-                  {t.page.agendaPlaceholder}
-                </p>
-              </div>
+              <CalendarioEmbed placeholder={t.page.agendaPlaceholder} />
 
-              <Button size="lg" fullWidth disabled>
-                {t.page.agendaButton}
-              </Button>
+              {/* Sem JS o embed não carrega — fica o link directo para o Cal.com. */}
+              <noscript>
+                <a
+                  href={CAL_BOOKING_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-body text-body-lg block text-center text-text-link underline"
+                >
+                  {t.page.agendaButton}
+                </a>
+              </noscript>
             </Card>
           </div>
         </div>
