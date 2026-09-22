@@ -31,7 +31,6 @@ export const institucional: typeof Source = {
   },
   legal: {
     updatedPrefix: "Last updated:",
-    pending: "TO BE CONFIRMED",
   },
   privacidade: {
     metadata: {
@@ -46,8 +45,6 @@ export const institucional: typeof Source = {
     controller: {
       title: "Who processes your data",
       p1: "EvDigital is the controller of the data collected on this website. For any question about this policy or about your data, use the form on the contact page.",
-      pending:
-        "[TO BE CONFIRMED: full company name, tax ID (NIF), address and contact email for privacy matters.]",
     },
     data: {
       title: "What data we collect",
@@ -81,8 +78,6 @@ export const institucional: typeof Source = {
     access: {
       title: "Who has access",
       p1: "Only EvDigital. The data is stored in our own database and is sent by email to our internal address when you contact us.",
-      pending:
-        "[TO BE CONFIRMED: identify the providers that host the website, the database and the email service, and state whether any of them processes data outside the European Union.]",
     },
     rights: {
       title: "Your rights",
@@ -110,7 +105,6 @@ export const institucional: typeof Source = {
     about: {
       title: "What this website is",
       p1: "An informational website about EvDigital's services, with a form to contact us. We do not sell anything directly here and we do not process payments.",
-      pending: "[TO BE CONFIRMED: full company name, tax ID (NIF) and registered office.]",
     },
     content: {
       title: "The website's content",
@@ -136,8 +130,6 @@ export const institucional: typeof Source = {
     law: {
       title: "Governing law",
       p1: "Portuguese law applies. In the event of a consumer dispute, you may turn to the competent alternative dispute resolution bodies.",
-      pending:
-        "[TO BE CONFIRMED: indicate the competent ADR body, mandatory for anyone providing services to consumers in Portugal.]",
     },
   },
 };

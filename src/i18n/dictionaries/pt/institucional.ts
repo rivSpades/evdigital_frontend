@@ -29,7 +29,6 @@ export const institucional = {
   },
   legal: {
     updatedPrefix: "Atualizada a",
-    pending: "POR CONFIRMAR",
   },
   privacidade: {
     metadata: {
@@ -44,8 +43,6 @@ export const institucional = {
     controller: {
       title: "Quem trata os seus dados",
       p1: "A EvDigital é a responsável pelo tratamento dos dados recolhidos neste site. Para qualquer questão sobre esta política ou sobre os seus dados, use o formulário da página de contacto.",
-      pending:
-        "[POR CONFIRMAR: denominação social completa, NIF, morada e email de contacto para assuntos de privacidade.]",
     },
     data: {
       title: "Que dados recolhemos",
@@ -79,8 +76,6 @@ export const institucional = {
     access: {
       title: "Quem tem acesso",
       p1: "Só a EvDigital. Os dados ficam numa base de dados nossa e são enviados por email para o nosso endereço interno quando nos contacta.",
-      pending:
-        "[POR CONFIRMAR: identificar os fornecedores que alojam o site, a base de dados e o serviço de email, e indicar se algum trata dados fora da União Europeia.]",
     },
     rights: {
       title: "Os seus direitos",
@@ -108,7 +103,6 @@ export const institucional = {
     about: {
       title: "O que é este site",
       p1: "Um site informativo sobre os serviços da EvDigital, com um formulário para nos contactar. Não vendemos nada diretamente aqui nem processamos pagamentos.",
-      pending: "[POR CONFIRMAR: denominação social completa, NIF e sede.]",
     },
     content: {
       title: "O conteúdo do site",
@@ -134,8 +128,6 @@ export const institucional = {
     law: {
       title: "Lei aplicável",
       p1: "Aplica-se a lei portuguesa. Em caso de litígio de consumo, pode recorrer às entidades de resolução alternativa de litígios competentes.",
-      pending:
-        "[POR CONFIRMAR: indicar a entidade RAL competente, obrigatório para quem presta serviços a consumidores em Portugal.]",
     },
   },
 };

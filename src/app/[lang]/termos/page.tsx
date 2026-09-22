@@ -38,7 +38,6 @@ export default async function Termos({ params }: PageProps<"/[lang]/termos">) {
       >
         <Acordeao titulo={t.about.title}>
           <p>{t.about.p1}</p>
-          <p className="text-text-tertiary">{t.about.pending}</p>
         </Acordeao>
 
         <Acordeao titulo={t.content.title}>
@@ -67,7 +66,6 @@ export default async function Termos({ params }: PageProps<"/[lang]/termos">) {
 
         <Acordeao titulo={t.law.title}>
           <p>{t.law.p1}</p>
-          <p className="text-text-tertiary">{t.law.pending}</p>
         </Acordeao>
       </PaginaLegal>
       <Footer />

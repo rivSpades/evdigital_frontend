@@ -9,8 +9,7 @@ import { pageMetadata } from "@/i18n/metadata";
 
 // RASCUNHO — PRD-backend.md §8 e D-B3.
 // Descreve com rigor o que o sistema faz hoje (os campos do formulário, para onde
-// vão, quanto tempo ficam). Os pontos marcados como POR CONFIRMAR dependem de
-// dados que só o dono do negócio tem, ou de validação jurídica.
+// vão, quanto tempo ficam).
 
 export async function generateMetadata({
   params,
@@ -37,7 +36,6 @@ export default async function Privacidade({ params }: PageProps<"/[lang]/privaci
       >
         <Acordeao titulo={t.controller.title}>
           <p>{t.controller.p1}</p>
-          <p className="text-text-tertiary">{t.controller.pending}</p>
         </Acordeao>
 
         <Acordeao titulo={t.data.title}>
@@ -69,7 +67,6 @@ export default async function Privacidade({ params }: PageProps<"/[lang]/privaci
 
         <Acordeao titulo={t.access.title}>
           <p>{t.access.p1}</p>
-          <p className="text-text-tertiary">{t.access.pending}</p>
         </Acordeao>
 
         <Acordeao titulo={t.rights.title}>

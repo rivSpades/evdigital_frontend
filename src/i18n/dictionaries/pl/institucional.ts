@@ -31,7 +31,6 @@ export const institucional: typeof Source = {
   },
   legal: {
     updatedPrefix: "Ostatnia aktualizacja:",
-    pending: "DO POTWIERDZENIA",
   },
   privacidade: {
     metadata: {
@@ -46,8 +45,6 @@ export const institucional: typeof Source = {
     controller: {
       title: "Kto przetwarza Państwa dane",
       p1: "EvDigital jest administratorem danych zbieranych na tej stronie. W razie jakichkolwiek pytań dotyczących niniejszej polityki lub Państwa danych prosimy skorzystać z formularza na stronie kontaktowej.",
-      pending:
-        "[DO POTWIERDZENIA: pełna nazwa firmy, numer NIF, adres i adres e-mail do spraw prywatności.]",
     },
     data: {
       title: "Jakie dane zbieramy",
@@ -81,8 +78,6 @@ export const institucional: typeof Source = {
     access: {
       title: "Kto ma dostęp",
       p1: "Wyłącznie EvDigital. Dane znajdują się w naszej własnej bazie danych, a gdy się z nami kontaktują Państwo, są wysyłane e-mailem na nasz wewnętrzny adres.",
-      pending:
-        "[DO POTWIERDZENIA: wskazać dostawców hostingu strony, bazy danych i usługi poczty e-mail oraz podać, czy któryś z nich przetwarza dane poza Unią Europejską.]",
     },
     rights: {
       title: "Państwa prawa",
@@ -110,7 +105,6 @@ export const institucional: typeof Source = {
     about: {
       title: "Czym jest ta strona",
       p1: "Strona informacyjna o usługach EvDigital z formularzem umożliwiającym kontakt z nami. Nie sprzedajemy tu niczego bezpośrednio ani nie przetwarzamy płatności.",
-      pending: "[DO POTWIERDZENIA: pełna nazwa firmy, numer NIF i siedziba.]",
     },
     content: {
       title: "Treść strony",
@@ -136,8 +130,6 @@ export const institucional: typeof Source = {
     law: {
       title: "Prawo właściwe",
       p1: "Zastosowanie ma prawo portugalskie. W przypadku sporu konsumenckiego mogą Państwo skorzystać z właściwych podmiotów pozasądowego rozwiązywania sporów.",
-      pending:
-        "[DO POTWIERDZENIA: wskazać właściwy podmiot ADR (RAL), obowiązkowy dla podmiotów świadczących usługi konsumentom w Portugalii.]",
     },
   },
 };
