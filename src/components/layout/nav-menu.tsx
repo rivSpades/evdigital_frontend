@@ -85,6 +85,7 @@ export function NavMenu({ currentPath, strings }: { currentPath?: string; string
         </nav>
 
         <div className="hidden items-center gap-md lg:flex">
+          <ButtonLink href={CTA_HREF}>{strings.cta}</ButtonLink>
           <Link
             href={strings.clientAreaHref}
             className="flex h-11 items-center gap-xs px-sm font-body text-label font-medium text-text-secondary transition-colors hover:text-text-primary"
@@ -92,7 +93,6 @@ export function NavMenu({ currentPath, strings }: { currentPath?: string; string
             <CircleUserRound size={20} strokeWidth={2} aria-hidden />
             {strings.clientArea}
           </Link>
-          <ButtonLink href={CTA_HREF}>{strings.cta}</ButtonLink>
         </div>
 
         <button
