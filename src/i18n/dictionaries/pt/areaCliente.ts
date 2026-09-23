@@ -19,6 +19,7 @@ export const areaCliente = {
     definicoes: "Definições",
   },
   logout: "Terminar sessão",
+  back: "Voltar",
   breadcrumbAria: "Localização",
   // Estados de pedido e de projeto: o backend devolve o código e o texto em português;
   // aqui traduzimos por código (o texto do backend serve de recurso se surgir um novo).
@@ -113,11 +114,9 @@ export const areaCliente = {
   },
   projetos: {
     heading: "Os seus projetos",
-    intro: "O que já está em curso, e o que já foi entregue.",
     newProject: "Criar novo projeto",
     emptyTitle: "Ainda não tem projetos aqui.",
-    emptyBody:
-      "Se já falámos consigo, o projeto aparece assim que o trabalho começar. Se quer começar um projeto novo, comece por aqui.",
+    projectRequestsHeading: "Pedidos de projeto",
     requestsHeading: "Os seus pedidos",
     requestsEmpty: "Ainda não tem pedidos abertos.",
     requestsAll: "Ver todos os pedidos",
@@ -126,6 +125,17 @@ export const areaCliente = {
     heading: "Os seus pedidos",
     newRequest: "Fazer um pedido",
     empty: "Ainda não fez nenhum pedido.",
+    searchLabel: "Pesquisar pedidos",
+    searchPlaceholder: "Pesquisar por título, projeto ou referência",
+    typeLabel: "Tipo",
+    allTypes: "Todos os tipos",
+    statusLabel: "Estado",
+    allStatuses: "Todos os estados",
+    clear: "Limpar filtros",
+    resultCount: "{count} pedidos",
+    resultOne: "1 pedido",
+    noResults: "Nenhum pedido corresponde à pesquisa.",
+    noResultsHint: "Experimente outros termos ou limpe os filtros.",
   },
   novoPedido: {
     heading: "O que precisa?",
@@ -171,6 +181,7 @@ export const areaCliente = {
       errGeneral: "Não foi possível enviar o pedido agora. Tente outra vez.",
       submit: "Enviar pedido",
       submitting: "A enviar...",
+      cancel: "Cancelar",
       forProjectContext: "A criar um pedido para {projeto}.",
     },
   },
@@ -199,6 +210,7 @@ export const areaCliente = {
       errGeneral: "Não foi possível enviar o pedido agora. Tente outra vez.",
       submit: "Enviar pedido",
       submitting: "A enviar...",
+      cancel: "Cancelar",
     },
   },
   detalhe: {
@@ -209,16 +221,13 @@ export const areaCliente = {
       "Ainda não há mensagens. Se quiser acrescentar alguma coisa ao pedido, escreva aqui.",
     teamName: "EvDigital",
     sheetHeading: "Ficha do pedido",
+    sheetReference: "Referência",
     sheetType: "Tipo",
     sheetProject: "Projeto",
     sheetNoProject: "Sem projeto associado",
     sheetSubmitted: "Submetido",
     sheetUpdated: "Última atualização",
     sheetReason: "Motivo",
-    talkHeading: "É mais fácil a falar?",
-    talkBody:
-      "Se preferir explicar por palavras suas, marque uma conversa sobre este pedido.",
-    talkCta: "Marcar conversa",
     comment: {
       ariaLabel: "Escreva a sua resposta",
       placeholder: "Escreva a sua resposta.",

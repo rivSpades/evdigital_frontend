@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CirclePlus, Paperclip, TriangleAlert } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { Select, type SelectOption } from "@/components/ui/select";
 import { localizePath, type Locale } from "@/i18n/config";
@@ -229,6 +229,14 @@ export function NovoPedidoForm({
         <Button type="submit" size="lg" disabled={aEnviar} className="w-full sm:w-auto">
           {aEnviar ? t.submitting : t.submit}
         </Button>
+        <ButtonLink
+          href={projetoFixo ? `/area-cliente/projetos/${projetoFixo.id}` : "/area-cliente/pedidos"}
+          variant="secondary"
+          size="lg"
+          className="w-full sm:w-auto"
+        >
+          {t.cancel}
+        </ButtonLink>
       </div>
     </form>
   );

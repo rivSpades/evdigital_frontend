@@ -8,7 +8,7 @@ import { getLocale, getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/i18n/metadata";
 import { LinkArrow } from "@/components/ui/link-arrow";
 import { backendFetch } from "@/lib/area-cliente/backend";
-import { formatarData, pedidoStatus, projetoStatusLabel, servicoLabel } from "@/lib/area-cliente/format";
+import { formatarData, pedidoStatus, referenciaPedido, projetoStatusLabel, servicoLabel } from "@/lib/area-cliente/format";
 import { requireSession } from "@/lib/area-cliente/session";
 import type { PedidoResumo, Projeto } from "@/lib/area-cliente/types";
 
@@ -41,6 +41,10 @@ export default async function AreaClienteProjetos() {
     backendFetch<PedidoResumo[]>("/api/me/requests/", { token }),
   ]);
 
+  // Pedidos "projeto novo" ainda não são projetos (o `Project` só é criado mais tarde):
+  // ficam numa secção própria, separada da lista de projetos.
+  const pedidosDeProjeto = pedidos.filter((p) => p.type === "novo_projeto" && !p.project);
+
   return (
     <div className="flex min-h-screen flex-col bg-bg-base">
       <Topbar me={me} lang={lang} t={t} />
@@ -52,9 +56,6 @@ export default async function AreaClienteProjetos() {
               <h1 className="font-heading text-title font-semibold tracking-[var(--letter-spacing-title)] text-text-primary">
                 {t.projetos.heading}
               </h1>
-              <p className="font-body text-body text-text-secondary">
-                {t.projetos.intro}
-              </p>
             </div>
             <ButtonLink href="/area-cliente/projetos/novo" className="w-full sm:w-auto">
               <Plus size={20} strokeWidth={2} aria-hidden />
@@ -71,9 +72,6 @@ export default async function AreaClienteProjetos() {
                 <h2 className="font-heading text-title-sm font-semibold text-text-primary">
                   {t.projetos.emptyTitle}
                 </h2>
-                <p className="font-body text-body text-text-secondary">
-                  {t.projetos.emptyBody}
-                </p>
               </div>
               <ButtonLink href="/area-cliente/projetos/novo" size="lg">
                 <Plus size={20} strokeWidth={2} aria-hidden />
@@ -160,6 +158,41 @@ export default async function AreaClienteProjetos() {
               </aside>
             </div>
           )}
+
+          {pedidosDeProjeto.length > 0 ? (
+            <section aria-labelledby="pedidos-projeto" className="flex flex-col gap-md">
+              <h2
+                id="pedidos-projeto"
+                className="font-heading text-title-sm font-semibold tracking-[var(--letter-spacing-title)] text-text-primary"
+              >
+                {t.projetos.projectRequestsHeading}
+              </h2>
+              <ul className="flex flex-col overflow-hidden rounded-[var(--radius-lg)] border border-border-subtle">
+                {pedidosDeProjeto.map((pedido, i) => (
+                  <li key={pedido.id} className={i > 0 ? "border-t border-border-subtle" : undefined}>
+                    <Link
+                      href={`/area-cliente/pedidos/${pedido.id}`}
+                      className="flex flex-col gap-sm bg-bg-surface p-lg transition-colors hover:bg-bg-surface-hover sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <div className="flex flex-col gap-2xs">
+                        <p className="font-body text-body-lg font-semibold text-text-primary">
+                          {pedido.title}
+                        </p>
+                        <p className="font-body text-caption text-text-tertiary">
+                          {referenciaPedido(pedido.id)} · {t.tipoPedido[pedido.type]} · {t.detalhe.submittedOn}{" "}
+                          {formatarData(lang, pedido.created_at)}
+                        </p>
+                      </div>
+                      <StatusPill
+                        label={pedidoStatus(t, pedido.status, pedido.status_label).label}
+                        tone={PEDIDO_TOM(pedido.status)}
+                      />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
         </div>
       </main>
     </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getLocale, getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/i18n/metadata";
+import { BackLink } from "@/components/area-cliente/back-link";
 import { Topbar } from "@/components/area-cliente/topbar";
 import { PerfilForm } from "@/components/area-cliente/perfil-form";
 import { PasswordForm } from "@/components/area-cliente/password-form";
@@ -36,6 +37,8 @@ export default async function AreaClienteDefinicoes({
 
       <main className="flex flex-1 justify-center px-lg py-2xl lg:px-2xl lg:py-3xl">
         <div className="flex w-full max-w-[640px] flex-col gap-2xl">
+          <BackLink href="/area-cliente/projetos" label={t.back} />
+
           <div className="flex flex-col gap-sm">
             <h1 className="font-heading text-headline font-bold tracking-[var(--letter-spacing-headline)] text-text-primary">
               {t.definicoes.heading}

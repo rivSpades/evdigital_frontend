@@ -3,6 +3,7 @@ import Link from "@/i18n/locale-link";
 import { getLocale, getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/i18n/metadata";
 import { ChevronRight } from "lucide-react";
+import { BackLink } from "@/components/area-cliente/back-link";
 import { Topbar } from "@/components/area-cliente/topbar";
 import { NovoPedidoForm } from "@/components/area-cliente/novo-pedido-form";
 import { backendFetch } from "@/lib/area-cliente/backend";
@@ -37,6 +38,8 @@ export default async function AreaClienteNovoPedido({
 
       <main className="flex flex-1 justify-center px-lg py-2xl lg:px-2xl lg:py-3xl">
         <div className="flex w-full max-w-[820px] flex-col gap-2xl">
+          <BackLink href={projetoFixo ? `/area-cliente/projetos/${projetoFixo.id}` : "/area-cliente/pedidos"} label={t.back} />
+
           <nav aria-label={t.breadcrumbAria} className="flex items-center gap-xs">
             <Link
               href="/area-cliente/pedidos"

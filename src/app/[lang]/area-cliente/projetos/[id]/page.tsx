@@ -3,11 +3,12 @@ import Link from "@/i18n/locale-link";
 import { getLocale, getDictionary } from "@/i18n/dictionaries";
 import { notFound } from "next/navigation";
 import { ChevronRight, Plus } from "lucide-react";
+import { BackLink } from "@/components/area-cliente/back-link";
 import { Topbar } from "@/components/area-cliente/topbar";
 import { StatusPill } from "@/components/area-cliente/status-pill";
 import { ButtonLink } from "@/components/ui/button";
 import { BackendError, backendFetch } from "@/lib/area-cliente/backend";
-import { formatarData, pedidoStatus, projetoStatusLabel, servicoLabel } from "@/lib/area-cliente/format";
+import { formatarData, pedidoStatus, referenciaPedido, projetoStatusLabel, servicoLabel } from "@/lib/area-cliente/format";
 import { requireSession } from "@/lib/area-cliente/session";
 import type { PedidoResumo, Projeto } from "@/lib/area-cliente/types";
 
@@ -57,6 +58,8 @@ export default async function AreaClienteProjetoDetalhe({
 
       <main className="flex flex-1 justify-center px-lg py-2xl lg:px-2xl lg:py-3xl">
         <div className="flex w-full max-w-[var(--grid-max-width)] flex-col gap-xl">
+          <BackLink href="/area-cliente/projetos" label={t.back} />
+
           <nav aria-label={t.breadcrumbAria} className="flex items-center gap-xs">
             <Link
               href="/area-cliente/projetos"
@@ -120,9 +123,15 @@ export default async function AreaClienteProjetoDetalhe({
                           href={`/area-cliente/pedidos/${pedido.id}`}
                           className="flex flex-col gap-sm bg-bg-surface p-lg transition-colors hover:bg-bg-surface-hover sm:flex-row sm:items-center sm:justify-between"
                         >
-                          <p className="font-body text-body-lg font-semibold text-text-primary">
-                            {pedido.title}
-                          </p>
+                          <div className="flex flex-col gap-2xs">
+                            <p className="font-body text-body-lg font-semibold text-text-primary">
+                              {pedido.title}
+                            </p>
+                            <p className="font-body text-caption text-text-tertiary">
+                              {referenciaPedido(pedido.id)} · {t.tipoPedido[pedido.type]} · {t.detalhe.submittedOn}{" "}
+                              {formatarData(lang, pedido.created_at)}
+                            </p>
+                          </div>
                           <StatusPill
                             label={pedidoStatus(t, pedido.status, pedido.status_label).label}
                             tone={PEDIDO_TOM(pedido.status)}

@@ -1,4 +1,5 @@
 import Link from "@/i18n/locale-link";
+import { TopbarNav } from "@/components/area-cliente/topbar-nav";
 import { AccountMenu } from "@/components/area-cliente/account-menu";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
@@ -9,10 +10,8 @@ import type { MeInfo } from "@/lib/area-cliente/session";
 // iniciais à direita. "Definições" e "Terminar sessão" vivem dentro do menu da conta
 // (`AccountMenu`), não na navegação principal.
 //
-// Sem nav de secções Projetos/Pedidos: pedidos deixaram de ser um destino de topo par
-// com Projetos — cada pedido vive dentro do seu projeto (`projetos/[id]`), por isso um
-// separador de abas aqui deixou de fazer sentido. "Os seus pedidos" continua acessível
-// a partir da lista de projetos e do detalhe de cada projeto.
+// Navegação principal: Projetos e Pedidos (`TopbarNav`, com estado activo pelo segmento
+// da rota). "Pedidos" lista todos os pedidos; cada projeto continua a mostrar os seus.
 //
 // Fixa no topo (`sticky`, não `fixed`): mantém-se em fluxo normal do documento — sem isso,
 // um `fixed` exigiria compensar com padding-top em cada página para o conteúdo não ficar
@@ -36,12 +35,13 @@ export function Topbar({
             <span className="text-text-accent">Ev</span>Digital
           </Link>
           <span aria-hidden className="hidden h-5 w-px bg-border-default sm:block" />
-          <Link
-            href="/area-cliente/projetos"
-            className="hidden font-body text-label text-text-secondary hover:text-text-primary sm:inline"
-          >
-            {t.topbar.area}
-          </Link>
+          <TopbarNav
+            ariaLabel={t.topbar.area}
+            items={[
+              { href: "/area-cliente/projetos", segment: "projetos", label: t.topbar.projetos },
+              { href: "/area-cliente/pedidos", segment: "pedidos", label: t.topbar.pedidos },
+            ]}
+          />
         </div>
 
         <AccountMenu me={me} lang={lang} t={t} />

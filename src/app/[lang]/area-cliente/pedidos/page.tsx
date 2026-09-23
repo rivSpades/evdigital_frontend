@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
-import Link from "@/i18n/locale-link";
 import { getLocale, getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/i18n/metadata";
 import { Plus } from "lucide-react";
 import { Topbar } from "@/components/area-cliente/topbar";
-import { StatusPill } from "@/components/area-cliente/status-pill";
+import { PedidosLista } from "@/components/area-cliente/pedidos-lista";
 import { ButtonLink } from "@/components/ui/button";
 import { backendFetch } from "@/lib/area-cliente/backend";
-import { pedidoStatus } from "@/lib/area-cliente/format";
 import { requireSession } from "@/lib/area-cliente/session";
 import type { PedidoResumo } from "@/lib/area-cliente/types";
 
@@ -20,9 +18,6 @@ export async function generateMetadata(): Promise<Metadata> {
     ...pageMetadata(lang, "/area-cliente/pedidos"),
   };
 }
-
-const TOM = (status: string) =>
-  status === "informacao_necessaria" ? "warning" : status === "concluido" ? "neutral" : "accent";
 
 export default async function AreaClientePedidos() {
   const lang = await getLocale();
@@ -51,28 +46,7 @@ export default async function AreaClientePedidos() {
               {t.pedidos.empty}
             </p>
           ) : (
-            <ul className="flex flex-col overflow-hidden rounded-[var(--radius-lg)] border border-border-subtle">
-              {pedidos.map((pedido, i) => (
-                <li key={pedido.id} className={i > 0 ? "border-t border-border-subtle" : undefined}>
-                  <Link
-                    href={`/area-cliente/pedidos/${pedido.id}`}
-                    className="flex flex-col gap-sm bg-bg-surface p-lg transition-colors hover:bg-bg-surface-hover sm:flex-row sm:items-center sm:justify-between"
-                  >
-                    <div className="flex flex-col gap-2xs">
-                      <p className="font-body text-body-lg font-semibold text-text-primary">
-                        {pedido.title}
-                      </p>
-                      {pedido.project ? (
-                        <p className="font-body text-caption text-text-tertiary">
-                          {pedido.project.title}
-                        </p>
-                      ) : null}
-                    </div>
-                    <StatusPill label={pedidoStatus(t, pedido.status, pedido.status_label).label} tone={TOM(pedido.status)} />
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <PedidosLista pedidos={pedidos} lang={lang} t={t} />
           )}
         </div>
       </main>
