@@ -4,6 +4,10 @@ Ler [`Context.md`](Context.md) primeiro — propósito, stack, estado das fases,
 Este ficheiro cobre só as regras do próprio Next.js (gerado automaticamente, ver bloco
 abaixo).
 
+## Don't
+- Não criar regras de agente só em `.cursor/rules/*.mdc` — ver
+  [`.ai/context/agent-rules-cross-tool.md`](.ai/context/agent-rules-cross-tool.md).
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know
