@@ -26,7 +26,7 @@ export default async function AreaClienteEntrar({
   const { areaCliente: t } = await getDictionary(lang);
   return (
     <div className="flex min-h-screen flex-col bg-bg-base">
-      <header className="flex h-16 items-center justify-between border-b border-border-subtle bg-bg-surface px-lg lg:px-2xl">
+      <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border-subtle bg-bg-surface px-lg lg:px-2xl">
         <span className="font-heading text-label font-bold tracking-[var(--letter-spacing-title)] text-text-primary">
           <span className="text-text-accent">Ev</span>Digital
         </span>
