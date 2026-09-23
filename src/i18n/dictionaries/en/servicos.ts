@@ -9,12 +9,9 @@ export const servicos: typeof Source = {
   },
   inicial: {
     titulo: "For those just getting started",
-    subtitulo: "We explain everything without technical jargon.",
-    verComoFunciona: "See how it works",
   },
   avancado: {
     titulo: "For those ready to go further",
-    subtitulo: "You already have a digital presence. What's missing is getting operations off manual work.",
   },
   ficha: {
     breadcrumbAria: "Breadcrumb",

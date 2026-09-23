@@ -111,9 +111,6 @@ export async function BlocoAvancado({ lang }: { lang: Locale }) {
         >
           {t.titulo}
         </h2>
-        <p className="font-body text-body text-text-secondary lg:max-w-[700px] lg:text-body-lg">
-          {t.subtitulo}
-        </p>
       </div>
 
       <div className="flex flex-col gap-md lg:gap-lg">

@@ -9,12 +9,9 @@ export const servicos: typeof Source = {
   },
   inicial: {
     titulo: "Dla tych, którzy dopiero zaczynają",
-    subtitulo: "Wszystko wyjaśniamy bez technicznego żargonu.",
-    verComoFunciona: "Zobacz, jak to działa",
   },
   avancado: {
     titulo: "Dla tych, którzy chcą pójść dalej",
-    subtitulo: "Obecność w internecie już jest. Brakuje tylko tego, by działanie firmy przestało być ręczne.",
   },
   ficha: {
     breadcrumbAria: "Ścieżka nawigacji",

@@ -21,12 +21,9 @@ export const servicos = {
   },
   inicial: {
     titulo: "Para quem está a começar",
-    subtitulo: "Explicamos tudo sem termos técnicos.",
-    verComoFunciona: "Ver como funciona",
   },
   avancado: {
     titulo: "Para quem já quer ir mais longe",
-    subtitulo: "Presença digital já existe. O que falta é a operação deixar de ser manual.",
   },
   ficha: {
     breadcrumbAria: "Localização",
