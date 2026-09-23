@@ -14,9 +14,15 @@ export function googleConfig() {
   return { clientId, clientSecret };
 }
 
-/** Origem pública do site. `SITE_URL` em produção (atrás de proxy o `request.url` mente). */
+/**
+ * Origem pública da Área de Cliente (o fluxo Google corre nela, onde nasce o cookie de
+ * sessão). `CLIENTES_URL` em produção — atrás de proxy o `request.url` mente.
+ */
 export function siteOrigin(request: Request): string {
-  return (process.env.SITE_URL ?? new URL(request.url).origin).replace(/\/$/, "");
+  return (process.env.CLIENTES_URL ?? process.env.SITE_URL ?? new URL(request.url).origin).replace(
+    /\/$/,
+    "",
+  );
 }
 
 export function redirectUri(request: Request): string {

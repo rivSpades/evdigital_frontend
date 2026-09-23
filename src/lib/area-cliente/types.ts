@@ -1,6 +1,15 @@
 // Espelha os serializers de apps/clients e apps/client_requests no backend.
 // Mantido à mão (sem geração automática) — mudou-se um lado, muda-se o outro.
 
+export type Perfil = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  nif: string;
+};
+
 export type Projeto = {
   id: string;
   title: string;

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, Info } from "lucide-react";
 import { Button, ButtonLink } from "@/components/ui/button";
-import { Field, Input } from "@/components/ui/input";
+import { Field, Input, PasswordInput } from "@/components/ui/input";
 import { localizePath, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { cn } from "@/lib/cn";
@@ -16,7 +16,9 @@ import { cn } from "@/lib/cn";
 type Aba = "entrar" | "criar-conta";
 
 type ErrosEntrar = Partial<Record<"email" | "password" | "geral", string>>;
-type ErrosRegisto = Partial<Record<"name" | "email" | "phone" | "password" | "geral", string>>;
+type ErrosRegisto = Partial<
+  Record<"name" | "email" | "phone" | "password" | "confirmPassword" | "geral", string>
+>;
 
 export function EntrarForm({
   erroGoogle = false,
@@ -88,6 +90,7 @@ export function EntrarForm({
   const [emailRegisto, setEmailRegisto] = useState("");
   const [telefone, setTelefone] = useState("");
   const [passwordRegisto, setPasswordRegisto] = useState("");
+  const [confirmarPasswordRegisto, setConfirmarPasswordRegisto] = useState("");
   const [errosRegisto, setErrosRegisto] = useState<ErrosRegisto>({});
   const [aRegistar, setARegistar] = useState(false);
   const [contaCriada, setContaCriada] = useState(false);
@@ -95,6 +98,12 @@ export function EntrarForm({
   async function onRegistar(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setErrosRegisto({});
+
+    if (passwordRegisto !== confirmarPasswordRegisto) {
+      setErrosRegisto({ confirmPassword: t.errPasswordMismatch });
+      return;
+    }
+
     setARegistar(true);
     try {
       const resposta = await fetch("/api/area-cliente/registar", {
@@ -192,11 +201,12 @@ export function EntrarForm({
             />
           </Field>
           <Field htmlFor="entrar-password" label={t.password}>
-            <Input
+            <PasswordInput
               id="entrar-password"
-              type="password"
               autoComplete="current-password"
               value={password}
+              showLabel={t.showPassword}
+              hideLabel={t.hidePassword}
               onChange={(e) => setPassword(e.target.value)}
             />
           </Field>
@@ -262,13 +272,29 @@ export function EntrarForm({
             hint={t.passwordHint}
             error={errosRegisto.password}
           >
-            <Input
+            <PasswordInput
               id="registo-password"
-              type="password"
               autoComplete="new-password"
               value={passwordRegisto}
               invalid={Boolean(errosRegisto.password)}
+              showLabel={t.showPassword}
+              hideLabel={t.hidePassword}
               onChange={(e) => setPasswordRegisto(e.target.value)}
+            />
+          </Field>
+          <Field
+            htmlFor="registo-confirmar-password"
+            label={t.confirmPassword}
+            error={errosRegisto.confirmPassword}
+          >
+            <PasswordInput
+              id="registo-confirmar-password"
+              autoComplete="new-password"
+              value={confirmarPasswordRegisto}
+              invalid={Boolean(errosRegisto.confirmPassword)}
+              showLabel={t.showPassword}
+              hideLabel={t.hidePassword}
+              onChange={(e) => setConfirmarPasswordRegisto(e.target.value)}
             />
           </Field>
 
@@ -287,14 +313,16 @@ export function EntrarForm({
         </form>
       )}
 
-      <div className="flex flex-col items-center gap-xs border-t border-border-subtle pt-lg">
-        <p className="font-body text-body text-text-secondary">
-          {t.contactPrompt}
-        </p>
-        <ButtonLink href="/contacto" variant="tertiary">
-          {t.contactCta}
-        </ButtonLink>
-      </div>
+      {aba === "entrar" ? (
+        <div className="flex flex-col items-center gap-xs border-t border-border-subtle pt-lg">
+          <p className="font-body text-body text-text-secondary">
+            {t.contactPrompt}
+          </p>
+          <ButtonLink href="/contacto" variant="tertiary">
+            {t.contactCta}
+          </ButtonLink>
+        </div>
+      ) : null}
     </div>
   );
 }

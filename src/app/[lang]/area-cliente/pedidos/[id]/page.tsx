@@ -48,7 +48,7 @@ export default async function AreaClientePedidoDetalhe({
 
   return (
     <div className="flex min-h-screen flex-col bg-bg-base">
-      <Topbar me={me} currentPath="/area-cliente/pedidos" lang={lang} t={t} />
+      <Topbar me={me} lang={lang} t={t} />
 
       <main className="flex flex-1 justify-center px-lg py-2xl lg:px-2xl lg:py-3xl">
         <div className="flex w-full max-w-[var(--grid-max-width)] flex-col gap-xl">

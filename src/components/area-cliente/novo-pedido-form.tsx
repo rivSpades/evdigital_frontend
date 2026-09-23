@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CirclePlus, Paperclip, Sparkles, TriangleAlert } from "lucide-react";
-import { Button, ButtonLink } from "@/components/ui/button";
+import { CirclePlus, Paperclip, TriangleAlert } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { Select, type SelectOption } from "@/components/ui/select";
 import { localizePath, type Locale } from "@/i18n/config";
@@ -13,10 +13,11 @@ import type { Projeto } from "@/lib/area-cliente/types";
 
 // Ecrã "Área de Cliente · Novo pedido" (sGpAX) do design-system.pen.
 
+// "novo_projeto" tem o seu próprio ecrã (`/area-cliente/projetos/novo`) — este
+// formulário serve apenas para pedidos sobre um projeto já existente.
 const TIPOS = [
   { valor: "ticket", icone: TriangleAlert },
   { valor: "feature", icone: CirclePlus },
-  { valor: "novo_projeto", icone: Sparkles },
 ] as const;
 
 const URGENCIAS = ["quando_possivel", "esta_semana", "urgente"] as const;
@@ -27,10 +28,12 @@ export function NovoPedidoForm({
   projetos,
   lang,
   t,
+  projetoFixo,
 }: {
   projetos: Projeto[];
   lang: Locale;
   t: Dictionary["areaCliente"]["novoPedido"]["form"];
+  projetoFixo?: Projeto;
 }) {
   const urgencias: SelectOption[] = URGENCIAS.map((value) => ({
     value,
@@ -38,7 +41,7 @@ export function NovoPedidoForm({
   }));
   const router = useRouter();
   const [tipo, setTipo] = useState<(typeof TIPOS)[number]["valor"] | "">("");
-  const [projeto, setProjeto] = useState("");
+  const [projeto, setProjeto] = useState(projetoFixo?.id ?? "");
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
   const [urgencia, setUrgencia] = useState("quando_possivel");
@@ -67,7 +70,7 @@ export function NovoPedidoForm({
           title: titulo,
           description: descricao,
           priority: urgencia,
-          project: precisaDeProjeto ? projeto : "",
+          project: precisaDeProjeto ? (projetoFixo?.id ?? projeto) : "",
         }),
       });
 
@@ -103,6 +106,12 @@ export function NovoPedidoForm({
 
   return (
     <form noValidate onSubmit={onSubmit} className="flex flex-col gap-2xl">
+      {projetoFixo ? (
+        <p className="font-body text-body text-text-secondary">
+          {t.forProjectContext.replace("{projeto}", projetoFixo.title)}
+        </p>
+      ) : null}
+
       <div className="flex flex-col gap-md">
         <p className="font-body text-label font-medium text-text-primary">
           {t.typeQuestion}
@@ -152,7 +161,11 @@ export function NovoPedidoForm({
       </div>
 
       <div className="flex flex-col gap-lg">
-        {precisaDeProjeto && opcoesProjeto.length > 0 ? (
+        {precisaDeProjeto && projetoFixo ? (
+          <Field htmlFor="pedido-projeto" label={t.projectLabel}>
+            <Input id="pedido-projeto" value={projetoFixo.title} disabled readOnly />
+          </Field>
+        ) : precisaDeProjeto && opcoesProjeto.length > 0 ? (
           <Field htmlFor="pedido-projeto" label={t.projectLabel}>
             <Select
               id="pedido-projeto"
@@ -216,9 +229,6 @@ export function NovoPedidoForm({
         <Button type="submit" size="lg" disabled={aEnviar} className="w-full sm:w-auto">
           {aEnviar ? t.submitting : t.submit}
         </Button>
-        <ButtonLink href="/contacto" variant="tertiary">
-          {t.talkInstead}
-        </ButtonLink>
       </div>
     </form>
   );

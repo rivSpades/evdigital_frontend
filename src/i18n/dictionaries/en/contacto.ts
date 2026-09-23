@@ -38,7 +38,6 @@ export const contacto: typeof Source = {
     needLabel: "What you need",
     needPlaceholder: "Choose an option",
     messageLabel: "Message",
-    messageHint: "Two or three sentences are enough.",
     messagePlaceholder: "Write here what you need for your business.",
     honeypotLabel: "Do not fill in",
   },

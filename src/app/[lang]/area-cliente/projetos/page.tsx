@@ -43,7 +43,7 @@ export default async function AreaClienteProjetos() {
 
   return (
     <div className="flex min-h-screen flex-col bg-bg-base">
-      <Topbar me={me} currentPath="/area-cliente/projetos" lang={lang} t={t} />
+      <Topbar me={me} lang={lang} t={t} />
 
       <main className="flex flex-1 flex-col gap-2xl px-lg py-2xl lg:px-2xl lg:py-3xl">
         <div className="mx-auto flex w-full max-w-[var(--grid-max-width)] flex-col gap-2xl">
@@ -56,9 +56,9 @@ export default async function AreaClienteProjetos() {
                 {t.projetos.intro}
               </p>
             </div>
-            <ButtonLink href="/area-cliente/pedidos/novo" className="w-full sm:w-auto">
+            <ButtonLink href="/area-cliente/projetos/novo" className="w-full sm:w-auto">
               <Plus size={20} strokeWidth={2} aria-hidden />
-              {t.projetos.newRequest}
+              {t.projetos.newProject}
             </ButtonLink>
           </div>
 
@@ -75,18 +75,19 @@ export default async function AreaClienteProjetos() {
                   {t.projetos.emptyBody}
                 </p>
               </div>
-              <ButtonLink href="/area-cliente/pedidos/novo" size="lg">
+              <ButtonLink href="/area-cliente/projetos/novo" size="lg">
                 <Plus size={20} strokeWidth={2} aria-hidden />
-                {t.projetos.newRequest}
+                {t.projetos.newProject}
               </ButtonLink>
             </div>
           ) : (
             <div className="flex flex-col gap-2xl lg:flex-row lg:items-start">
               <div className="flex flex-1 flex-col gap-md">
                 {projetos.map((projeto) => (
-                  <div
+                  <Link
                     key={projeto.id}
-                    className="flex flex-col gap-md rounded-[var(--radius-lg)] border border-border-subtle bg-bg-surface p-lg"
+                    href={`/area-cliente/projetos/${projeto.id}`}
+                    className="flex flex-col gap-md rounded-[var(--radius-lg)] border border-border-subtle bg-bg-surface p-lg transition-colors hover:bg-bg-surface-hover"
                   >
                     <div className="flex items-center justify-between gap-md">
                       <div className="flex flex-col gap-3xs">
@@ -113,7 +114,7 @@ export default async function AreaClienteProjetos() {
                         </div>
                       </>
                     ) : null}
-                  </div>
+                  </Link>
                 ))}
               </div>
 

@@ -1,5 +1,7 @@
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
-import { CircleAlert } from "lucide-react";
+"use client";
+
+import { useState, type ComponentPropsWithoutRef, type ReactNode } from "react";
+import { CircleAlert, Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 // Espelha os swatches ds/form/input-field--* do frame "Inventário · Lote A" (EoIvi) e as
@@ -129,6 +131,54 @@ export function Input({ invalid = false, icon, className, ...rest }: InputProps)
         )}
         {...rest}
       />
+    </div>
+  );
+}
+
+type PasswordInputProps = {
+  invalid?: boolean;
+  className?: string;
+  showLabel: string;
+  hideLabel: string;
+} & Omit<ComponentPropsWithoutRef<"input">, "className" | "type">;
+
+export function PasswordInput({
+  invalid = false,
+  className,
+  showLabel,
+  hideLabel,
+  ...rest
+}: PasswordInputProps) {
+  const [visivel, setVisivel] = useState(false);
+
+  return (
+    <div className="relative">
+      <input
+        type={visivel ? "text" : "password"}
+        aria-invalid={invalid || undefined}
+        className={cn(
+          controlBase,
+          "h-11 px-[var(--input-inset-x)] pr-12",
+          invalid && controlInvalid,
+          className,
+        )}
+        {...rest}
+      />
+      <button
+        type="button"
+        onClick={() => setVisivel((valor) => !valor)}
+        aria-label={visivel ? hideLabel : showLabel}
+        className={cn(
+          "absolute top-1/2 right-[var(--input-inset-x)] -translate-y-1/2 text-text-tertiary transition-colors",
+          "hover:text-text-primary",
+        )}
+      >
+        {visivel ? (
+          <EyeOff size={20} strokeWidth={2} aria-hidden />
+        ) : (
+          <Eye size={20} strokeWidth={2} aria-hidden />
+        )}
+      </button>
     </div>
   );
 }

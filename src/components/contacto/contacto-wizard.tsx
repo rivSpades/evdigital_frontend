@@ -417,7 +417,6 @@ export function ContactoWizard({
           <Field
             htmlFor="mensagem"
             label={t.form.messageLabel}
-            hint={t.form.messageHint}
             error={erros.mensagem}
           >
             <Textarea

@@ -36,7 +36,6 @@ export const contacto = {
     needLabel: "O que precisa",
     needPlaceholder: "Escolha uma opção",
     messageLabel: "Mensagem",
-    messageHint: "Duas ou três frases chegam.",
     messagePlaceholder: "Escreva aqui o que precisa para o seu negócio.",
     honeypotLabel: "Não preencher",
   },

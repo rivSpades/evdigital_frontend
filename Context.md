@@ -60,6 +60,15 @@ Next.js (App Router) + TypeScript + Tailwind CSS v4 (config CSS-first via `@them
   para o que ficou deliberadamente fora (anexos, notas internas, emails de mudança de
   estado — tudo AC2). O `Nav` e o menu mobile já têm a entrada "Área de Cliente", e as
   fichas de produto já têm a terceira via "Já é cliente? Peça na sua área".
+- **Área de Cliente em subdomínio (2026-09-23).** Mesma app Next, dois hosts:
+  `SITE_URL` (site público) e `CLIENTES_URL` (ex. `clientes.evdigital.eu`). `src/proxy.ts`
+  separa por host: em `clientes.*` faz rewrite `/pt/entrar` → `/pt/area-cliente/entrar`,
+  redireciona páginas públicas para o site e só deixa passar `/api/area-cliente/*`; no site
+  público redireciona `/…/area-cliente/*` (308) para o subdomínio e dá 404 a
+  `/api/area-cliente/*` (o cookie `ac_token` só nasce no subdomínio, host-only). Sem
+  `CLIENTES_URL` a separação fica desligada. Dev: `www.localhost:3001` +
+  `clientes.localhost:3001` — nunca `localhost` nu como `SITE_URL` (o Next relativiza o
+  redirect e fica no mesmo host). Backend: `CLIENTES_BASE_URL` (link do email de confirmação).
   **Por fazer:** versões mobile das 4 páginas (existem, mas não foram desenhadas no
   `.pen` nem verificadas viewport a viewport).
 - **Multilingue (2026-09-20) — feito**: pt (origem), en, pl. Rotas `src/app/[lang]/**`;

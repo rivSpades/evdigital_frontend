@@ -4,32 +4,23 @@ import { getLocale, getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/i18n/metadata";
 import { ChevronRight } from "lucide-react";
 import { Topbar } from "@/components/area-cliente/topbar";
-import { NovoPedidoForm } from "@/components/area-cliente/novo-pedido-form";
-import { backendFetch } from "@/lib/area-cliente/backend";
+import { NovoProjetoForm } from "@/components/area-cliente/novo-projeto-form";
 import { requireSession } from "@/lib/area-cliente/session";
-import type { Projeto } from "@/lib/area-cliente/types";
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getLocale();
   const { areaCliente: t } = await getDictionary(lang);
   return {
-    title: t.meta.novoPedidoTitle,
+    title: t.meta.novoProjetoTitle,
     robots: { index: false },
-    ...pageMetadata(lang, "/area-cliente/pedidos/novo"),
+    ...pageMetadata(lang, "/area-cliente/projetos/novo"),
   };
 }
 
-export default async function AreaClienteNovoPedido({
-  searchParams,
-}: PageProps<"/[lang]/area-cliente/pedidos/novo">) {
+export default async function AreaClienteNovoProjeto() {
   const lang = await getLocale();
   const { areaCliente: t } = await getDictionary(lang);
-  const { token, me } = await requireSession(lang);
-  const projetos = await backendFetch<Projeto[]>("/api/me/projects/", { token });
-
-  const { project: projectParam } = await searchParams;
-  const projetoFixo =
-    typeof projectParam === "string" ? projetos.find((p) => p.id === projectParam) : undefined;
+  const { me } = await requireSession(lang);
 
   return (
     <div className="flex min-h-screen flex-col bg-bg-base">
@@ -39,41 +30,25 @@ export default async function AreaClienteNovoPedido({
         <div className="flex w-full max-w-[820px] flex-col gap-2xl">
           <nav aria-label={t.breadcrumbAria} className="flex items-center gap-xs">
             <Link
-              href="/area-cliente/pedidos"
+              href="/area-cliente/projetos"
               className="font-body text-caption font-medium text-text-link hover:text-text-accent"
             >
-              {t.topbar.pedidos}
+              {t.topbar.projetos}
             </Link>
             <ChevronRight size={16} strokeWidth={2} aria-hidden className="text-text-tertiary" />
-            {projetoFixo ? (
-              <>
-                <Link
-                  href={`/area-cliente/projetos/${projetoFixo.id}`}
-                  className="font-body text-caption font-medium text-text-link hover:text-text-accent"
-                >
-                  {projetoFixo.title}
-                </Link>
-                <ChevronRight size={16} strokeWidth={2} aria-hidden className="text-text-tertiary" />
-              </>
-            ) : null}
-            <span className="font-body text-caption text-text-tertiary">{t.novoPedido.breadcrumbCurrent}</span>
+            <span className="font-body text-caption text-text-tertiary">{t.novoProjeto.breadcrumbCurrent}</span>
           </nav>
 
           <div className="flex flex-col gap-sm">
             <h1 className="font-heading text-headline font-bold tracking-[var(--letter-spacing-headline)] text-text-primary">
-              {t.novoPedido.heading}
+              {t.novoProjeto.heading}
             </h1>
             <p className="font-body text-body-lg text-text-secondary">
-              {t.novoPedido.intro}
+              {t.novoProjeto.intro}
             </p>
           </div>
 
-          <NovoPedidoForm
-            projetos={projetos}
-            lang={lang}
-            t={t.novoPedido.form}
-            projetoFixo={projetoFixo}
-          />
+          <NovoProjetoForm lang={lang} t={t.novoProjeto.form} />
         </div>
       </main>
     </div>

@@ -32,7 +32,7 @@ export default async function AreaClientePedidos() {
 
   return (
     <div className="flex min-h-screen flex-col bg-bg-base">
-      <Topbar me={me} currentPath="/area-cliente/pedidos" lang={lang} t={t} />
+      <Topbar me={me} lang={lang} t={t} />
 
       <main className="flex flex-1 flex-col gap-2xl px-lg py-2xl lg:px-2xl lg:py-3xl">
         <div className="mx-auto flex w-full max-w-[var(--grid-max-width)] flex-col gap-2xl">
