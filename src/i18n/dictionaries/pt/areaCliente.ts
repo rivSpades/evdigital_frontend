@@ -50,6 +50,7 @@ export const areaCliente = {
     "loja-online": "Loja online",
     "marcacoes-e-reservas": "Marcações e reservas",
     "negocio-no-google": "O seu negócio no Google",
+    "dominio-e-email": "Domínio e e-mail profissional",
     "ferramentas-a-medida": "Ferramentas à medida",
     "automacao-e-integracoes": "Automação e integrações",
     "assistentes-ia": "Assistentes/agentes de IA",

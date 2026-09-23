@@ -1,5 +1,6 @@
 import { createElement } from "react";
 import {
+  AtSign,
   CalendarCheck,
   Cloud,
   Layers,
@@ -23,6 +24,7 @@ const ICONES: Record<string, LucideIcon> = {
   "loja-online": Store,
   "negocio-no-google": MapPin,
   "marcacoes-e-reservas": CalendarCheck,
+  "dominio-e-email": AtSign,
   "ferramentas-a-medida": LayoutDashboard,
   "automacao-e-integracoes": Workflow,
   "assistentes-ia": MessageSquareMore,

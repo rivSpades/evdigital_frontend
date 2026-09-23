@@ -8,9 +8,9 @@ const ref = {
   services: getAllServices("pt").map((s) => s.slug).sort(),
 };
 
-console.log(`pt: ${ref.projects.length} projetos, ${ref.services.length} serviços (esperado: 1 / 9)`);
+console.log(`pt: ${ref.projects.length} projetos, ${ref.services.length} serviços (esperado: 1 / 10)`);
 if (ref.projects.length !== 1) throw new Error("Número de projetos inesperado.");
-if (ref.services.length !== 9) throw new Error("Número de serviços inesperado.");
+if (ref.services.length !== 10) throw new Error("Número de serviços inesperado.");
 
 for (const lang of locales) {
   const projects = getAllProjects(lang).map((p) => p.slug).sort();

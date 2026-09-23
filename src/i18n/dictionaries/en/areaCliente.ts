@@ -50,6 +50,7 @@ export const areaCliente: typeof Source = {
     "loja-online": "Online store",
     "marcacoes-e-reservas": "Bookings and reservations",
     "negocio-no-google": "Your business on Google",
+    "dominio-e-email": "Domain and professional email",
     "ferramentas-a-medida": "Custom tools",
     "automacao-e-integracoes": "Automation and integrations",
     "assistentes-ia": "AI assistants/agents",

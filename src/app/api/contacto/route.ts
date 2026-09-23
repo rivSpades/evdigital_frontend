@@ -19,13 +19,14 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const NEEDS = ["site", "melhorar", "avancado", "nao_sei"] as const;
 
-// Os 7 slugs do catálogo (PRD-servicos.md §2), mais "não sei" — têm de coincidir com
-// `Service` em backend/apps/leads/models.py e com os ficheiros em content/services/.
+// Os slugs do catálogo (PRD-servicos.md §2), mais "não sei" — têm de coincidir com
+// `Service` em backend/apps/core/choices.py e com os ficheiros em content/*/services/.
 const SERVICES = [
   "site-profissional",
   "loja-online",
   "marcacoes-e-reservas",
   "negocio-no-google",
+  "dominio-e-email",
   "ferramentas-a-medida",
   "automacao-e-integracoes",
   "assistentes-ia",
