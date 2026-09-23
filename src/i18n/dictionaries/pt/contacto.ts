@@ -7,13 +7,11 @@ export const contacto = {
   },
   page: {
     title: "Vamos conversar",
-    intro:
-      "Trinta minutos, sem compromisso e sem custo. Se não fizer sentido avançar, dizemos-lhe.",
   },
   steps: {
-    describe: "1. Fale-nos do que precisa",
-    meeting: "2. Deseja marcar reunião?",
-    summary: "3. Resumo",
+    describe: "Fale-nos do que precisa",
+    meeting: "Deseja marcar reunião?",
+    summary: "Resumo",
   },
   form: {
     needOptions: {
@@ -29,8 +27,6 @@ export const contacto = {
       needRequired: "Escolha uma opção.",
       messageRequired: "Escreva o que precisa.",
     },
-    requestingProposal: "A pedir proposta para",
-    removeServiceAria: "Remover produto pré-selecionado",
     nameLabel: "Nome",
     namePlaceholder: "Ana Silva",
     emailLabel: "Email",

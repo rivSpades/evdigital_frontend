@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CheckCircle2, Info, Mail, Phone, User, X } from "lucide-react";
+import { CheckCircle2, Info, Mail, Phone, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Field, Input, Textarea } from "@/components/ui/input";
@@ -14,14 +14,33 @@ import type { Dictionary } from "@/i18n/dictionaries";
 // site/Context.md) — usa só tokens e componentes já existentes (Card, Button, Input,
 // Select), sem primitivo novo em components/ui.
 //
-// `servicoInicial` chega da query string de /contacto (PRD-servicos.md §6, via CTA
-// "Pedir uma proposta" nas fichas de /servicos/[slug]) e viaja como campo `service` no
-// POST final — não é um campo do formulário, é contexto que a ficha já sabia.
+// O campo "O que precisa" lista o catálogo inteiro (`servicos`, vindo de
+// `getAllServices` no Server Component pai) mais "Ainda não sei" — não os 4 baldes
+// genéricos do `Need` do backend. `servicoInicial` (query string `?servico=`, da CTA
+// "Pedir uma proposta" de /servicos/[slug], PRD-servicos.md §6) só pré-seleciona qual
+// dessas opções já vem escolhida; continua editável, nunca bloqueado.
 
-// Valores iguais aos do modelo `Need` do backend (apps/leads/models.py). Um único
-// vocabulário entre site e backend, em vez de uma tabela de tradução que deriva
-// silenciosamente com o tempo. As etiquetas é que são visíveis; os valores, não.
-const NEED_VALUES = ["site", "melhorar", "avancado", "nao_sei"] as const;
+// Valores do modelo `Need` do backend (apps/leads/models.py) — obrigatório lá,
+// invisível aqui. O visitante escolhe um produto do catálogo (ou "não sei"); este mapa
+// traduz essa escolha para o balde de segmentação de persona que o backend exige,
+// sem lhe voltar a perguntar a mesma coisa por outras palavras.
+type Need = "site" | "melhorar" | "avancado" | "nao_sei";
+
+// Produtos de entrada (site, loja) → "pôr o negócio online"; produtos que pressupõem
+// uma presença já existente (marcações, Google, domínio/email) → "melhorar o que já
+// tenho"; toda a família B → "avançado".
+const NEED_BY_SERVICE: Record<string, Need> = {
+  "site-profissional": "site",
+  "loja-online": "site",
+  "marcacoes-e-reservas": "melhorar",
+  "negocio-no-google": "melhorar",
+  "dominio-e-email": "melhorar",
+  "ferramentas-a-medida": "avancado",
+  "automacao-e-integracoes": "avancado",
+  "assistentes-ia": "avancado",
+  "auditoria-mvp-ia": "avancado",
+  "microsoft-365-azure": "avancado",
+};
 
 const DATE_LOCALE: Record<Locale, string> = { pt: "pt-PT", en: "en-GB", pl: "pl-PL" };
 const DIAS_JANELA = 14;
@@ -62,16 +81,18 @@ type Estado = "parado" | "a-enviar" | "enviado" | "parcial" | "falhou" | "demasi
 export function ContactoWizard({
   lang,
   t,
+  servicos,
   servicoInicial,
 }: {
   lang: Locale;
   t: Dict;
-  servicoInicial?: { slug: string; titulo: string };
+  servicos: { slug: string; titulo: string }[];
+  servicoInicial?: string;
 }) {
-  const OPCOES: SelectOption[] = NEED_VALUES.map((value) => ({
-    value,
-    label: t.form.needOptions[value],
-  }));
+  const OPCOES: SelectOption[] = [
+    ...servicos.map((servico) => ({ value: servico.slug, label: servico.titulo })),
+    { value: "nao_sei", label: t.form.needOptions.nao_sei },
+  ];
   const locale = DATE_LOCALE[lang];
 
   const [passo, setPasso] = useState<Passo>("descrever");
@@ -80,9 +101,9 @@ export function ContactoWizard({
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
-  const [assunto, setAssunto] = useState("");
+  // Valor de "O que precisa": um slug de `servicos`, ou "nao_sei".
+  const [assunto, setAssunto] = useState(servicoInicial ?? "");
   const [mensagem, setMensagem] = useState("");
-  const [servico, setServico] = useState(servicoInicial?.slug ?? "");
   const [erros, setErros] = useState<Erros>({});
   const [tentouEnviar, setTentouEnviar] = useState(false);
 
@@ -188,6 +209,9 @@ export function ContactoWizard({
         ? { start: horaEscolhida, timeZone: timezoneRef.current }
         : undefined;
 
+    const service = assunto === "nao_sei" ? "" : assunto;
+    const need = assunto === "nao_sei" ? "nao_sei" : (NEED_BY_SERVICE[assunto] ?? "nao_sei");
+
     try {
       const resposta = await fetch("/api/contacto", {
         method: "POST",
@@ -197,8 +221,8 @@ export function ContactoWizard({
           name: nome,
           email,
           phone: telefone,
-          need: assunto,
-          service: servico,
+          need,
+          service,
           message: mensagem,
           website,
           elapsedSeconds:
@@ -324,23 +348,6 @@ export function ContactoWizard({
           }}
           className="flex flex-col gap-lg"
         >
-          {servico ? (
-            <div className="flex items-center justify-between gap-sm rounded-[var(--radius-md)] border border-border-interactive bg-accent-primary-subtle px-md py-sm">
-              <p className="font-body text-caption text-text-primary">
-                {t.form.requestingProposal}{" "}
-                <span className="font-semibold">{servicoInicial?.titulo}</span>.
-              </p>
-              <button
-                type="button"
-                onClick={() => setServico("")}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-text-secondary transition-colors hover:bg-bg-surface-hover hover:text-text-primary"
-                aria-label={t.form.removeServiceAria}
-              >
-                <X size={16} strokeWidth={2} aria-hidden />
-              </button>
-            </div>
-          ) : null}
-
           <Field htmlFor="nome" label={t.form.nameLabel} error={erros.nome}>
             <Input
               id="nome"
@@ -577,7 +584,7 @@ export function ContactoWizard({
                 [t.summary.nameLabel, nome],
                 [t.summary.emailLabel, email],
                 [t.summary.phoneLabel, telefone || t.summary.notProvided],
-                [t.summary.needLabel, t.form.needOptions[assunto as (typeof NEED_VALUES)[number]]],
+                [t.summary.needLabel, OPCOES.find((opcao) => opcao.value === assunto)?.label ?? ""],
                 [t.summary.messageLabel, mensagem],
                 [t.summary.meetingLabel, resumoReuniao ?? t.summary.noMeeting],
               ].map(([label, valor]) => (

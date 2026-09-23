@@ -9,13 +9,11 @@ export const contacto: typeof Source = {
   },
   page: {
     title: "Let's talk",
-    intro:
-      "Thirty minutes, no commitment and no cost. If it doesn't make sense to go ahead, we'll tell you.",
   },
   steps: {
-    describe: "1. Tell us what you need",
-    meeting: "2. Would you like to book a meeting?",
-    summary: "3. Summary",
+    describe: "Tell us what you need",
+    meeting: "Would you like to book a meeting?",
+    summary: "Summary",
   },
   form: {
     needOptions: {
@@ -31,8 +29,6 @@ export const contacto: typeof Source = {
       needRequired: "Choose an option.",
       messageRequired: "Tell us what you need.",
     },
-    requestingProposal: "Requesting a proposal for",
-    removeServiceAria: "Remove pre-selected product",
     nameLabel: "Name",
     namePlaceholder: "Jane Smith",
     emailLabel: "Email",

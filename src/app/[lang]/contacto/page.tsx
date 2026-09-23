@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
 import { ContactoWizard } from "@/components/contacto/contacto-wizard";
-import { getServiceBySlug } from "@/lib/content";
+import { getAllServices, getServiceBySlug } from "@/lib/content";
 import { getDictionary } from "@/i18n/dictionaries";
 import { hasLocale } from "@/i18n/config";
 import { pageMetadata } from "@/i18n/metadata";
@@ -36,9 +36,15 @@ export default async function Contacto({
   const { servico: servicoSlug } = await searchParams;
   const slug = typeof servicoSlug === "string" ? servicoSlug : undefined;
   const servico = slug ? getServiceBySlug(lang, slug) : null;
-  const servicoInicial = servico
-    ? { slug: servico.slug, titulo: servico.frontmatter.title }
-    : undefined;
+  const servicoInicial = servico?.slug;
+
+  // Ordem do "O que precisa" (contacto-wizard.tsx): família A antes de B, mesma leitura
+  // simples → avançado do catálogo em /servicos.
+  const todosOsServicos = getAllServices(lang);
+  const servicos = [
+    ...todosOsServicos.filter((s) => s.frontmatter.family === "A"),
+    ...todosOsServicos.filter((s) => s.frontmatter.family === "B"),
+  ].map((s) => ({ slug: s.slug, titulo: s.frontmatter.title }));
 
   return (
     <>
@@ -52,14 +58,10 @@ export default async function Contacto({
             <h1 className="font-heading text-headline leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-headline)] text-text-primary lg:text-display-sm lg:leading-[var(--line-height-display)] lg:tracking-[var(--letter-spacing-display)]">
               {t.page.title}
             </h1>
-
-            <p className="font-body text-body text-text-secondary lg:max-w-[720px] lg:text-body-lg">
-              {t.page.intro}
-            </p>
           </header>
 
           <div className="max-w-[640px]">
-            <ContactoWizard lang={lang} t={t} servicoInicial={servicoInicial} />
+            <ContactoWizard lang={lang} t={t} servicos={servicos} servicoInicial={servicoInicial} />
           </div>
         </div>
       </main>

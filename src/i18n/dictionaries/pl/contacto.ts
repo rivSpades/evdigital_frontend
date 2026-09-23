@@ -9,13 +9,11 @@ export const contacto: typeof Source = {
   },
   page: {
     title: "Porozmawiajmy",
-    intro:
-      "Trzydzieści minut, bez zobowiązań i bez kosztów. Jeśli dalsza współpraca nie będzie miała sensu, powiemy to wprost.",
   },
   steps: {
-    describe: "1. Proszę opisać, czego Państwo potrzebują",
-    meeting: "2. Czy chcą Państwo umówić rozmowę?",
-    summary: "3. Podsumowanie",
+    describe: "Proszę opisać, czego Państwo potrzebują",
+    meeting: "Czy chcą Państwo umówić rozmowę?",
+    summary: "Podsumowanie",
   },
   form: {
     needOptions: {
@@ -31,8 +29,6 @@ export const contacto: typeof Source = {
       needRequired: "Proszę wybrać opcję.",
       messageRequired: "Proszę opisać, czego Państwo potrzebują.",
     },
-    requestingProposal: "Zapytanie o ofertę dla:",
-    removeServiceAria: "Usuń wstępnie wybrany produkt",
     nameLabel: "Imię i nazwisko",
     namePlaceholder: "Anna Kowalska",
     emailLabel: "E-mail",
