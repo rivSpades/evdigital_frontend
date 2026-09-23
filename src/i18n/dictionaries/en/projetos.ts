@@ -16,5 +16,5 @@ export const projetos: typeof Source = {
   visitTitle: "See the project",
   visitText: "Live application, open to anyone who wants to try it.",
   ctaText: "Thirty minutes, no commitment, to work out what makes sense to build.",
-  ctaLabel: "Book a free chat",
+  ctaLabel: "Contact us",
 };

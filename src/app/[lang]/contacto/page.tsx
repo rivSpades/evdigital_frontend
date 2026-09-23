@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
-import { Card } from "@/components/ui/card";
-import { Formulario } from "@/components/contacto/formulario";
-import { CalendarioEmbed, CAL_BOOKING_URL } from "@/components/contacto/calendario-embed";
+import { ContactoWizard } from "@/components/contacto/contacto-wizard";
 import { getServiceBySlug } from "@/lib/content";
 import { getDictionary } from "@/i18n/dictionaries";
 import { hasLocale } from "@/i18n/config";
@@ -11,8 +9,9 @@ import { pageMetadata } from "@/i18n/metadata";
 import { notFound } from "next/navigation";
 
 // Contacto migrada dos frames M9S6m (desktop, 1440) e uhCIg (mobile, 390) do
-// design/design-system.pen. Copy do copy-draft.md §5.
-// A página é Server Component; só o formulário é cliente (estado e validação).
+// design/design-system.pen. Copy do copy-draft.md §5. O wizard de 3 passos (descrever
+// / reunião / resumo) ainda não tem frames próprios no .pen — excepção pontual, ver
+// nota em site/Context.md. A página é Server Component; só o wizard é cliente.
 //
 // `?servico=<slug>` chega da CTA "Pedir uma proposta" das fichas de /servicos/[slug]
 // (PRD-servicos.md §6). Um slug desconhecido ou ausente é tratado como "sem produto
@@ -59,35 +58,8 @@ export default async function Contacto({
             </p>
           </header>
 
-          <div className="flex flex-col gap-2xl lg:grid lg:grid-cols-[1.6fr_1fr] lg:items-start lg:gap-3xl">
-            <Formulario lang={lang} t={t.form} servicoInicial={servicoInicial} />
-
-            <Card className="flex flex-col gap-lg p-lg lg:p-xl">
-              <h2
-                id="contacto-agenda-titulo"
-                className="font-heading text-title-sm font-semibold tracking-[var(--letter-spacing-title)] text-text-primary"
-              >
-                {t.page.agendaTitle}
-              </h2>
-
-              <p className="font-body text-body text-text-secondary">
-                {t.page.agendaText}
-              </p>
-
-              <CalendarioEmbed placeholder={t.page.agendaPlaceholder} />
-
-              {/* Sem JS o embed não carrega — fica o link directo para o Cal.com. */}
-              <noscript>
-                <a
-                  href={CAL_BOOKING_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-body text-body-lg block text-center text-text-link underline"
-                >
-                  {t.page.agendaButton}
-                </a>
-              </noscript>
-            </Card>
+          <div className="max-w-[640px]">
+            <ContactoWizard lang={lang} t={t} servicoInicial={servicoInicial} />
           </div>
         </div>
       </main>

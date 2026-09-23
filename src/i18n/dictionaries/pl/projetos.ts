@@ -16,5 +16,5 @@ export const projetos: typeof Source = {
   visitTitle: "Zobacz projekt",
   visitText: "Aplikacja działająca produkcyjnie, otwarta dla każdego, kto chce ją wypróbować.",
   ctaText: "Trzydzieści minut, bez zobowiązań, by ustalić, co warto zbudować.",
-  ctaLabel: "Umów bezpłatną rozmowę",
+  ctaLabel: "Skontaktuj się",
 };

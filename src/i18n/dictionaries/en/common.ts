@@ -3,7 +3,7 @@ import type { common as Source } from "../pt/common";
 // Namespace "common" — en. Tem de cumprir a forma do português.
 export const common: typeof Source = {
   siteDescription: "EvDigital — business digitalisation, websites and custom software.",
-  cta: "Book a free call",
+  cta: "Contact us",
   language: "Language",
   scrollToTop: "Back to top",
   nav: {

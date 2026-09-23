@@ -14,5 +14,5 @@ export const projetos = {
   visitTitle: "Ver o projeto",
   visitText: "Aplicação em produção, aberta a quem quiser experimentar.",
   ctaText: "Trinta minutos, sem compromisso, para perceber o que faz sentido construir.",
-  ctaLabel: "Marcar conversa gratuita",
+  ctaLabel: "Fale connosco",
 };

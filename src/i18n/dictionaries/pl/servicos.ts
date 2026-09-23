@@ -19,7 +19,7 @@ export const servicos: typeof Source = {
   ficha: {
     breadcrumbAria: "Ścieżka nawigacji",
     breadcrumbServicos: "Usługi",
-    marcarConversa: "Umów bezpłatną rozmowę",
+    marcarConversa: "Skontaktuj się",
     pedirProposta: "Poproś o ofertę",
     jaCliente: "Są już Państwo naszym klientem? Zlecenie w panelu klienta",
     oQueEParaQuem: "Czym jest i dla kogo",

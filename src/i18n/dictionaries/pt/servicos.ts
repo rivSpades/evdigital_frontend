@@ -31,7 +31,7 @@ export const servicos = {
   ficha: {
     breadcrumbAria: "Localização",
     breadcrumbServicos: "Serviços",
-    marcarConversa: "Marcar conversa gratuita",
+    marcarConversa: "Fale connosco",
     pedirProposta: "Pedir uma proposta",
     jaCliente: "Já é cliente? Peça na sua área",
     oQueEParaQuem: "O que é e para quem",

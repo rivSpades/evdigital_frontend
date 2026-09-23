@@ -65,8 +65,6 @@ export const areaCliente: typeof Source = {
   },
   entrar: {
     heading: "Strefa Klienta",
-    intro:
-      "Tutaj śledzą Państwo swoje projekty i składają nowe zgłoszenia bez umawiania spotkania.",
     backToSite: "Wróć na stronę",
     tabEntrar: "Logowanie",
     tabCriarConta: "Załóż konto",
@@ -96,7 +94,7 @@ export const areaCliente: typeof Source = {
     errRegister: "Nie udało się teraz założyć konta. Proszę spróbować ponownie.",
     registerNote: "Po założeniu konta wyślemy wiadomość e-mail w celu potwierdzenia adresu.",
     contactPrompt: "Nie są Państwo jeszcze naszym klientem i chcą porozmawiać?",
-    contactCta: "Umów bezpłatną rozmowę",
+    contactCta: "Skontaktuj się",
   },
   confirmar: {
     okTitle: "Adres e-mail potwierdzony",

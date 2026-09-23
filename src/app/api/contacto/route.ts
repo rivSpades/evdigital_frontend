@@ -44,6 +44,7 @@ type Payload = {
   message?: unknown;
   website?: unknown;
   elapsedSeconds?: unknown;
+  meeting?: { start?: unknown; timeZone?: unknown } | unknown;
 };
 
 function asString(value: unknown): string {
@@ -78,6 +79,15 @@ export async function POST(request: Request) {
 
   const need = asString(body.need);
   const service = asString(body.service);
+
+  // Passo 2 do wizard (opcional): horário escolhido no calendário. Um valor mal
+  // formado é tratado como "sem reunião" — o backend valida outra vez de qualquer
+  // forma, e a lead nunca pode ficar bloqueada por isto.
+  const meetingRaw =
+    body.meeting && typeof body.meeting === "object" ? (body.meeting as Record<string, unknown>) : null;
+  const meetingStart = meetingRaw ? asString(meetingRaw.start) : "";
+  const meetingTimeZone = meetingRaw ? asString(meetingRaw.timeZone) : "";
+  const meeting = meetingStart && meetingTimeZone ? { start: meetingStart, timezone: meetingTimeZone } : undefined;
 
   // Validação própria, com mensagens no idioma do visitante. O backend valida outra vez.
   const v = t.form.validation;
@@ -120,6 +130,7 @@ export async function POST(request: Request) {
         website: asString(body.website),
         elapsed_seconds:
           typeof body.elapsedSeconds === "number" ? body.elapsedSeconds : undefined,
+        meeting,
       }),
       // O visitante não pode ficar à espera indefinidamente se o backend estiver em baixo.
       signal: AbortSignal.timeout(10_000),
@@ -158,7 +169,11 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json({ status: "recebida" }, { status: 201 });
+    const dados: { meeting_confirmed?: boolean } = await resposta.json().catch(() => ({}));
+    return NextResponse.json(
+      { status: "recebida", meeting_confirmed: Boolean(dados.meeting_confirmed) },
+      { status: 201 },
+    );
   } catch (erro) {
     // Nunca registar o corpo do pedido: contém dados pessoais (PRD-backend.md §8).
     console.error("Falha a contactar o backend de leads:", erro);

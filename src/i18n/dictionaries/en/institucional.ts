@@ -24,10 +24,10 @@ export const institucional: typeof Source = {
       "We tell you what isn't worth doing.",
       "We don't disappear after delivery.",
     ],
-    ctaAria: "Book a free conversation",
+    ctaAria: "Contact us",
     ctaText:
       "Thirty minutes, no commitment, to understand where you are and what makes sense to do next.",
-    ctaButton: "Book a free conversation",
+    ctaButton: "Contact us",
   },
   legal: {
     updatedPrefix: "Last updated:",

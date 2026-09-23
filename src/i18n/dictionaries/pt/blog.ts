@@ -27,5 +27,5 @@ export const blog = {
   relatedAll: "Ver todos os artigos",
   closingTitle: "Ficou com uma dúvida sobre o que leu?",
   closingText: "Trinta minutos, sem compromisso, para perceber o que faz sentido no seu caso.",
-  closingCta: "Marcar conversa gratuita",
+  closingCta: "Fale connosco",
 };

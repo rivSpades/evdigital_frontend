@@ -64,7 +64,6 @@ export const areaCliente = {
   },
   entrar: {
     heading: "Área de Cliente",
-    intro: "Aqui acompanha os seus projetos e faz pedidos novos sem ter de marcar reunião.",
     backToSite: "Voltar ao site",
     tabEntrar: "Entrar",
     tabCriarConta: "Criar conta",
@@ -92,7 +91,7 @@ export const areaCliente = {
     errRegister: "Não foi possível criar a conta agora. Tente outra vez.",
     registerNote: "Depois de criar a conta enviamos-lhe um email para confirmar o endereço.",
     contactPrompt: "Ainda não é cliente e quer falar connosco?",
-    contactCta: "Marcar conversa gratuita",
+    contactCta: "Fale connosco",
   },
   confirmar: {
     okTitle: "Email confirmado",

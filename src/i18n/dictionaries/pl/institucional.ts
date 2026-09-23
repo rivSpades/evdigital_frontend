@@ -24,10 +24,10 @@ export const institucional: typeof Source = {
       "Mówimy, czego nie warto robić.",
       "Nie znikamy po wdrożeniu.",
     ],
-    ctaAria: "Umów bezpłatną rozmowę",
+    ctaAria: "Skontaktuj się",
     ctaText:
       "Trzydzieści minut, bez zobowiązań, aby zrozumieć, gdzie Państwo są i co warto zrobić dalej.",
-    ctaButton: "Umów bezpłatną rozmowę",
+    ctaButton: "Skontaktuj się",
   },
   legal: {
     updatedPrefix: "Ostatnia aktualizacja:",

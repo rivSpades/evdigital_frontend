@@ -11,10 +11,11 @@ export const contacto: typeof Source = {
     title: "Let's talk",
     intro:
       "Thirty minutes, no commitment and no cost. If it doesn't make sense to go ahead, we'll tell you.",
-    agendaTitle: "Prefer to book a time now?",
-    agendaText: "Pick the day and time that suit you. It's booked instantly.",
-    agendaPlaceholder: "Space reserved for the calendar",
-    agendaButton: "Book a free conversation",
+  },
+  steps: {
+    describe: "1. Tell us what you need",
+    meeting: "2. Would you like to book a meeting?",
+    summary: "3. Summary",
   },
   form: {
     needOptions: {
@@ -44,17 +45,48 @@ export const contacto: typeof Source = {
     messageHint: "Two or three sentences are enough.",
     messagePlaceholder: "Write here what you need for your business.",
     honeypotLabel: "Do not fill in",
+  },
+  meeting: {
+    question: "Would you like to book a meeting?",
+    hint: "Optional. Thirty minutes, no commitment.",
+    yes: "Yes, I'd like to book",
+    no: "No, just send the message",
+    loading: "Looking for available times...",
+    noSlots:
+      "No available times in the coming days. You can continue without booking. We'll reach out to arrange one.",
+    loadError: "We couldn't load the available times. You can continue without booking.",
+    chooseDay: "Choose a day",
+    chooseTime: "Choose a time",
+    changeDay: "Choose another day",
+  },
+  summary: {
+    title: "Confirm your details",
+    nameLabel: "Name",
+    emailLabel: "Email",
+    phoneLabel: "Phone",
+    needLabel: "What you need",
+    messageLabel: "Message",
+    meetingLabel: "Meeting",
+    noMeeting: "No meeting booked",
+    notProvided: "Not provided",
+  },
+  actions: {
+    continue: "Continue",
+    back: "Back",
+    finish: "Finish",
     sending: "Sending...",
-    submit: "Send message",
+  },
+  result: {
     successTitle: "Message sent.",
     successText:
       "We've received your request and will reply shortly. We've also sent a confirmation to your email.",
+    meetingConfirmedText: "Your meeting is booked. We've sent the confirmation to your email.",
+    partialTitle: "Message sent.",
+    partialText: "We couldn't automatically confirm the meeting. We'll contact you to arrange a time.",
     tooManyTitle: "We've already received several messages from you.",
-    tooManyText:
-      "Please wait a little before sending another. If it's urgent, book a conversation using the panel next to the form.",
+    tooManyText: "Please wait a little before sending another.",
     failedTitle: "We couldn't send your message.",
-    failedText:
-      "Please try again in a moment. If it still doesn't work, book a conversation using the panel next to the form.",
+    failedText: "Please try again in a moment.",
   },
   api: {
     invalidRequest: "Invalid request.",

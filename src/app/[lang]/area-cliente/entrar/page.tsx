@@ -44,9 +44,6 @@ export default async function AreaClienteEntrar({
           <h1 className="font-heading text-title font-semibold tracking-[var(--letter-spacing-title)] text-text-primary">
             {t.entrar.heading}
           </h1>
-          <p className="font-body text-body text-text-secondary">
-            {t.entrar.intro}
-          </p>
         </div>
 
         <EntrarForm erroGoogle={erro === "google"} lang={lang} t={t.entrar} />

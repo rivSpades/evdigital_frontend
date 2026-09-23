@@ -64,7 +64,6 @@ export const areaCliente: typeof Source = {
   },
   entrar: {
     heading: "Client Area",
-    intro: "Here you follow your projects and make new requests without having to book a meeting.",
     backToSite: "Back to the site",
     tabEntrar: "Sign in",
     tabCriarConta: "Create account",
@@ -92,7 +91,7 @@ export const areaCliente: typeof Source = {
     errRegister: "We could not create the account right now. Please try again.",
     registerNote: "After you create the account we will email you to confirm the address.",
     contactPrompt: "Not a client yet and want to talk to us?",
-    contactCta: "Book a free call",
+    contactCta: "Contact us",
   },
   confirmar: {
     okTitle: "Email confirmed",

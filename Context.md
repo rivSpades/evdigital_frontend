@@ -45,8 +45,8 @@ Next.js (App Router) + TypeScript + Tailwind CSS v4 (config CSS-first via `@them
   - `src/lib/payments.ts`: dados dos 8 meios de pagamento (só a ficha da Loja online).
     O PRD previa `content/data/payments.yaml`; sem parser YAML no projecto, ficou como
     módulo TS tipado — mesma informação, sem dependência nova.
-  - `Formulario` (`src/components/contacto/formulario.tsx`) e `/contacto` aceitam
-    `?servico=<slug>` e enviam `service` na lead (backend: `Lead.service`,
+  - `ContactoWizard` (`src/components/contacto/contacto-wizard.tsx`) e `/contacto`
+    aceitam `?servico=<slug>` e enviam `service` na lead (backend: `Lead.service`,
     `backend/apps/leads/migrations/0002_lead_service.py`).
   - **Por fazer**: versões mobile dos 7 ecrãs do `.pen` (o código já é responsive por
     Tailwind; o `.pen` mobile das fichas ainda não foi desenhado — ver
@@ -73,6 +73,19 @@ Next.js (App Router) + TypeScript + Tailwind CSS v4 (config CSS-first via `@them
   **Por fazer:** campo `language` no `Lead` do backend (emails em pt); erros de validação do
   Django chegam em pt; texto "Opcional" fixo em `ui/input.tsx`; revisão jurídica das
   traduções de privacidade/termos.
+- **Wizard de `/contacto` + CTA "Fale connosco" (2026-09-22) — feito**: CTA
+  site-wide renomeada de "Marcar conversa gratuita" para "Fale connosco" (8 chaves ×
+  pt/en/pl, ver `../design-guardrails.md` §6). `/contacto` deixou de ter formulário e
+  embed do Cal.com lado a lado — passou a `ContactoWizard`
+  (`src/components/contacto/contacto-wizard.tsx`) de 3 passos (descrever / reunião
+  opcional / resumo), um único "Finalizar" que cria a lead e, se aplicável, a
+  marcação no Cal.com no mesmo pedido (`src/app/api/contacto/route.ts` estendida +
+  novo `src/app/api/contacto/slots/route.ts`, proxy para
+  `backend/apps/leads/calcom.py`). `calendario-embed.tsx` foi removido.
+  **Por fazer**: os 3 ecrãs do wizard não foram desenhados no `.pen` antes do código
+  — excepção pontual (decisão do Ricardo, 2026-09-22), tokens e componentes
+  reutilizados de `components/ui`, sem primitivo novo. Passar pelo `.pen` fica como
+  dívida de design, tal como a versão mobile das fichas de serviço acima.
 - **Fase 4.4b — pendente**: restantes páginas (Projetos, Blog, Sobre) à espera do gate
   de validação com utilizador real (PRD Fase 3.4).
 

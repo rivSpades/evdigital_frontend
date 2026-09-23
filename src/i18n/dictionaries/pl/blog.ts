@@ -29,5 +29,5 @@ export const blog: typeof Source = {
   relatedAll: "Zobacz wszystkie artykuły",
   closingTitle: "Czy po lekturze mają Państwo jakieś wątpliwości?",
   closingText: "Trzydzieści minut, bez zobowiązań, by ustalić, co ma sens w Państwa przypadku.",
-  closingCta: "Umów bezpłatną rozmowę",
+  closingCta: "Skontaktuj się",
 };

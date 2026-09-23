@@ -29,5 +29,5 @@ export const blog: typeof Source = {
   relatedAll: "See all articles",
   closingTitle: "Still have a question about what you read?",
   closingText: "Thirty minutes, no commitment, to work out what makes sense in your case.",
-  closingCta: "Book a free chat",
+  closingCta: "Contact us",
 };

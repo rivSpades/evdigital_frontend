@@ -22,10 +22,10 @@ export const institucional = {
       "Dizemos o que não vale a pena fazer.",
       "Não desaparecemos depois da entrega.",
     ],
-    ctaAria: "Marcar conversa gratuita",
+    ctaAria: "Fale connosco",
     ctaText:
       "Trinta minutos, sem compromisso, para perceber onde está e o que faz sentido fazer a seguir.",
-    ctaButton: "Marcar conversa gratuita",
+    ctaButton: "Fale connosco",
   },
   legal: {
     updatedPrefix: "Atualizada a",

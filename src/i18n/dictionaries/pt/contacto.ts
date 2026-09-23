@@ -9,10 +9,11 @@ export const contacto = {
     title: "Vamos conversar",
     intro:
       "Trinta minutos, sem compromisso e sem custo. Se não fizer sentido avançar, dizemos-lhe.",
-    agendaTitle: "Prefere marcar já uma hora?",
-    agendaText: "Escolha o dia e a hora que lhe der jeito. Fica marcado na hora.",
-    agendaPlaceholder: "Espaço reservado para a agenda",
-    agendaButton: "Marcar conversa gratuita",
+  },
+  steps: {
+    describe: "1. Fale-nos do que precisa",
+    meeting: "2. Deseja marcar reunião?",
+    summary: "3. Resumo",
   },
   form: {
     needOptions: {
@@ -42,17 +43,49 @@ export const contacto = {
     messageHint: "Duas ou três frases chegam.",
     messagePlaceholder: "Escreva aqui o que precisa para o seu negócio.",
     honeypotLabel: "Não preencher",
+  },
+  meeting: {
+    question: "Deseja marcar uma reunião?",
+    hint: "É opcional. Trinta minutos, sem compromisso.",
+    yes: "Sim, quero marcar",
+    no: "Não, só quero enviar a mensagem",
+    loading: "A procurar horários...",
+    noSlots:
+      "Sem horários disponíveis nos próximos dias. Pode continuar sem marcar. Entramos em contacto para combinar.",
+    loadError: "Não foi possível carregar os horários. Pode continuar sem marcar.",
+    chooseDay: "Escolha um dia",
+    chooseTime: "Escolha uma hora",
+    changeDay: "Escolher outro dia",
+  },
+  summary: {
+    title: "Confirme os seus dados",
+    nameLabel: "Nome",
+    emailLabel: "Email",
+    phoneLabel: "Telefone",
+    needLabel: "O que precisa",
+    messageLabel: "Mensagem",
+    meetingLabel: "Reunião",
+    noMeeting: "Sem reunião marcada",
+    notProvided: "Não indicado",
+  },
+  actions: {
+    continue: "Continuar",
+    back: "Voltar",
+    finish: "Finalizar",
     sending: "A enviar...",
-    submit: "Enviar mensagem",
+  },
+  result: {
     successTitle: "Mensagem enviada.",
     successText:
       "Recebemos o seu pedido e respondemos em breve. Enviámos também uma confirmação para o seu email.",
+    meetingConfirmedText: "A reunião ficou marcada. Enviámos a confirmação para o seu email.",
+    partialTitle: "Mensagem enviada.",
+    partialText:
+      "Não conseguimos confirmar a reunião automaticamente. Vamos contactá-lo para combinar o horário.",
     tooManyTitle: "Já recebemos várias mensagens suas.",
-    tooManyText:
-      "Aguarde um pouco antes de enviar outra. Se for urgente, marque uma conversa pelo bloco ao lado.",
+    tooManyText: "Aguarde um pouco antes de enviar outra.",
     failedTitle: "Não foi possível enviar.",
-    failedText:
-      "Tente outra vez daqui a nada. Se continuar sem funcionar, marque uma conversa pelo bloco ao lado.",
+    failedText: "Tente outra vez daqui a nada.",
   },
   // Mensagens devolvidas por /api/contacto (o route handler não tem acesso ao dicionário
   // por root-params, por isso importa este slice diretamente).
