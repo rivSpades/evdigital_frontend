@@ -444,7 +444,7 @@ export function ContactoWizard({
     <div
       className={cn(
         "flex flex-col pb-xl lg:pb-2xl",
-        voltar ? "gap-md pt-lg lg:gap-lg lg:pt-xl" : "pt-2xl lg:pt-3xl",
+        voltar ? "gap-md pt-lg lg:gap-lg lg:pt-xl" : "pt-lg lg:pt-xl",
       )}
     >
       {voltar ? (
@@ -452,9 +452,9 @@ export function ContactoWizard({
           <BackLink onClick={voltar} disabled={estado === "a-enviar"} label={t.actions.back} />
         </div>
       ) : null}
-      <h1 className="font-heading text-headline leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-headline)] text-text-primary lg:text-display lg:tracking-[var(--letter-spacing-display)]">
-        {titulo}
-      </h1>
+      {/* O título «Vamos conversar» não se vê (pedido do dono, 2026-09-24): a página mantém o
+          seu h1 para leitores de ecrã e para a estrutura de cabeçalhos. */}
+      <h1 className="sr-only">{titulo}</h1>
     </div>
   );
 
@@ -905,18 +905,19 @@ export function ContactoWizard({
             total={TOTAL_PASSOS}
             titulo={passos[passoNumero - 1].titulo}
           />
-          <CabecalhoPasso
-            as="h2"
-            tamanho="passo"
-            title={cabecalho.title}
-            subtitle={cabecalho.subtitle}
-            titleRef={tituloPassoRef}
-            className={cn(
-              "pt-lg lg:pt-0",
-              estado === "demasiados-pedidos" && passo === "resumo" ? "pb-lg" : "pb-xl",
-            )}
-          />
-          <div className="w-full max-w-[704px]">{folha}</div>
+          {/* O título do passo não se vê (o «1/3» e a lista de passos já o dizem), mas o h2 recebe
+              o foco ao mudar de passo. O contentor esconde-o à vista sem misturar classes
+              (o `cn` do projecto não resolve conflitos entre `w-full` e `sr-only`). */}
+          <div className="sr-only">
+            <CabecalhoPasso
+              as="h2"
+              tamanho="passo"
+              title={cabecalho.title}
+              subtitle={cabecalho.subtitle}
+              titleRef={tituloPassoRef}
+            />
+          </div>
+          <div className="w-full max-w-[704px] pt-lg lg:pt-0">{folha}</div>
         </div>
       </div>
     </div>

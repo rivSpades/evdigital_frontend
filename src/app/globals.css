@@ -34,6 +34,14 @@ body {
   }
 }
 
+/* Em mobile as acções dos formulários ficam coladas ao fundo (ui/folha.tsx): reserva espaço
+   ao fazer scroll até um campo com foco para que a barra não o tape (WCAG 2.4.11). */
+@media (max-width: 767px) {
+  html {
+    scroll-padding-bottom: 7rem;
+  }
+}
+
 /* Foco visível em todo o site — mandato de acessibilidade (PRD §5) */
 :focus-visible {
   outline: var(--border-width-focus) solid var(--color-border-focus);
