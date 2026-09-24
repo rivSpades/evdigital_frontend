@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { AC_COOKIE_NAME, backendFetch } from "@/lib/area-cliente/backend";
+import { AC_COOKIE_NAME, backendFetch, clientIpFrom } from "@/lib/area-cliente/backend";
 import {
   GOOGLE_STATE_COOKIE,
   googleConfig,
@@ -56,6 +56,7 @@ export async function GET(request: Request) {
     const dados = await backendFetch<{ token: string }>("/api/auth/google/", {
       method: "POST",
       body: { id_token },
+      clientIp: clientIpFrom(request),
     });
 
     const resposta = NextResponse.redirect(`${origem}${localizePath(lang, "/area-cliente/projetos")}`);

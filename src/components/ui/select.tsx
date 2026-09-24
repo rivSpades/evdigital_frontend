@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
+import { useFieldContext } from "@/components/ui/input";
 import { cn } from "@/lib/cn";
 
 // Espelha os swatches ds/overlay/dropdown-menu--* do frame "Inventário · Lote A" (EoIvi)
@@ -17,7 +18,17 @@ import { cn } from "@/lib/cn";
 // ($tap-target-min), raio $radius-sm, e o item escolhido fica a $bg-surface-selected com
 // visto a $text-accent.
 
-export type SelectOption = { value: string; label: string };
+//
+// `appearance="folha"` (ds/form/select, direcção "A vez", Contacto): o gatilho é um campo da
+// folha ($bg-surface-sunken, contorno hairline $input-border, valor em body
+// $font-weight-body, seta de 16); aberto ou focado, o foco é o anel interior do campo
+// ($input-border-focus, 2px, sem anel exterior, como em `ui/input.tsx`). A lista fica a
+// $radius-none com contorno $border-default, itens a direito, e o visto em $text-primary
+// (o verde fica para botão, foco e ligação). `group` numa opção abre um rótulo de grupo
+// (caption $font-weight-label $text-tertiary) antes da primeira opção desse grupo; as
+// opções desse grupo ficam num role="group" com esse rótulo em aria-labelledby.
+
+export type SelectOption = { value: string; label: string; group?: string };
 
 export function Select({
   id,
@@ -26,8 +37,10 @@ export function Select({
   onChange,
   options,
   placeholder,
-  invalid = false,
-  describedBy,
+  invalid: invalidProp,
+  describedBy: describedByProp,
+  appearance = "default",
+  onBlur,
 }: {
   id: string;
   name: string;
@@ -35,9 +48,21 @@ export function Select({
   onChange: (value: string) => void;
   options: SelectOption[];
   placeholder: string;
+  /** Por omissão vem do `Field` à volta (erro presente). */
   invalid?: boolean;
+  /** Por omissão vem do `Field` à volta (ids da ajuda e do erro). */
   describedBy?: string;
+  appearance?: "default" | "folha";
+  /**
+   * O foco saiu do campo (para mostrar o erro em blur, design-guardrails.md §6). Escolher
+   * uma opção com o rato não conta: a lista não tira o foco ao gatilho.
+   */
+  onBlur?: () => void;
 }) {
+  const folha = appearance === "folha";
+  const field = useFieldContext();
+  const invalid = invalidProp ?? field.invalid;
+  const describedBy = describedByProp ?? field.describedBy;
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -108,6 +133,52 @@ export function Select({
     }
   }
 
+  // Opções seguidas com o mesmo `group` formam um bloco: sem grupo, as opções ficam direto
+  // dentro da listbox; com grupo, num role="group" com o rótulo em aria-labelledby. Nada de
+  // wrappers role="presentation" entre a listbox e as opções (escondiam-nas da árvore de
+  // acessibilidade).
+  const blocos: { group?: string; indices: number[] }[] = [];
+  options.forEach((option, index) => {
+    const ultimo = blocos[blocos.length - 1];
+    if (ultimo && ultimo.group === option.group) ultimo.indices.push(index);
+    else blocos.push({ group: option.group, indices: [index] });
+  });
+
+  function renderOption(index: number) {
+    const option = options[index];
+    const isSelected = option.value === value;
+    return (
+      <div
+        key={option.value}
+        id={optionId(index)}
+        role="option"
+        aria-selected={isSelected}
+        ref={(node) => {
+          optionRefs.current[index] = node;
+        }}
+        onMouseEnter={() => setActiveIndex(index)}
+        onClick={() => choose(index)}
+        className={cn(
+          "flex h-11 shrink-0 cursor-pointer items-center gap-sm px-sm",
+          folha ? "rounded-[var(--radius-none)]" : "rounded-[var(--radius-sm)]",
+          "font-body text-body text-text-primary",
+          isSelected && "bg-bg-surface-selected",
+          !isSelected && index === activeIndex && "bg-bg-surface-hover",
+        )}
+      >
+        <span className="flex-1">{option.label}</span>
+        {isSelected ? (
+          <Check
+            size={20}
+            strokeWidth={2}
+            aria-hidden
+            className={folha ? "text-text-primary" : "text-text-accent"}
+          />
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <div ref={rootRef} className="relative">
       <input type="hidden" name={name} value={value} />
@@ -124,13 +195,25 @@ export function Select({
         aria-describedby={describedBy}
         onClick={() => (isOpen ? setIsOpen(false) : open())}
         onKeyDown={onKeyDown}
+        onBlur={(event) => {
+          if (rootRef.current?.contains(event.relatedTarget as Node | null)) return;
+          onBlur?.();
+        }}
         className={cn(
-          "flex h-11 w-full items-center justify-between gap-xs",
+          "flex h-11 w-full items-center justify-between",
           "rounded-[var(--input-radius)] px-[var(--input-inset-x)]",
-          "border font-body text-label font-medium transition-colors",
-          isOpen
-            ? "border-border-interactive bg-bg-surface-pressed shadow-[inset_0_0_0_1px_var(--color-border-interactive)]"
-            : "border-[var(--input-border)] bg-[var(--input-bg)] hover:border-border-interactive hover:bg-bg-surface-hover",
+          "border font-body transition-colors",
+          folha ? "gap-sm text-body" : "gap-xs text-label font-medium",
+          folha
+            ? cn(
+                "bg-bg-surface-sunken focus-visible:outline-none",
+                isOpen
+                  ? "border-[var(--input-border-focus)] shadow-[inset_0_0_0_1px_var(--input-border-focus)]"
+                  : "border-[var(--input-border)] hover:border-border-interactive focus:border-[var(--input-border-focus)] focus:shadow-[inset_0_0_0_1px_var(--input-border-focus)]",
+              )
+            : isOpen
+              ? "border-border-interactive bg-bg-surface-pressed shadow-[inset_0_0_0_1px_var(--color-border-interactive)]"
+              : "border-[var(--input-border)] bg-[var(--input-bg)] hover:border-border-interactive hover:bg-bg-surface-hover",
           invalid &&
             !isOpen &&
             "border-feedback-error-border shadow-[inset_0_0_0_1px_var(--color-feedback-error-border)] hover:border-feedback-error-border",
@@ -139,9 +222,9 @@ export function Select({
       >
         <span className="truncate">{selected ? selected.label : placeholder}</span>
         {isOpen ? (
-          <ChevronUp size={20} strokeWidth={2} aria-hidden className="shrink-0 text-text-secondary" />
+          <ChevronUp size={folha ? 16 : 20} strokeWidth={2} aria-hidden className="shrink-0 text-text-secondary" />
         ) : (
-          <ChevronDown size={20} strokeWidth={2} aria-hidden className="shrink-0 text-text-secondary" />
+          <ChevronDown size={folha ? 16 : 20} strokeWidth={2} aria-hidden className="shrink-0 text-text-secondary" />
         )}
       </button>
 
@@ -150,37 +233,29 @@ export function Select({
           id={listId}
           role="listbox"
           aria-label={placeholder}
+          // O foco fica no gatilho (aria-activedescendant): clicar numa opção não o tira.
+          onMouseDown={(event) => event.preventDefault()}
           className={cn(
             "absolute top-[calc(100%+var(--spacing-xs))] right-0 left-0 z-30",
-            "flex max-h-[280px] flex-col gap-3xs overflow-auto p-2xs",
-            "rounded-[var(--radius-md)] border border-border-subtle bg-bg-surface-raised",
-            "shadow-[inset_0_1px_0_0_var(--color-border-highlight),var(--shadow-elevation-3)]",
+            "flex max-h-[280px] flex-col overflow-auto p-2xs bg-bg-surface-raised",
+            folha
+              ? "max-h-[360px] rounded-[var(--radius-none)] border border-border-default"
+              : "gap-3xs rounded-[var(--radius-md)] border border-border-subtle shadow-[inset_0_1px_0_0_var(--color-border-highlight),var(--shadow-elevation-3)]",
           )}
         >
-          {options.map((option, index) => {
-            const isSelected = option.value === value;
+          {blocos.map((bloco) => {
+            const itens = bloco.indices.map(renderOption);
+            const rotuloId = `${id}-grupo-${bloco.indices[0]}`;
+            if (!bloco.group) return <Fragment key={rotuloId}>{itens}</Fragment>;
             return (
-              <div
-                key={option.value}
-                id={optionId(index)}
-                role="option"
-                aria-selected={isSelected}
-                ref={(node) => {
-                  optionRefs.current[index] = node;
-                }}
-                onMouseEnter={() => setActiveIndex(index)}
-                onClick={() => choose(index)}
-                className={cn(
-                  "flex h-11 shrink-0 cursor-pointer items-center gap-sm rounded-[var(--radius-sm)] px-sm",
-                  "font-body text-body text-text-primary",
-                  isSelected && "bg-bg-surface-selected",
-                  !isSelected && index === activeIndex && "bg-bg-surface-hover",
-                )}
-              >
-                <span className="flex-1">{option.label}</span>
-                {isSelected ? (
-                  <Check size={20} strokeWidth={2} aria-hidden className="text-text-accent" />
-                ) : null}
+              <div key={rotuloId} role="group" aria-labelledby={rotuloId} className="flex shrink-0 flex-col">
+                <div
+                  id={rotuloId}
+                  className="px-sm pt-xs pb-2xs font-body text-caption font-medium text-text-tertiary"
+                >
+                  {bloco.group}
+                </div>
+                {itens}
               </div>
             );
           })}

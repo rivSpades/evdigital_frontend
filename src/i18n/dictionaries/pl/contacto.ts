@@ -5,7 +5,7 @@ export const contacto: typeof Source = {
   metadata: {
     title: "Kontakt",
     description:
-      "Trzydzieści minut, bez zobowiązań i bez kosztów. Jeśli dalsza współpraca nie będzie miała sensu, powiemy to wprost.",
+      "Bez zobowiązań i bez kosztów. Jeśli dalsza współpraca nie będzie miała sensu, powiemy to wprost.",
   },
   page: {
     title: "Porozmawiajmy",
@@ -26,6 +26,7 @@ export const contacto: typeof Source = {
       nameRequired: "Proszę wpisać imię i nazwisko.",
       emailRequired: "Proszę wpisać adres e-mail.",
       emailInvalid: "Brakuje znaku @. Proszę wpisać w formacie: imie@firma.pl",
+      emailFormat: "Ten adres e-mail wygląda na nieprawidłowy. Proszę wpisać go tak: imie@firma.pl",
       needRequired: "Proszę wybrać opcję.",
       messageRequired: "Proszę opisać, czego Państwo potrzebują.",
     },
@@ -43,7 +44,7 @@ export const contacto: typeof Source = {
   },
   meeting: {
     question: "Czy chcą Państwo umówić rozmowę?",
-    hint: "Opcjonalnie. Trzydzieści minut, bez zobowiązań.",
+    hint: "Opcjonalnie. Bez zobowiązań.",
     yes: "Tak, chcę umówić termin",
     no: "Nie, chcę tylko wysłać wiadomość",
     loading: "Szukamy dostępnych terminów...",
@@ -65,6 +66,8 @@ export const contacto: typeof Source = {
     meetingLabel: "Rozmowa",
     noMeeting: "Bez umówionej rozmowy",
     notProvided: "Nie podano",
+    privacyBefore: "Wykorzystujemy te dane wyłącznie po to, aby Państwu odpowiedzieć. Więcej informacji w ",
+    privacyAfter: ".",
   },
   actions: {
     continue: "Dalej",

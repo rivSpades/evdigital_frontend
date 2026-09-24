@@ -1,21 +1,28 @@
-import { TabSegments } from "@/components/ui/tabs";
+import Link from "@/i18n/locale-link";
 import { articleCount } from "@/lib/blog";
+import { cn } from "@/lib/cn";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
 
-// Frames: "Filtro por nível" (Q7KrN no wide, i4gxD no narrow).
-// No wide a fila é rótulo + segmentos à esquerda e contagem à direita; no narrow o
-// rótulo e a contagem partilham a primeira linha e os segmentos ocupam a segunda a toda
-// a largura. Um só contentor com flex-wrap e `order` resolve as duas leituras sem
-// duplicar a contagem no markup.
+// Frames "v2 · A vez" / Ecrã · Blog: "Margem · filtro por nível" (Ky0bn desktop, sqVy8
+// mobile; KigTl / G7B2i no filtro sem resultados). Gap $space-2xs.
+// - Cabeçalho: rótulo caption $text-tertiary à esquerda e contagem $font-mono caption
+//   $text-tertiary à direita.
+// - Níveis: instâncias de ds/action/ligacao (alvo de 44, sem fundo, sem pill). A activa em
+//   $text-primary $font-weight-body-strong com aria-current; as outras em $text-secondary
+//   $font-weight-label. Em lg empilhadas na Margem (colunas 1 a 3); abaixo lado a lado
+//   com gap $space-md.
+// O estado vive no URL (?nivel=), por isso é um Server Component.
 
 export type BlogLevelFilter = "todos" | "simples" | "tecnico";
 
 export async function LevelFilter({
   current,
   total,
+  className,
 }: {
   current: BlogLevelFilter;
   total: number;
+  className?: string;
 }) {
   const lang = await getLocale();
   const { blog: t } = await getDictionary(lang);
@@ -26,24 +33,37 @@ export async function LevelFilter({
   ];
 
   return (
-    <div className="flex flex-wrap items-center gap-sm lg:gap-md">
-      <span className="order-1 font-body text-caption font-medium tracking-[var(--letter-spacing-overline)] text-text-tertiary">
-        {t.filterOverline}
-      </span>
+    <div className={cn("flex flex-col gap-2xs", className)}>
+      <div className="flex items-center justify-between gap-sm">
+        <p className="font-body text-caption text-text-tertiary">{t.filterOverline}</p>
+        <p className="font-mono text-caption text-text-tertiary">
+          {articleCount(lang, t, total)}
+        </p>
+      </div>
 
-      <p className="order-2 ml-auto font-body text-caption text-text-tertiary lg:order-3">
-        {articleCount(lang, t, total)}
-      </p>
-
-      <TabSegments
-        label={t.filterLabel}
-        className="order-3 w-full lg:order-2 lg:w-auto"
-        segments={segments.map((segment) => ({
-          label: segment.label,
-          href: segment.href,
-          current: segment.value === current,
-        }))}
-      />
+      <nav aria-label={t.filterLabel}>
+        <ul className="flex gap-md lg:flex-col lg:gap-0">
+          {segments.map((segment) => {
+            const atual = segment.value === current;
+            return (
+              <li key={segment.value}>
+                <Link
+                  href={segment.href}
+                  aria-current={atual ? "page" : undefined}
+                  className={cn(
+                    "inline-flex min-h-11 items-center font-body text-label tracking-[var(--letter-spacing-label)] transition-colors",
+                    atual
+                      ? "font-semibold text-text-primary"
+                      : "font-medium text-text-secondary hover:text-text-primary",
+                  )}
+                >
+                  {segment.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
     </div>
   );
 }

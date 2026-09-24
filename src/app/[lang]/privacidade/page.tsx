@@ -2,14 +2,17 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
-import { PaginaLegal, Acordeao } from "@/components/legal/pagina-legal";
+import { PaginaLegal, SubtituloLegal } from "@/components/legal/pagina-legal";
+import { LinhaTexto, ListaTexto } from "@/components/ui/linha-texto";
+import { SecaoLeitura } from "@/components/ui/secao-leitura";
 import { hasLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/i18n/metadata";
 
-// RASCUNHO — PRD-backend.md §8 e D-B3.
-// Descreve com rigor o que o sistema faz hoje (os campos do formulário, para onde
-// vão, quanto tempo ficam).
+// Casca e secções do grupo "Ecrã · Páginas legais" de "v2 · A vez" do .pen (ver
+// components/legal/pagina-legal.tsx). RASCUNHO, PRD-backend.md §8 e D-B3.
+// Descreve com rigor o que o sistema faz hoje (formulário de contacto, Área de Cliente,
+// login Google, Cal.com, cookies: que dados, para onde vão, quanto tempo ficam).
 
 export async function generateMetadata({
   params,
@@ -31,45 +34,62 @@ export default async function Privacidade({ params }: PageProps<"/[lang]/privaci
       <Nav />
       <PaginaLegal
         titulo={t.title}
-        atualizado={`${institucional.legal.updatedPrefix} ${t.updatedAt}.`}
+        atualizadoRotulo={institucional.legal.updatedPrefix}
+        atualizadoData={t.updatedAt}
         intro={t.intro}
       >
-        <Acordeao titulo={t.controller.title}>
+        <SecaoLeitura titulo={t.controller.title}>
           <p>{t.controller.p1}</p>
-        </Acordeao>
+        </SecaoLeitura>
 
-        <Acordeao titulo={t.data.title}>
+        <SecaoLeitura titulo={t.data.title}>
           <p>{t.data.intro}</p>
-          <ul>
-            {t.data.items.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
+          {t.data.groups.map((grupo) => (
+            <div key={grupo.title} className="flex flex-col gap-xs">
+              <SubtituloLegal>{grupo.title}</SubtituloLegal>
+              <ListaTexto>
+                {grupo.items.map((item) => (
+                  <LinhaTexto key={item} compacta>
+                    {item}
+                  </LinhaTexto>
+                ))}
+              </ListaTexto>
+            </div>
+          ))}
+          <div className="flex flex-col gap-xs">
+            <SubtituloLegal>{t.data.google.title}</SubtituloLegal>
+            <p>{t.data.google.text}</p>
+          </div>
           <p>{t.data.outro}</p>
-        </Acordeao>
+        </SecaoLeitura>
 
-        <Acordeao titulo={t.purpose.title}>
+        <SecaoLeitura titulo={t.cookies.title}>
+          <p>{t.cookies.p1}</p>
+        </SecaoLeitura>
+
+        <SecaoLeitura titulo={t.purpose.title}>
           <p>{t.purpose.p1}</p>
           <p>
             <strong>{t.purpose.p2Bold}</strong>
             {t.purpose.p2Rest}
           </p>
-        </Acordeao>
+        </SecaoLeitura>
 
-        <Acordeao titulo={t.basis.title}>
+        <SecaoLeitura titulo={t.basis.title}>
           <p>{t.basis.text}</p>
-        </Acordeao>
+        </SecaoLeitura>
 
-        <Acordeao titulo={t.retention.title}>
+        <SecaoLeitura titulo={t.retention.title}>
           <p>{t.retention.p1}</p>
           <p>{t.retention.p2}</p>
-        </Acordeao>
+          <p>{t.retention.p3}</p>
+        </SecaoLeitura>
 
-        <Acordeao titulo={t.access.title}>
+        <SecaoLeitura titulo={t.access.title}>
           <p>{t.access.p1}</p>
-        </Acordeao>
+        </SecaoLeitura>
 
-        <Acordeao titulo={t.rights.title}>
+        <SecaoLeitura titulo={t.rights.title}>
           <p>{t.rights.p1}</p>
           <p>
             {t.rights.p2Before}
@@ -77,17 +97,16 @@ export default async function Privacidade({ params }: PageProps<"/[lang]/privaci
               href={t.rights.authorityUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-text-link underline underline-offset-4"
             >
               {t.rights.authorityLinkLabel}
             </a>
             {t.rights.p2After}
           </p>
-        </Acordeao>
+        </SecaoLeitura>
 
-        <Acordeao titulo={t.security.title}>
+        <SecaoLeitura titulo={t.security.title}>
           <p>{t.security.text}</p>
-        </Acordeao>
+        </SecaoLeitura>
       </PaginaLegal>
       <Footer />
     </>

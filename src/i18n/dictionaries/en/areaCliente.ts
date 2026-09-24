@@ -13,6 +13,7 @@ export const areaCliente: typeof Source = {
     projetoDetalheTitle: "Project details",
     confirmarTitle: "Confirm email",
     definicoesTitle: "Settings",
+    reporTitle: "New password",
   },
   topbar: {
     area: "Client Area",
@@ -85,6 +86,7 @@ export const areaCliente: typeof Source = {
     submitting: "Signing in...",
     errUnconfirmed: "Your email still needs to be confirmed. We have just resent the link.",
     errCredentials: "The email or password is not correct.",
+    errPasswordRequired: "Enter your password.",
     errLogin: "We could not sign you in right now. Please try again.",
     createdTitle: "Your email still needs to be confirmed.",
     createdBody:
@@ -99,9 +101,28 @@ export const areaCliente: typeof Source = {
     register: "Create account",
     registering: "Creating account...",
     errRegister: "We could not create the account right now. Please try again.",
+    errEmailTaken: "An account with this email already exists.",
     registerNote: "After you create the account we will email you to confirm the address.",
-    contactPrompt: "Not a client yet and want to talk to us?",
-    contactCta: "Contact us",
+    forgotPassword: "Forgot your password?",
+    backToLogin: "Back to sign in",
+    resetHeading: "Forgot your password?",
+    resetIntro: "Enter your account email. We will send you a link to set a new one.",
+    resetSubmit: "Send link",
+    resetSubmitting: "Sending...",
+    resetSentTitle: "Check your email.",
+    resetSentBody:
+      "If there is an account with this address, we have sent a link to set a new password. Check your spam folder too.",
+    resetResend: "Send again",
+    resetErr: "Please try again in a moment. If it keeps happening, contact us.",
+    passwordResetTitle: "Password changed.",
+    passwordResetBody: "Sign in with your new password.",
+  },
+  repor: {
+    heading: "New password",
+    intro: "Choose the new password for your account.",
+    invalidTitle: "This link is no longer valid",
+    invalidBody: "It has already been used or it has expired. Request another one to set a new password.",
+    requestNew: "Request a new link",
   },
   confirmar: {
     okTitle: "Email confirmed",
@@ -138,9 +159,7 @@ export const areaCliente: typeof Source = {
     noResultsHint: "Try different terms or clear the filters.",
   },
   novoPedido: {
-    heading: "What do you need?",
-    intro:
-      "Describe it in your own words. You don't need to know technical terms, and if you would rather talk, you can do that too.",
+    heading: "New request",
     breadcrumbCurrent: "New request",
     form: {
       typeQuestion: "What kind of request is it?",
@@ -179,6 +198,9 @@ export const areaCliente: typeof Source = {
       attachments:
         "Attachments are coming in a later phase. If it helps, describe what a screenshot would show.",
       errGeneral: "We could not send the request right now. Please try again.",
+      errTitleRequired: "Enter a title for the request.",
+      errDescriptionRequired: "Describe what you need.",
+      errProjectInvalid: "Invalid project.",
       submit: "Send request",
       submitting: "Sending...",
       cancel: "Cancel",
@@ -186,9 +208,7 @@ export const areaCliente: typeof Source = {
     },
   },
   novoProjeto: {
-    heading: "Tell us about the project you want.",
-    intro:
-      "Describe it in your own words. You don't need to know technical terms, and if you would rather talk, you can do that too.",
+    heading: "New project",
     breadcrumbCurrent: "New project",
     form: {
       urgencias: {
@@ -208,6 +228,8 @@ export const areaCliente: typeof Source = {
       attachments:
         "Attachments are coming in a later phase. If it helps, describe what a screenshot would show.",
       errGeneral: "We could not send the request right now. Please try again.",
+      errTitleRequired: "Enter a title for the request.",
+      errDescriptionRequired: "Describe what you need.",
       submit: "Send request",
       submitting: "Sending...",
       cancel: "Cancel",
@@ -234,6 +256,11 @@ export const areaCliente: typeof Source = {
       errSend: "We could not send the message right now. Please try again.",
       submit: "Reply",
       submitting: "Sending...",
+      // Conversa ainda vazia: não há nada a que responder.
+      startConversation: "Start a conversation",
+      placeholderFirst: "Write your message.",
+      ariaLabelFirst: "Write your message",
+      cancel: "Cancel",
     },
   },
   definicoes: {
@@ -252,6 +279,7 @@ export const areaCliente: typeof Source = {
       companyPlaceholder: "Company name",
       nif: "Tax number",
       nifPlaceholder: "123456789",
+      optional: "Optional",
       errGeneral: "We could not save the changes right now. Please try again.",
       submit: "Save changes",
       submitting: "Saving...",
@@ -267,12 +295,36 @@ export const areaCliente: typeof Source = {
       showPassword: "Show password",
       hidePassword: "Hide password",
       errOldPassword: "The current password is not correct.",
+      errOldPasswordRequired: "Enter your current password.",
       errNewPassword: "The password needs at least eight characters.",
       errPasswordMismatch: "The passwords do not match.",
       errGeneral: "We could not change the password right now. Please try again.",
       submit: "Change password",
       submitting: "Changing...",
       success: "Password changed.",
+      googleTitle: "Your account is linked to Google.",
+      googleBody:
+        "You sign in with Google. If you like, also set a password to sign in with your email.",
+      googleSubmit: "Set password",
+      googleSubmitting: "Saving...",
+      googleSuccessTitle: "Password set.",
+      googleSuccessBody: "You can now sign in with your email and this password.",
+      googleErr: "We could not set the password right now. Please try again.",
+    },
+    apagar: {
+      title: "Delete account",
+      body: "We ask the team to delete your account and your data. Your projects and requests will no longer appear here.",
+      cta: "Delete account",
+      modalTitle: "Delete your account?",
+      modalBody:
+        "We send the request to the team. We delete the account and your data, and your projects and requests will no longer appear here. This cannot be undone.",
+      confirm: "Request deletion",
+      sending: "Sending...",
+      cancel: "Cancel",
+      close: "Close",
+      sentTitle: "Request sent.",
+      sentBody: "We will reply by email.",
+      err: "Please try again in a moment. If it keeps happening, contact us.",
     },
   },
   projetoDetalhe: {

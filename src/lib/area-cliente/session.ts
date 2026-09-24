@@ -1,7 +1,9 @@
+import { cache } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { localizePath, type Locale } from "@/i18n/config";
 import { AC_COOKIE_NAME, BackendError, backendFetch } from "@/lib/area-cliente/backend";
+import type { Perfil } from "@/lib/area-cliente/types";
 
 // Um mês. Os tokens do DRF não expiram sozinhos (PRD-servicos.md §8) — quem termina a
 // sessão fá-lo por "Terminar sessão", que apaga o token no Django e o cookie aqui.
@@ -22,19 +24,33 @@ export async function getSessionToken(): Promise<string | null> {
   return store.get(AC_COOKIE_NAME)?.value ?? null;
 }
 
-export type MeInfo = { id: number; name: string; email: string };
+export type MeInfo = {
+  id: number;
+  name: string;
+  email: string;
+  /** `false` numa conta criada com Google: define a primeira palavra-passe sem a atual. */
+  has_usable_password: boolean;
+};
 
 /**
- * Usar no topo de cada página Server Component da Área de Cliente que exige sessão.
- * Redireciona para `/<lang>/area-cliente/entrar` sem sessão válida — nunca deixa a página
- * renderizar dados de outra pessoa nem um ecrã vazio a fingir que está tudo bem.
+ * Usar no layout `(conta)` e no topo de cada página Server Component da Área de Cliente
+ * que exige sessão. Redireciona para `/<lang>/area-cliente/entrar` sem sessão válida:
+ * nunca deixa a página renderizar dados de outra pessoa nem um ecrã vazio a fingir que
+ * está tudo bem.
+ *
+ * `cache` (React): no mesmo pedido, o layout e a página partilham uma única chamada a
+ * /api/me/. Numa navegação dentro da Área de Cliente o layout não volta a renderizar e só
+ * a página a pede.
  */
-export async function requireSession(lang: Locale): Promise<{ token: string; me: MeInfo }> {
+export const requireSession = cache(async function requireSession(
+  lang: Locale,
+): Promise<{ token: string; me: Perfil }> {
   const token = await getSessionToken();
   if (!token) redirect(localizePath(lang, "/area-cliente/entrar"));
 
   try {
-    const me = await backendFetch<MeInfo>("/api/me/", { token });
+    // /api/me/ devolve o perfil completo (Definições usa-o sem voltar a pedir).
+    const me = await backendFetch<Perfil>("/api/me/", { token });
     return { token, me };
   } catch (erro) {
     if (erro instanceof BackendError && (erro.status === 401 || erro.status === 403)) {
@@ -42,4 +58,4 @@ export async function requireSession(lang: Locale): Promise<{ token: string; me:
     }
     throw erro;
   }
-}
+});

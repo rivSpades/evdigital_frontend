@@ -13,6 +13,6 @@ export const projetos = {
   stackUsed: "Stack usada",
   visitTitle: "Ver o projeto",
   visitText: "Aplicação em produção, aberta a quem quiser experimentar.",
-  ctaText: "Trinta minutos, sem compromisso, para perceber o que faz sentido construir.",
+  ctaText: "Sem compromisso, para perceber o que faz sentido construir.",
   ctaLabel: "Fale connosco",
 };

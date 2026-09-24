@@ -1,23 +1,33 @@
 import type { Metadata } from "next";
-import Link from "@/i18n/locale-link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, CircleDot, ExternalLink } from "lucide-react";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
-import { Badge } from "@/components/ui/badge";
-import { ButtonLink } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { BackLink } from "@/components/area-cliente/back-link";
+import { EstadoTexto } from "@/components/ui/estado-texto";
+import { Facto, Factos } from "@/components/ui/facto";
+import { FechoPagina } from "@/components/ui/fecho-pagina";
+import { LigacaoExterna } from "@/components/ui/ligacao-externa";
 import { getAllProjects, getProjectBySlug } from "@/lib/content";
 import { hostLabel } from "@/lib/url";
 import { locales, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/i18n/metadata";
 
-// Ficha de projeto migrada dos frames ArroA (wide, 1440) e oQ6zT (narrow, 390) do
-// design/design-system.pen. Rota dinâmica: um ficheiro por projeto em content/projects/**.
+// Ficha de projeto migrada do grupo "Ecrã · Projetos" de "v2 · A vez" (flhgP) do
+// design/design-system.pen: "Projeto · EvPlanner (ficha)" (BWPLE desktop 1280, P2PlNZ
+// mobile 375). Rota dinâmica: um ficheiro por projeto em content/<lang>/projects/**.
+// - Secção · topo: ds/navigation/voltar ("Projetos") como primeira linha a seguir à barra
+//   de topo, alinhado à margem; depois estado (só a palavra), título $font-size-display
+//   ($font-size-display-narrow em mobile) e descrição (body-lg, 720, em lg). Padding
+//   [$space-xl, 0, $space-4xl, 0] e gap $space-lg em lg; [$space-lg, 0, $space-2xl, 0] e
+//   gap $space-md abaixo.
+// - Secção · corpo: em lg, Margem · ficha (colunas 1 a 3: "Stack usada" em
+//   ds/display/facto e "Ver o projeto") e a coluna principal "O que é" (4 a 12, parágrafos
+//   body-lg de 760). Abaixo: "O que é" primeiro, a ficha depois, gap $space-2xl.
+// - Secção · fecho: ds/layout/fecho-pagina sem título, na coluna principal.
 //
 // Os testemunhos existem no schema mas estão vazios, por isso não há secção de
-// testemunhos nesta página (decisão do PRD D7 — nada de "em breve").
+// testemunhos nesta página (decisão do PRD D7: nada de "em breve").
 
 export function generateStaticParams() {
   return locales.flatMap((lang) =>
@@ -39,6 +49,9 @@ export async function generateMetadata({
   };
 }
 
+// Rótulo de secção da margem: caption $text-tertiary.
+const rotuloMargem = "font-body text-caption text-text-tertiary";
+
 export default async function ProjetoPage({ params }: PageProps<"/[lang]/projetos/[slug]">) {
   const { slug, lang } = await params;
   const { projetos: t } = await getDictionary(lang as Locale);
@@ -58,119 +71,83 @@ export default async function ProjetoPage({ params }: PageProps<"/[lang]/projeto
     <>
       <Nav currentPath="/projetos" />
 
-      <main className="flex-1 px-lg pt-lg pb-3xl md:px-xl lg:px-2xl lg:pt-xl lg:pb-4xl">
-        <div className="mx-auto flex max-w-[var(--grid-max-width)] flex-col gap-2xl lg:gap-3xl">
-          <div className="flex flex-col gap-md lg:gap-lg">
-            <Link
-              href="/projetos"
-              className="inline-flex h-11 items-center gap-xs self-start px-2xs font-body text-label font-medium text-text-secondary transition-colors hover:text-text-primary"
-            >
-              <ArrowLeft size={18} strokeWidth={2} aria-hidden />
-              {t.backToList}
-            </Link>
+      <main className="flex-1 px-lg md:px-xl lg:px-2xl">
+        <div className="mx-auto w-full max-w-[var(--grid-max-width)]">
+          <div className="flex flex-col gap-md pt-lg pb-2xl lg:gap-lg lg:pt-xl lg:pb-4xl">
+            <BackLink href="/projetos" label={t.backToList} />
 
-            <div className="flex flex-col gap-md">
-              {url ? (
-                <Badge
-                  tone="accent"
-                  className="self-start"
-                  icon={<CircleDot size={16} strokeWidth={2} aria-hidden />}
-                >
-                  {t.statusLive}
-                </Badge>
-              ) : null}
-
-              <h1 className="font-heading text-title/[var(--line-height-headline)] font-bold tracking-[var(--letter-spacing-headline)] text-text-primary lg:text-display-sm lg:tracking-[var(--letter-spacing-display)]">
+            <div className="flex flex-col gap-sm lg:gap-md">
+              {url ? <EstadoTexto tom="primario">{t.statusLive}</EstadoTexto> : null}
+              <h1 className="font-heading text-[length:var(--font-size-display-narrow)] leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-display)] text-text-primary lg:text-display">
                 {title}
               </h1>
-
-              <p className="font-body text-body-lg text-text-secondary lg:max-w-[720px]">
+              <p className="font-body text-body text-text-secondary lg:max-w-[720px] lg:text-body-lg">
                 {description}
               </p>
             </div>
           </div>
 
-          <div className="flex flex-col gap-2xl lg:flex-row lg:gap-3xl">
-            <section aria-labelledby="o-que-e" className="flex flex-col gap-md lg:flex-1">
+          <div className="flex flex-col gap-2xl pb-xl lg:grid lg:grid-cols-12 lg:gap-x-lg lg:gap-y-0 lg:pb-3xl">
+            <section
+              aria-labelledby="o-que-e"
+              className="flex flex-col gap-md lg:col-span-9 lg:col-start-4 lg:row-start-1"
+            >
               <h2
                 id="o-que-e"
-                className="font-heading text-title-sm font-semibold tracking-[var(--letter-spacing-title)] text-text-primary"
+                className="font-heading text-title leading-[var(--line-height-title)] font-semibold tracking-[var(--letter-spacing-title)] text-text-primary lg:text-title-sm"
               >
                 {t.about}
               </h2>
               {paragrafos.map((paragrafo) => (
-                <p key={paragrafo} className="font-body text-body text-text-secondary">
+                <p
+                  key={paragrafo}
+                  className="font-body text-body text-text-secondary lg:max-w-[760px] lg:text-body-lg"
+                >
                   {paragrafo}
                 </p>
               ))}
             </section>
 
-            <aside className="flex flex-col gap-md lg:w-[380px] lg:shrink-0 lg:gap-lg">
-              <Card className="flex flex-col gap-md p-lg">
-                <h2 className="font-heading text-body-lg leading-[var(--line-height-title)] font-semibold tracking-[var(--letter-spacing-title)] text-text-primary">
-                  {t.stackUsed}
-                </h2>
-
-                {stackGroups.length > 0 ? (
-                  stackGroups.map((grupo) => (
-                    <div key={grupo.label} className="flex flex-col gap-xs">
-                      <p className="font-body text-caption text-text-tertiary">
-                        {grupo.label}
-                      </p>
-                      <ul className="flex flex-wrap items-center gap-xs">
-                        {grupo.items.map((item) => (
-                          <li key={item}>
-                            <Badge tone="neutral">{item}</Badge>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))
-                ) : (
-                  <ul className="flex flex-wrap items-center gap-xs">
-                    {stack.map((item) => (
-                      <li key={item}>
-                        <Badge tone="neutral">{item}</Badge>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </Card>
+            <aside className="flex flex-col gap-xl lg:col-span-3 lg:col-start-1 lg:row-start-1">
+              <div className="flex flex-col gap-sm">
+                <h2 className={rotuloMargem}>{t.stackUsed}</h2>
+                <Factos>
+                  {stackGroups.length > 0
+                    ? stackGroups.map((grupo) => (
+                        <Facto
+                          key={grupo.label}
+                          termo={grupo.label}
+                          valor={grupo.items.join(", ")}
+                          valorTexto
+                        />
+                      ))
+                    : stack.map((item) => <Facto key={item} valor={item} valorTexto />)}
+                </Factos>
+              </div>
 
               {url ? (
-                <Card className="flex flex-col gap-sm p-lg">
-                  <h2 className="font-heading text-body-lg leading-[var(--line-height-title)] font-semibold tracking-[var(--letter-spacing-title)] text-text-primary">
-                    {t.visitTitle}
-                  </h2>
-                  <p className="font-body text-caption text-text-secondary">
-                    {t.visitText}
-                  </p>
-                  <ButtonLink
-                    href={url}
-                    variant="secondary"
-                    fullWidth
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                <div className="flex flex-col gap-2xs">
+                  <h2 className={rotuloMargem}>{t.visitTitle}</h2>
+                  <p className="font-body text-body text-text-secondary">{t.visitText}</p>
+                  <LigacaoExterna href={url} tom="link">
                     {hostLabel(url)}
-                    <ExternalLink size={20} strokeWidth={2} aria-hidden />
-                  </ButtonLink>
-                </Card>
+                  </LigacaoExterna>
+                </div>
               ) : null}
             </aside>
           </div>
 
-          <Card className="flex flex-col gap-md p-lg lg:flex-row lg:items-center lg:justify-between lg:gap-2xl lg:p-2xl">
-            <div className="flex flex-col gap-md lg:gap-xs">
-              <p className="font-body text-body text-text-secondary">
-                {t.ctaText}
-              </p>
-            </div>
-
-            <ButtonLink href="/contacto" size="lg" className="w-full lg:w-auto">
-              {t.ctaLabel}
-            </ButtonLink>
-          </Card>
+          <section
+            aria-label={t.ctaLabel}
+            className="pb-2xl lg:grid lg:grid-cols-12 lg:gap-x-lg lg:pb-3xl"
+          >
+            <FechoPagina
+              texto={t.ctaText}
+              acao={t.ctaLabel}
+              href="/contacto"
+              className="lg:col-span-9 lg:col-start-4"
+            />
+          </section>
         </div>
       </main>
 

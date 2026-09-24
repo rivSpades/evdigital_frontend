@@ -277,5 +277,15 @@
   --avatar-border: #2A2A27;
   --avatar-fg: #C4C4BF;
   --avatar-status-size: 18px;
-  --token-version: "1.0.0";
+  --motion-duration-reveal: 480ms;
+  --motion-duration-fast: 240ms;
+  --motion-distance-desktop: 16px;
+  --motion-distance-mobile: 12px;
+  --motion-stagger-step: 70ms;
+  --motion-stagger-max-items: 4;
+  --motion-stagger-max-items-mobile: 3;
+  --motion-ruler-step: 120ms;
+  --motion-easing-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-view-threshold: 0.2;
+  --token-version: "1.1.0";
 }

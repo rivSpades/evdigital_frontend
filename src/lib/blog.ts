@@ -1,6 +1,6 @@
 import type { getAllBlogPosts } from "@/lib/content";
 import type { BlogPostFrontmatter } from "@/lib/content";
-import type { Locale } from "@/i18n/config";
+import { intlLocale, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 
 // Utilitários partilhados pelas duas páginas de blog (listagem e artigo).
@@ -9,10 +9,8 @@ import type { Dictionary } from "@/i18n/dictionaries";
 export type BlogPost = ReturnType<typeof getAllBlogPosts>[number];
 export type BlogLevel = BlogPostFrontmatter["level"];
 
-const DATE_LOCALE: Record<Locale, string> = { pt: "pt-PT", en: "en-GB", pl: "pl-PL" };
-
 export function formatPostDate(lang: Locale, date: Date) {
-  return new Intl.DateTimeFormat(DATE_LOCALE[lang], {
+  return new Intl.DateTimeFormat(intlLocale[lang], {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -25,7 +23,7 @@ export function fillCount(template: string, n: number) {
 
 /** "1 artigo" / "N artigos", com as formas plurais do idioma (polaco tem "few"). */
 export function articleCount(lang: Locale, blog: Dictionary["blog"], n: number) {
-  const category = new Intl.PluralRules(DATE_LOCALE[lang]).select(n);
+  const category = new Intl.PluralRules(intlLocale[lang]).select(n);
   if (category === "one") return blog.countOne;
   return fillCount(category === "few" ? blog.countFew : blog.countMany, n);
 }

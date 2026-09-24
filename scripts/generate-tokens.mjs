@@ -152,6 +152,19 @@ for (const [k, v] of componentTokens) {
   }
   css += `  --${k}: ${val};\n`;
 }
+// Movimento (scroll reveal da Início, frame "Design System · Movimento" do .pen): durações
+// em ms, distâncias em px, contagens e limiar sem unidade, curva em string.
+const motionUnits = {
+  "motion-duration-reveal": "ms",
+  "motion-duration-fast": "ms",
+  "motion-stagger-step": "ms",
+  "motion-ruler-step": "ms",
+  "motion-distance-desktop": "px",
+  "motion-distance-mobile": "px",
+};
+for (const [k, v] of Object.entries(resolved).filter(([k]) => k.startsWith("motion-"))) {
+  css += `  --${k}: ${v.value}${motionUnits[k] ?? ""};\n`;
+}
 css += `  --token-version: "${resolved["token-version"].value}";\n`;
 css += `}\n`;
 

@@ -10,9 +10,14 @@ import { Problema } from "@/components/home/problema";
 import { ComoTrabalhamos } from "@/components/home/como-trabalhamos";
 import { Faq } from "@/components/home/faq";
 import { CtaFinal } from "@/components/home/cta-final";
+import { RevealScope } from "@/components/ui/reveal";
 
-// Home migrada dos frames wzYyU (wide, 1440) e EZ3bZ (narrow, 390) do
-// design/design-system.pen. Ordem das seis secções tal como no .pen.
+// Início migrada do grupo "Ecrã · Início" de "v2 · A vez" (flhgP) do
+// design/design-system.pen: frames "Início · desktop 1280" (BuYwz) e "Início · mobile 375"
+// (MGl6H). Uma só coluna com as margens de layout ($space-layout-margin-narrow/mid/wide)
+// e as seis secções pela ordem do .pen. O <main> é o RevealScope do scroll reveal
+// (storyboard "Movimento · Storyboard da Início", Ix1bn); cabeçalho e rodapé ficam fora
+// e não animam (R16).
 
 export async function generateMetadata({
   params,
@@ -34,20 +39,16 @@ export default function Home() {
     <>
       <Nav currentPath="/" />
 
-      <main className="flex-1">
-        <Hero />
-
-        <div className="px-lg py-3xl md:px-xl lg:px-2xl lg:py-4xl">
-          <div className="mx-auto flex max-w-[var(--grid-max-width)] flex-col gap-3xl lg:gap-4xl">
-            <DuasPortas />
-            <Problema />
-            <ComoTrabalhamos />
-            <Faq />
-          </div>
+      <RevealScope className="flex-1 px-lg md:px-xl lg:px-2xl">
+        <div className="mx-auto w-full max-w-[var(--grid-max-width)]">
+          <Hero />
+          <DuasPortas />
+          <Problema />
+          <ComoTrabalhamos />
+          <Faq />
+          <CtaFinal />
         </div>
-
-        <CtaFinal />
-      </main>
+      </RevealScope>
 
       <Footer />
     </>

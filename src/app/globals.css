@@ -5,10 +5,150 @@ body {
   font-feature-settings: "cv11", "ss01";
 }
 
+/* Cursor de mão em tudo o que é clicável. O Tailwind 4 deixou de o pôr nos botões, por
+   isso vive aqui, numa só regra, em vez de repetido (e esquecido) componente a componente.
+   Em @layer base para qualquer utilitário (cursor-not-allowed, cursor-default, etc.) o
+   sobrepor. Desactivado = cursor-not-allowed. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="tab"]:not([aria-disabled="true"]),
+  [role="menuitem"]:not([aria-disabled="true"]),
+  [role="option"]:not([aria-disabled="true"]),
+  a[href],
+  summary,
+  select:not(:disabled),
+  label[for],
+  input:is([type="checkbox"], [type="radio"], [type="submit"], [type="button"], [type="file"]):not(:disabled) {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [role="button"][aria-disabled="true"],
+  [role="tab"][aria-disabled="true"],
+  [role="menuitem"][aria-disabled="true"],
+  [role="option"][aria-disabled="true"],
+  select:disabled,
+  input:disabled {
+    cursor: not-allowed;
+  }
+}
+
 /* Foco visível em todo o site — mandato de acessibilidade (PRD §5) */
 :focus-visible {
   outline: var(--border-width-focus) solid var(--color-border-focus);
   outline-offset: var(--focus-ring-offset);
+}
+
+/* ------------------------------------------------------------------------------------
+ * Scroll reveal da Início (frames "Design System · Movimento" e "Movimento · Storyboard
+ * da Início" do .pen). Só opacity e transform: translateY (R01); nada horizontal (R03).
+ * Durações, distâncias, stagger, curva e limiar vêm de --motion-* (tokens.css).
+ * O estado escondido só existe dentro de um <main data-reveal-on> (posto pelo script de
+ * arranque do RevealScope, ui/reveal.tsx) e enquanto o grupo não tem data-revealed.
+ * ------------------------------------------------------------------------------------ */
+
+/* Índice de stagger por elemento: não herda, para um item dentro de outro não copiar o
+   atraso do pai. Nas secções: [--reveal-i:N]. */
+@property --reveal-i {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+
+:root {
+  /* < 768 ($bp-mid): 12 px e no máximo 3 itens com atraso próprio (R04, R13). */
+  --motion-distance: var(--motion-distance-mobile);
+  --reveal-max: calc(var(--motion-stagger-max-items-mobile) - 1);
+
+  @variant md {
+    --motion-distance: var(--motion-distance-desktop);
+    --reveal-max: calc(var(--motion-stagger-max-items) - 1);
+  }
+}
+
+[data-reveal] {
+  transition-property: opacity, transform;
+  transition-duration: var(--motion-duration-reveal);
+  transition-timing-function: var(--motion-easing-out);
+  transition-delay: calc(min(var(--reveal-i), var(--reveal-max)) * var(--motion-stagger-step));
+}
+/* Contorno do bloco da vez e marcas da régua: duração curta. */
+[data-reveal="outline"],
+[data-reveal="mark"] {
+  transition-duration: var(--motion-duration-fast);
+}
+
+[data-reveal-on] [data-reveal-group]:not([data-revealed]) [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, var(--motion-distance), 0);
+}
+/* fade (linha da régua) e outline (contorno do bloco da vez): só opacidade. */
+[data-reveal-on] [data-reveal-group]:not([data-revealed]) [data-reveal="fade"],
+[data-reveal-on] [data-reveal-group]:not([data-revealed]) [data-reveal="outline"] {
+  transform: none;
+}
+/* Marca da régua: metade da distância. */
+[data-reveal-on] [data-reveal-group]:not([data-revealed]) [data-reveal="mark"] {
+  transform: translate3d(0, calc(var(--motion-distance-desktop) / 2), 0);
+}
+
+/* Régua de "Como trabalhamos", o único gesto próprio. Em mobile cada passo é um grupo e
+   a marca entra com o passo, o texto meio tempo de régua depois. Em desktop os quatro
+   passos estão na mesma linha: marca k a 2 x stagger + meio tempo + k x $motion-ruler-step
+   (200, 320, 440, 560 ms) e o texto meio tempo depois (260 ... 620 ms). */
+[data-ruler-step] > [data-reveal="mark"] {
+  transition-delay: 0ms;
+
+  @variant lg {
+    transition-delay: calc(
+      2 * var(--motion-stagger-step) + var(--motion-ruler-step) / 2 + var(--ruler-k, 0) *
+        var(--motion-ruler-step)
+    );
+  }
+}
+[data-ruler-step] > [data-reveal]:not([data-reveal="mark"]) {
+  transition-delay: calc(var(--motion-ruler-step) / 2);
+
+  @variant lg {
+    transition-delay: calc(
+      2 * var(--motion-stagger-step) + var(--motion-ruler-step) + var(--ruler-k, 0) *
+        var(--motion-ruler-step)
+    );
+  }
+}
+
+/* O que já passou (âncora, recarregar a meio, scroll que saltou o grupo): sem animação. */
+[data-reveal-instant] [data-reveal] {
+  transition: none;
+}
+/* will-change só durante a entrada (R17). */
+[data-revealing] [data-reveal] {
+  will-change: opacity, transform;
+}
+
+/* Hero, acima da dobra: entra no primeiro paint por CSS, sem esperar pelo JavaScript
+   nem por scroll (R05). O título não usa esta classe (LCP): só o subtítulo e a acção,
+   com um fade curto. */
+.reveal-load {
+  animation: reveal-fade var(--motion-duration-fast) var(--motion-easing-out) both;
+  animation-delay: calc(min(var(--reveal-i), var(--reveal-max)) * var(--motion-stagger-step));
+}
+@keyframes reveal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Reduzir movimento: tudo visível no primeiro paint, sem transição nem animação (R06). */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  .reveal-load {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

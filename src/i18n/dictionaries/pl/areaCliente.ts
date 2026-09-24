@@ -14,6 +14,7 @@ export const areaCliente: typeof Source = {
     projetoDetalheTitle: "Szczegóły projektu",
     confirmarTitle: "Potwierdzenie adresu e-mail",
     definicoesTitle: "Ustawienia",
+    reporTitle: "Nowe hasło",
   },
   topbar: {
     area: "Strefa Klienta",
@@ -88,6 +89,7 @@ export const areaCliente: typeof Source = {
     errUnconfirmed:
       "Adres e-mail nie został jeszcze potwierdzony. Właśnie wysłaliśmy link ponownie.",
     errCredentials: "Adres e-mail lub hasło są nieprawidłowe.",
+    errPasswordRequired: "Proszę wpisać hasło.",
     errLogin: "Nie udało się teraz zalogować. Proszę spróbować ponownie.",
     createdTitle: "Należy jeszcze potwierdzić adres e-mail.",
     createdBody:
@@ -102,9 +104,29 @@ export const areaCliente: typeof Source = {
     register: "Załóż konto",
     registering: "Zakładanie konta...",
     errRegister: "Nie udało się teraz założyć konta. Proszę spróbować ponownie.",
+    errEmailTaken: "Konto z tym adresem e-mail już istnieje.",
     registerNote: "Po założeniu konta wyślemy wiadomość e-mail w celu potwierdzenia adresu.",
-    contactPrompt: "Nie są Państwo jeszcze naszym klientem i chcą porozmawiać?",
-    contactCta: "Skontaktuj się",
+    forgotPassword: "Nie pamiętają Państwo hasła?",
+    backToLogin: "Wróć do logowania",
+    resetHeading: "Nie pamiętają Państwo hasła?",
+    resetIntro: "Proszę podać adres e-mail konta. Wyślemy link do ustawienia nowego hasła.",
+    resetSubmit: "Wyślij link",
+    resetSubmitting: "Wysyłanie...",
+    resetSentTitle: "Proszę sprawdzić skrzynkę e-mail.",
+    resetSentBody:
+      "Jeśli istnieje konto z tym adresem, wysłaliśmy link do ustawienia nowego hasła. Proszę sprawdzić także folder spam.",
+    resetResend: "Wyślij ponownie",
+    resetErr: "Proszę spróbować ponownie za chwilę. Jeśli problem się powtórzy, prosimy o kontakt.",
+    passwordResetTitle: "Hasło zmienione.",
+    passwordResetBody: "Proszę zalogować się nowym hasłem.",
+  },
+  repor: {
+    heading: "Nowe hasło",
+    intro: "Proszę wybrać nowe hasło do konta.",
+    invalidTitle: "Ten link jest już nieważny",
+    invalidBody:
+      "Został już użyty albo wygasł. Proszę poprosić o nowy, aby ustawić nowe hasło.",
+    requestNew: "Poproś o nowy link",
   },
   confirmar: {
     okTitle: "Adres e-mail potwierdzony",
@@ -141,9 +163,7 @@ export const areaCliente: typeof Source = {
     noResultsHint: "Spróbuj innych fraz lub wyczyść filtry.",
   },
   novoPedido: {
-    heading: "Czego potrzebują Państwo?",
-    intro:
-      "Proszę opisać to własnymi słowami. Nie trzeba znać terminów technicznych, a jeśli wolą Państwo porozmawiać, to też jest możliwe.",
+    heading: "Nowe zgłoszenie",
     breadcrumbCurrent: "Nowe zgłoszenie",
     form: {
       typeQuestion: "Jakiego rodzaju jest to zgłoszenie?",
@@ -182,6 +202,9 @@ export const areaCliente: typeof Source = {
       attachments:
         "Załączniki pojawią się w następnym etapie. Jeśli to pomoże, proszę opisać, co byłoby widać na zrzucie ekranu.",
       errGeneral: "Nie udało się teraz wysłać zgłoszenia. Proszę spróbować ponownie.",
+      errTitleRequired: "Proszę wpisać tytuł zgłoszenia.",
+      errDescriptionRequired: "Proszę opisać, czego Państwo potrzebują.",
+      errProjectInvalid: "Nieprawidłowy projekt.",
       submit: "Wyślij zgłoszenie",
       submitting: "Wysyłanie...",
       cancel: "Anuluj",
@@ -189,9 +212,7 @@ export const areaCliente: typeof Source = {
     },
   },
   novoProjeto: {
-    heading: "Proszę opowiedzieć o projekcie, który Państwo chcą.",
-    intro:
-      "Proszę opisać to własnymi słowami. Nie trzeba znać terminów technicznych, a jeśli wolą Państwo porozmawiać, to też jest możliwe.",
+    heading: "Nowy projekt",
     breadcrumbCurrent: "Nowy projekt",
     form: {
       urgencias: {
@@ -211,6 +232,8 @@ export const areaCliente: typeof Source = {
       attachments:
         "Załączniki pojawią się w następnym etapie. Jeśli to pomoże, proszę opisać, co byłoby widać na zrzucie ekranu.",
       errGeneral: "Nie udało się teraz wysłać zgłoszenia. Proszę spróbować ponownie.",
+      errTitleRequired: "Proszę wpisać tytuł zgłoszenia.",
+      errDescriptionRequired: "Proszę opisać, czego Państwo potrzebują.",
       submit: "Wyślij zgłoszenie",
       submitting: "Wysyłanie...",
       cancel: "Anuluj",
@@ -238,6 +261,11 @@ export const areaCliente: typeof Source = {
       errSend: "Nie udało się teraz wysłać wiadomości. Proszę spróbować ponownie.",
       submit: "Odpowiedz",
       submitting: "Wysyłanie...",
+      // Conversa ainda vazia: não há nada a que responder.
+      startConversation: "Rozpocznij rozmowę",
+      placeholderFirst: "Proszę napisać wiadomość.",
+      ariaLabelFirst: "Proszę napisać wiadomość",
+      cancel: "Anuluj",
     },
   },
   definicoes: {
@@ -256,6 +284,7 @@ export const areaCliente: typeof Source = {
       companyPlaceholder: "Nazwa firmy",
       nif: "NIP",
       nifPlaceholder: "123456789",
+      optional: "Opcjonalnie",
       errGeneral: "Nie udało się teraz zapisać zmian. Proszę spróbować ponownie.",
       submit: "Zapisz zmiany",
       submitting: "Zapisywanie...",
@@ -272,12 +301,36 @@ export const areaCliente: typeof Source = {
       showPassword: "Pokaż hasło",
       hidePassword: "Ukryj hasło",
       errOldPassword: "Obecne hasło jest nieprawidłowe.",
+      errOldPasswordRequired: "Proszę wpisać obecne hasło.",
       errNewPassword: "Hasło musi mieć co najmniej osiem znaków.",
       errPasswordMismatch: "Hasła nie są takie same.",
       errGeneral: "Nie udało się teraz zmienić hasła. Proszę spróbować ponownie.",
       submit: "Zmień hasło",
       submitting: "Zmienianie...",
       success: "Hasło zmienione.",
+      googleTitle: "Państwa konto jest połączone z Google.",
+      googleBody:
+        "Logują się Państwo przez Google. W razie potrzeby można też ustawić hasło, aby logować się adresem e-mail.",
+      googleSubmit: "Ustaw hasło",
+      googleSubmitting: "Zapisywanie...",
+      googleSuccessTitle: "Hasło ustawione.",
+      googleSuccessBody: "Można już logować się adresem e-mail i tym hasłem.",
+      googleErr: "Nie udało się teraz ustawić hasła. Proszę spróbować ponownie.",
+    },
+    apagar: {
+      title: "Usuń konto",
+      body: "Prosimy zespół o usunięcie Państwa konta i danych. Projekty i zgłoszenia przestaną się tu wyświetlać.",
+      cta: "Usuń konto",
+      modalTitle: "Usunąć Państwa konto?",
+      modalBody:
+        "Wysyłamy prośbę do zespołu. Usuwamy konto i Państwa dane, a projekty i zgłoszenia przestaną się tu wyświetlać. Tego nie można cofnąć.",
+      confirm: "Poproś o usunięcie",
+      sending: "Wysyłanie...",
+      cancel: "Anuluj",
+      close: "Zamknij",
+      sentTitle: "Prośba wysłana.",
+      sentBody: "Odpowiemy e-mailem.",
+      err: "Proszę spróbować ponownie za chwilę. Jeśli problem się powtórzy, prosimy o kontakt.",
     },
   },
   projetoDetalhe: {

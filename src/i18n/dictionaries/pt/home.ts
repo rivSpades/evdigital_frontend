@@ -58,6 +58,6 @@ export const home = {
     ],
   },
   finalCta: {
-    body: "Trinta minutos, sem compromisso, para perceber onde está e o que faz sentido fazer a seguir.",
+    body: "Sem compromisso, para perceber onde está e o que faz sentido fazer a seguir.",
   },
 };

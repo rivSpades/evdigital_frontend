@@ -3,6 +3,7 @@ import { defaultLocale, hasLocale, type Locale } from "@/i18n/config";
 import { contacto as contactoPt } from "@/i18n/dictionaries/pt/contacto";
 import { contacto as contactoEn } from "@/i18n/dictionaries/en/contacto";
 import { contacto as contactoPl } from "@/i18n/dictionaries/pl/contacto";
+import { erroDoEmail } from "@/lib/email";
 
 // Este route handler não tem acesso a root-params, por isso importa os slices do
 // dicionário diretamente e escolhe pelo `lang` enviado no corpo do POST.
@@ -11,7 +12,6 @@ const MESSAGES: Record<Locale, typeof contactoPt> = {
   en: contactoEn,
   pl: contactoPl,
 };
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Proxy site → backend (PRD-backend.md §4.2).
 // O browser nunca fala com o Django nem vê a LEADS_API_KEY: esta rota corre no
@@ -94,8 +94,8 @@ export async function POST(request: Request) {
   const v = t.form.validation;
   const campos: Record<string, string[]> = {};
   if (!asString(body.name).trim()) campos.name = [v.nameRequired];
-  if (!asString(body.email).trim()) campos.email = [v.emailRequired];
-  else if (!EMAIL_PATTERN.test(asString(body.email).trim())) campos.email = [v.emailInvalid];
+  const erroEmail = erroDoEmail(asString(body.email), v);
+  if (erroEmail) campos.email = [erroEmail];
   if (!(NEEDS as readonly string[]).includes(need)) campos.need = [v.needRequired];
   if (!asString(body.message).trim()) campos.message = [v.messageRequired];
   if (Object.keys(campos).length > 0) {

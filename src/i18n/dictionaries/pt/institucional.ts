@@ -24,7 +24,7 @@ export const institucional = {
     ],
     ctaAria: "Fale connosco",
     ctaText:
-      "Trinta minutos, sem compromisso, para perceber onde está e o que faz sentido fazer a seguir.",
+      "Sem compromisso, para perceber onde está e o que faz sentido fazer a seguir.",
     ctaButton: "Fale connosco",
   },
   legal: {
@@ -34,61 +34,85 @@ export const institucional = {
     metadata: {
       title: "Política de Privacidade",
       description:
-        "Como a EvDigital trata os dados pessoais recolhidos no formulário de contacto.",
+        "Como a EvDigital trata os dados pessoais recolhidos no site e na Área de Cliente.",
     },
     title: "Política de Privacidade",
-    updatedAt: "31 de agosto de 2026",
+    updatedAt: "24 de setembro de 2026",
     intro:
-      "Esta página explica que dados recolhemos quando nos contacta pelo site, para que servem, quanto tempo ficam connosco e o que pode exigir sobre eles.",
+      "Esta página explica que dados recolhemos quando usa este site ou a sua Área de Cliente, para que servem, quanto tempo ficam connosco e o que pode exigir sobre eles.",
     controller: {
       title: "Quem trata os seus dados",
-      p1: "A EvDigital é a responsável pelo tratamento dos dados recolhidos neste site. Para qualquer questão sobre esta política ou sobre os seus dados, use o formulário da página de contacto.",
+      p1: "A EvDigital é a responsável pelo tratamento dos dados recolhidos neste site e na Área de Cliente. Para qualquer questão sobre esta política ou sobre os seus dados, use o formulário da página de contacto. Se já tem conta, pode também escrever-nos num pedido na sua Área de Cliente.",
     },
     data: {
       title: "Que dados recolhemos",
-      intro: "Apenas o que escreve no formulário de contacto:",
-      items: [
-        "Nome",
-        "Email",
-        "Telefone, se decidir indicá-lo (é opcional)",
-        "O que precisa, escolhido da lista",
-        "A mensagem que escrever",
+      intro: "Depende do que faz no site.",
+      groups: [
+        {
+          title: "Quando nos contacta",
+          items: [
+            "Nome",
+            "Email",
+            "Telefone, se decidir indicá-lo (é opcional)",
+            "O que precisa, escolhido da lista",
+            "A mensagem que escrever",
+            "Se marcar uma reunião, o dia e a hora que escolher",
+          ],
+        },
+        {
+          title: "Quando cria uma conta na Área de Cliente",
+          items: [
+            "Nome e email",
+            "Palavra-passe (guardamos apenas uma versão cifrada, nunca a palavra-passe em si)",
+            "Telefone, empresa e NIF, se decidir indicá-los (são opcionais)",
+            "Os projetos e pedidos que criar e as mensagens que trocar connosco",
+          ],
+        },
       ],
+      google: {
+        title: "Se entrar com o Google",
+        text: "Recebemos do Google o seu email e o seu nome. Não recebemos a sua palavra-passe do Google.",
+      },
       outro:
         "Não usamos cookies de publicidade, não o seguimos entre sites e não compramos nem vendemos listas de contactos.",
     },
+    cookies: {
+      title: "Cookies",
+      p1: "Usamos apenas cookies necessários ao funcionamento do site: um guarda o idioma que escolheu e, na Área de Cliente, outro mantém a sua sessão iniciada (dura até 30 dias ou até terminar sessão). Não usamos cookies de análise nem de publicidade.",
+    },
     purpose: {
       title: "Para que servem",
-      p1: "Servem exclusivamente para responder ao seu pedido e, se avançarmos, para tratar do trabalho que nos pedir. Guardamos também o estado do contacto (por exemplo, se já lhe respondemos) para nos organizarmos.",
+      p1: "Servem exclusivamente para responder ao seu pedido, para manter a sua conta e, se avançarmos, para tratar do trabalho que nos pedir. Guardamos também o estado dos contactos e dos pedidos (por exemplo, se já lhe respondemos) para nos organizarmos.",
       p2Bold: "Não o inscrevemos em newsletters nem em campanhas.",
       p2Rest:
         " Se um dia quisermos enviar-lhe esse tipo de comunicação, pedimos-lhe autorização expressa primeiro, e pode retirá-la quando quiser.",
     },
     basis: {
       title: "Com que fundamento legal",
-      text: "Tratamos estes dados para dar seguimento a um pedido que partiu de si (diligências pré-contratuais, alínea b) do n.º 1 do artigo 6.º do Regulamento Geral sobre a Proteção de Dados).",
+      text: "Tratamos estes dados para dar seguimento a um pedido que partiu de si e para lhe prestar o serviço da Área de Cliente (diligências pré-contratuais e execução de um contrato, alínea b) do n.º 1 do artigo 6.º do Regulamento Geral sobre a Proteção de Dados).",
     },
     retention: {
       title: "Durante quanto tempo",
       p1: "Guardamos os contactos que não deram origem a trabalho durante 24 meses, findos os quais são apagados. Se formos trabalhar consigo, os dados ficam enquanto durar a relação e pelo período que a lei exigir depois disso.",
-      p2: "Pode pedir o apagamento antes disso a qualquer momento.",
+      p2: "Os dados da conta ficam enquanto a conta existir. Se pedir o apagamento, apagamos a conta e os dados associados, exceto o que a lei nos obrigue a guardar.",
+      p3: "Pode pedir o apagamento antes disso a qualquer momento. Na Área de Cliente, faça-o em Definições, no separador Segurança.",
     },
     access: {
       title: "Quem tem acesso",
-      p1: "Só a EvDigital. Os dados ficam numa base de dados nossa e são enviados por email para o nosso endereço interno quando nos contacta.",
+      p1: "Só a EvDigital e os serviços que usamos para o site funcionar: o envio de email, o Cal.com, se marcar uma reunião (recebe o seu nome, email, fuso horário e o horário que escolher) e o Google, se entrar com a sua conta Google. Os dados ficam numa base de dados nossa e são enviados por email para o nosso endereço interno quando nos contacta.",
     },
     rights: {
       title: "Os seus direitos",
       p1: "Pode pedir-nos, a qualquer momento e sem justificar: aceder aos dados que temos sobre si, corrigi-los, apagá-los, limitar o que fazemos com eles, opor-se ao tratamento, ou recebê-los num formato que possa levar para outro lado.",
       p2Before:
-        "Basta pedir pelo formulário de contacto. Respondemos no prazo de um mês. Se achar que não tratámos o assunto como devíamos, pode apresentar queixa à Comissão Nacional de Proteção de Dados (",
+        "Basta pedir pelo formulário de contacto ou, se tem conta, num pedido na Área de Cliente. Respondemos no prazo de um mês. Se achar que não tratámos o assunto como devíamos, pode apresentar queixa à Comissão Nacional de Proteção de Dados (",
       authorityLinkLabel: "cnpd.pt",
       authorityUrl: "https://www.cnpd.pt",
       p2After: ").",
     },
     security: {
       title: "Segurança",
-      text: "A ligação ao site é encriptada. O acesso aos contactos recebidos é restrito e protegido por palavra-passe. Não registamos o conteúdo das suas mensagens em ficheiros de diagnóstico.",
+      text: "A ligação ao site é encriptada. As palavras-passe são guardadas cifradas. O acesso aos contactos e às contas é restrito e protegido por palavra-passe. Não registamos o conteúdo das suas mensagens em ficheiros de diagnóstico.",
     },
   },
   termos: {
@@ -97,12 +121,11 @@ export const institucional = {
       description: "Condições de utilização do site da EvDigital.",
     },
     title: "Termos de Utilização",
-    updatedAt: "31 de agosto de 2026",
-    intro:
-      "As condições de utilização deste site. São curtas de propósito: isto é um site informativo com uma forma de nos contactar.",
+    updatedAt: "24 de setembro de 2026",
+    intro: "As condições de utilização deste site e da Área de Cliente. São curtas de propósito.",
     about: {
       title: "O que é este site",
-      p1: "Um site informativo sobre os serviços da EvDigital, com um formulário para nos contactar. Não vendemos nada diretamente aqui nem processamos pagamentos.",
+      p1: "Um site informativo sobre os serviços da EvDigital, com um formulário para nos contactar e uma Área de Cliente onde pode acompanhar projetos e fazer pedidos. Não vendemos nada diretamente aqui nem processamos pagamentos.",
     },
     content: {
       title: "O conteúdo do site",
@@ -116,6 +139,12 @@ export const institucional = {
       privacyLinkLabel: "Política de Privacidade",
       p1After: ".",
       p2: "Não use o formulário para envio de publicidade não solicitada nem para qualquer fim ilícito. Podemos ignorar e apagar mensagens desse tipo.",
+    },
+    conta: {
+      title: "A sua conta",
+      p1: "Ao criar uma conta, dê-nos dados verdadeiros e guarde a sua palavra-passe em segurança. A conta é pessoal: não a partilhe.",
+      p2: "Um pedido feito na Área de Cliente não é uma encomenda: qualquer trabalho é acordado por proposta escrita e específica.",
+      p3: "Podemos suspender ou apagar contas usadas para fins ilícitos. Pode pedir o apagamento da sua conta a qualquer momento, em Definições.",
     },
     ownership: {
       title: "Propriedade",

@@ -11,8 +11,20 @@ import { LOCALE_COOKIE, hasLocale, matchLocale } from "@/i18n/config";
 // /_next e ficheiros estáticos ficam de fora (ver `matcher`); /api passa por aqui para
 // que as rotas da Área de Cliente só respondam no subdomínio.
 
-/** Primeiros segmentos (após o idioma) que pertencem a `[lang]/area-cliente/**`. */
-const AREA_CLIENTE_SEGMENTS = new Set(["entrar", "confirmar", "projetos", "pedidos", "definicoes"]);
+/**
+ * Primeiros segmentos das páginas do site público (`[lang]/**` fora da Área de Cliente).
+ * No subdomínio da Área de Cliente redirecionam para o site; qualquer outro segmento
+ * desconhecido fica no subdomínio e mostra o 404 da Área de Cliente. "projetos" não
+ * entra aqui: no subdomínio é a lista de projetos da conta.
+ */
+const SITE_PUBLICO_SEGMENTS = new Set([
+  "servicos",
+  "blog",
+  "contacto",
+  "sobre",
+  "privacidade",
+  "termos",
+]);
 
 const AREA_CLIENTE_API = "/api/area-cliente";
 
@@ -91,14 +103,18 @@ export function proxy(request: NextRequest) {
     return noindex(redirectTo(hosts.clientesUrl, request, `/${first}${clean}`));
   }
 
-  if (AREA_CLIENTE_SEGMENTS.has(rest.split("/")[1])) {
-    const url = request.nextUrl.clone();
-    url.pathname = `/${first}/area-cliente${rest}`;
-    return noindex(NextResponse.rewrite(url));
+  // Páginas públicas (serviços, blog, …) não existem aqui: mandar para o site.
+  if (SITE_PUBLICO_SEGMENTS.has(rest.split("/")[1])) {
+    return noindex(redirectTo(hosts.siteUrl, request, pathname));
   }
 
-  // Páginas públicas (serviços, blog, …) não existem aqui: mandar para o site.
-  return noindex(redirectTo(hosts.siteUrl, request, pathname));
+  // Rotas da Área de Cliente e endereços desconhecidos: reescrever para
+  // `[lang]/area-cliente/**`. Os desconhecidos caem em area-cliente/[...rota] e mostram o
+  // 404 da Área de Cliente (HTTP 404), no subdomínio, em vez de saltarem para o 404 do
+  // site público.
+  const url = request.nextUrl.clone();
+  url.pathname = `/${first}/area-cliente${rest}`;
+  return noindex(NextResponse.rewrite(url));
 }
 
 export const config = {

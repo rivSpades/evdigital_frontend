@@ -5,7 +5,7 @@ export const contacto: typeof Source = {
   metadata: {
     title: "Contact",
     description:
-      "Thirty minutes, no commitment and no cost. If it doesn't make sense to go ahead, we'll tell you.",
+      "No commitment and no cost. If it doesn't make sense to go ahead, we'll tell you.",
   },
   page: {
     title: "Let's talk",
@@ -26,6 +26,7 @@ export const contacto: typeof Source = {
       nameRequired: "Enter your name.",
       emailRequired: "Enter your email.",
       emailInvalid: "The @ is missing. Write it like this: name@company.com",
+      emailFormat: "This email does not look right. Write it like this: name@company.com",
       needRequired: "Choose an option.",
       messageRequired: "Tell us what you need.",
     },
@@ -43,7 +44,7 @@ export const contacto: typeof Source = {
   },
   meeting: {
     question: "Would you like to book a meeting?",
-    hint: "Optional. Thirty minutes, no commitment.",
+    hint: "Optional. No commitment.",
     yes: "Yes, I'd like to book",
     no: "No, just send the message",
     loading: "Looking for available times...",
@@ -64,6 +65,8 @@ export const contacto: typeof Source = {
     meetingLabel: "Meeting",
     noMeeting: "No meeting booked",
     notProvided: "Not provided",
+    privacyBefore: "We use this data only to reply to you. Find out more in the ",
+    privacyAfter: ".",
   },
   actions: {
     continue: "Continue",

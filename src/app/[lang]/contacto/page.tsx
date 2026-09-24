@@ -8,10 +8,9 @@ import { hasLocale } from "@/i18n/config";
 import { pageMetadata } from "@/i18n/metadata";
 import { notFound } from "next/navigation";
 
-// Contacto migrada dos frames M9S6m (desktop, 1440) e uhCIg (mobile, 390) do
-// design/design-system.pen. Copy do copy-draft.md §5. O wizard de 3 passos (descrever
-// / reunião / resumo) ainda não tem frames próprios no .pen — excepção pontual, ver
-// nota em site/Context.md. A página é Server Component; só o wizard é cliente.
+// Contacto migrada do grupo "Ecrã · Contacto" de "v2 · A vez" (flhgP) do
+// design/design-system.pen (frames 1280 e 375 de cada passo e estado; ver
+// contacto-wizard.tsx). A página é Server Component; só o wizard é cliente.
 //
 // `?servico=<slug>` chega da CTA "Pedir uma proposta" das fichas de /servicos/[slug]
 // (PRD-servicos.md §6). Um slug desconhecido ou ausente é tratado como "sem produto
@@ -32,7 +31,14 @@ export default async function Contacto({
 }: PageProps<"/[lang]/contacto">) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
-  const { contacto: t } = await getDictionary(lang);
+  const {
+    contacto: t,
+    institucional,
+    areaCliente,
+    erros,
+    home,
+    servicos: servicosT,
+  } = await getDictionary(lang);
   const { servico: servicoSlug } = await searchParams;
   const slug = typeof servicoSlug === "string" ? servicoSlug : undefined;
   const servico = slug ? getServiceBySlug(lang, slug) : null;
@@ -44,25 +50,30 @@ export default async function Contacto({
   const servicos = [
     ...todosOsServicos.filter((s) => s.frontmatter.family === "A"),
     ...todosOsServicos.filter((s) => s.frontmatter.family === "B"),
-  ].map((s) => ({ slug: s.slug, titulo: s.frontmatter.title }));
+  ].map((s) => ({ slug: s.slug, titulo: s.frontmatter.title, familia: s.frontmatter.family }));
 
   return (
     <>
       <Nav />
 
-      <main className="flex-1 px-lg py-3xl md:px-xl lg:px-2xl lg:py-4xl">
-        <div className="mx-auto flex max-w-[var(--grid-max-width)] flex-col gap-2xl lg:gap-3xl">
-          <header className="flex flex-col gap-md lg:gap-lg">
-            {/* No narrow o .pen usa $font-size-display-sm-narrow (39), o mesmo valor de
-                --text-headline, com a entrelinha de display. */}
-            <h1 className="font-heading text-headline leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-headline)] text-text-primary lg:text-display-sm lg:leading-[var(--line-height-display)] lg:tracking-[var(--letter-spacing-display)]">
-              {t.page.title}
-            </h1>
-          </header>
-
-          <div className="max-w-[640px]">
-            <ContactoWizard lang={lang} t={t} servicos={servicos} servicoInicial={servicoInicial} />
-          </div>
+      {/* Margens do .pen: $space-layout-margin-narrow (24) em mobile e -wide (48) em lg;
+          padding inferior $space-4xl da secção do assistente. O topo é do wizard (o Voltar
+          dos passos 2 e 3 é a primeira linha da página, antes do título). */}
+      <main className="flex-1 px-lg pb-4xl md:px-xl lg:px-2xl">
+        <div className="mx-auto flex max-w-[var(--grid-max-width)] flex-col">
+          <ContactoWizard
+            lang={lang}
+            t={t}
+            titulo={t.page.title}
+            servicos={servicos}
+            grupos={{ A: servicosT.inicial.titulo, B: servicosT.avancado.titulo }}
+            servicoInicial={servicoInicial}
+            privacyLinkLabel={institucional.termos.form.privacyLinkLabel}
+            optionalLabel={areaCliente.definicoes.perfil.optional}
+            retryLabel={erros.pagina.retry}
+            homeLabel={erros.naoEncontrada.home}
+            servicesLinkLabel={home.hero.secondaryCta}
+          />
         </div>
       </main>
 

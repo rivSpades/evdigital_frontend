@@ -17,14 +17,12 @@ export const servicos: typeof Source = {
     breadcrumbAria: "Ścieżka nawigacji",
     breadcrumbServicos: "Usługi",
     marcarConversa: "Skontaktuj się",
-    pedirProposta: "Poproś o ofertę",
-    jaCliente: "Są już Państwo naszym klientem? Zlecenie w panelu klienta",
     oQueEParaQuem: "Czym jest i dla kogo",
     oQuePodeIncluir: "Co może obejmować",
     perguntasFrequentes: "Najczęściej zadawane pytania",
     tambemInteressar: "Może Państwa również zainteresować",
     ctaTitulo: "Porozmawiajmy o tym, czego Państwo potrzebują?",
-    ctaTexto: "Trzydzieści minut, bez zobowiązań, aby sprawdzić, czy to ma dla Państwa sens.",
+    ctaTexto: "Bez zobowiązań, aby sprawdzić, czy to ma dla Państwa sens.",
   },
   ganhaExige: {
     ganha: "Co Państwo zyskują",
@@ -33,19 +31,6 @@ export const servicos: typeof Source = {
   },
   comoFunciona: {
     titulo: "Jak to działa",
-    passos: [
-      { titulo: "Rozmawiamy.", descricao: "Jedno spotkanie, bez zobowiązań, aby zrozumieć Państwa firmę." },
-      { titulo: "Proponujemy.", descricao: "Co warto zrobić, w jakiej kolejności i ile to kosztuje." },
-      {
-        titulo: "Budujemy.",
-        descricao: "Postępy prac można śledzić w panelu klienta i podczas spotkań.",
-      },
-      {
-        titulo: "Zostajemy.",
-        descricao:
-          "Po wdrożeniu wsparcie jest dostępne, gdy tylko będzie potrzebne: nowe zlecenia, zgłoszenia, doradztwo i inne.",
-      },
-    ],
   },
   tabela: {
     recomendacao: "Nasza rekomendacja",

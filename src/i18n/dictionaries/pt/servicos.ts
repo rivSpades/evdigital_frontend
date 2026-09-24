@@ -29,14 +29,12 @@ export const servicos = {
     breadcrumbAria: "Localização",
     breadcrumbServicos: "Serviços",
     marcarConversa: "Fale connosco",
-    pedirProposta: "Pedir uma proposta",
-    jaCliente: "Já é cliente? Peça na sua área",
     oQueEParaQuem: "O que é e para quem",
     oQuePodeIncluir: "O que poderá incluir",
     perguntasFrequentes: "Perguntas frequentes",
     tambemInteressar: "Também pode interessar",
     ctaTitulo: "Vamos falar sobre o que precisa?",
-    ctaTexto: "Trinta minutos, sem compromisso, para perceber se isto faz sentido para si.",
+    ctaTexto: "Sem compromisso, para perceber se isto faz sentido para si.",
   },
   ganhaExige: {
     ganha: "O que ganha",
@@ -45,19 +43,6 @@ export const servicos = {
   },
   comoFunciona: {
     titulo: "Como funciona",
-    passos: [
-      { titulo: "Conversamos.", descricao: "Uma reunião, sem compromisso, para perceber o negócio." },
-      { titulo: "Propomos.", descricao: "O que faz sentido fazer, por que ordem, e quanto custa." },
-      {
-        titulo: "Construímos.",
-        descricao: "Acompanha o desenvolvimento na área de cliente e em reuniões.",
-      },
-      {
-        titulo: "Ficamos.",
-        descricao:
-          "Depois de entregue, continua a ter suporte quando precisar: novos pedidos, tickets, consultoria, etc.",
-      },
-    ],
   },
   tabela: {
     recomendacao: "A nossa recomendação",

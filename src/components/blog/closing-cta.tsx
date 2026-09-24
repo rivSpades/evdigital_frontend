@@ -1,27 +1,26 @@
-import { ButtonLink } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { FechoPagina } from "@/components/ui/fecho-pagina";
 import { getDictionary } from "@/i18n/dictionaries";
 
-// Frames: "Fecho · CTA" (BO2C1 no wide, wax6x no narrow). Fecha a listagem quando já há
-// artigos; usa a mesma etiqueta de CTA do resto do site (design-guardrails.md §6).
+// Frames "v2 · A vez" / Ecrã · Blog: "Secção · fecho" (o2xPT desktop, FXCXY mobile).
+// ds/layout/fecho-pagina com título, na coluna principal (4 a 12 em lg). Fecha a listagem
+// quando já há artigos; mesma etiqueta de CTA do resto do site (design-guardrails.md §6).
 
 export async function BlogClosingCta() {
   const { blog: t } = await getDictionary();
 
   return (
-    <Card className="flex flex-col gap-md p-lg lg:flex-row lg:items-center lg:justify-between lg:gap-2xl lg:px-2xl lg:py-xl">
-      <div className="flex flex-col gap-md lg:gap-2xs">
-        <h2 className="font-heading text-body-lg font-semibold tracking-[var(--letter-spacing-title)] text-text-primary lg:text-title-sm">
-          {t.closingTitle}
-        </h2>
-        <p className="font-body text-body text-text-secondary">
-          {t.closingText}
-        </p>
-      </div>
-
-      <ButtonLink href="/contacto" size="lg" className="w-full lg:w-auto">
-        {t.closingCta}
-      </ButtonLink>
-    </Card>
+    <section
+      aria-labelledby="blog-fecho-titulo"
+      className="pb-2xl lg:grid lg:grid-cols-12 lg:gap-x-lg lg:pb-3xl"
+    >
+      <FechoPagina
+        titulo={t.closingTitle}
+        tituloId="blog-fecho-titulo"
+        texto={t.closingText}
+        acao={t.closingCta}
+        href="/contacto"
+        className="lg:col-span-9 lg:col-start-4"
+      />
+    </section>
   );
 }

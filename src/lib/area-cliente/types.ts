@@ -8,6 +8,8 @@ export type Perfil = {
   phone: string;
   company: string;
   nif: string;
+  /** `false` numa conta criada com Google: define a primeira palavra-passe sem a atual. */
+  has_usable_password: boolean;
 };
 
 export type Projeto = {

@@ -42,6 +42,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
 export default async function RootLayout({ children, params }: LayoutProps<"/[lang]">) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
+  const { common } = await getDictionary(lang);
 
   return (
     <html
@@ -51,7 +52,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
     >
       <body className="min-h-full flex flex-col bg-bg-base text-text-primary font-body">
         {children}
-        <ScrollToTop />
+        <ScrollToTop label={common.scrollToTop} />
       </body>
     </html>
   );

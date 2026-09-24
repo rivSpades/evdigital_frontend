@@ -26,6 +26,6 @@ export const blog = {
   relatedTitle: "Continuar a ler",
   relatedAll: "Ver todos os artigos",
   closingTitle: "Ficou com uma dúvida sobre o que leu?",
-  closingText: "Trinta minutos, sem compromisso, para perceber o que faz sentido no seu caso.",
+  closingText: "Sem compromisso, para perceber o que faz sentido no seu caso.",
   closingCta: "Fale connosco",
 };

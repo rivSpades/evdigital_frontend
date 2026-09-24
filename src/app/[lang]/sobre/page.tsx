@@ -1,17 +1,28 @@
 import type { Metadata } from "next";
-import { CircleSlash, LifeBuoy, MessagesSquare } from "lucide-react";
+import { notFound } from "next/navigation";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
-import { ButtonLink } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { FechoPagina } from "@/components/ui/fecho-pagina";
+import { LinhaTexto, ListaTexto } from "@/components/ui/linha-texto";
 import { getDictionary } from "@/i18n/dictionaries";
 import { hasLocale } from "@/i18n/config";
 import { pageMetadata } from "@/i18n/metadata";
-import { notFound } from "next/navigation";
 
-// Sobre migrada dos frames tJSRH (desktop, 1440) e U24nJG (mobile, 390) do
-// design/design-system.pen. Copy do copy-draft.md §4, cinco blocos mais o fecho.
-// Mobile first; md:(768) e lg:(1024) correspondem a $bp-mid/$bp-wide do .pen.
+// Sobre migrada do grupo "Ecrã · Sobre" de "v2 · A vez" (flhgP) do
+// design/design-system.pen: "Sobre · desktop 1280" (H19Dt) e "Sobre · mobile 375" (rlACb).
+// Uma coluna com as margens de layout; sem cartões nem traço de cor.
+// - O que é a EvDigital: sobretítulo $font-mono caption $text-tertiary com
+//   $letter-spacing-overline (o único da página), título $font-size-display
+//   ($font-size-display-narrow em mobile) e introdução body-lg (680 em lg). Padding
+//   [$space-4xl, 0] e gap $space-lg em lg; [$space-2xl, 0, $space-3xl, 0] e gap $space-md
+//   abaixo.
+// - Porque existimos: em lg, título na Margem (colunas 1 a 3, $font-size-title-sm
+//   $text-secondary) e a coluna principal (afirmação $font-size-headline de 680 e os dois
+//   parágrafos body-lg de 760); abaixo empilham com gap $space-md e o título em
+//   $font-size-title.
+// - Como trabalhamos: título $font-size-title e as três afirmações como
+//   ds/display/linha-texto na variante afirmação, com a régua superior no contentor.
+// - Fecho: ds/layout/fecho-pagina sem título, na coluna principal.
 
 export async function generateMetadata({
   params,
@@ -21,12 +32,6 @@ export async function generateMetadata({
   const { institucional } = await getDictionary(lang);
   return { ...institucional.sobre.metadata, ...pageMetadata(lang, "/sobre") };
 }
-
-const ICONES = [MessagesSquare, CircleSlash, LifeBuoy];
-
-// Título de bloco: $font-size-title-sm no narrow e $font-size-title no wide.
-const tituloBloco =
-  "font-heading text-title-sm font-semibold tracking-[var(--letter-spacing-title)] text-text-primary lg:text-title";
 
 export default async function Sobre({ params }: PageProps<"/[lang]/sobre">) {
   const { lang } = await params;
@@ -38,96 +43,72 @@ export default async function Sobre({ params }: PageProps<"/[lang]/sobre">) {
     <>
       <Nav currentPath="/sobre" />
 
-      <main className="flex-1 px-lg py-3xl md:px-xl lg:px-2xl lg:py-4xl">
-        <div className="mx-auto flex max-w-[var(--grid-max-width)] flex-col gap-3xl lg:gap-4xl">
-          {/* Bloco 1 · O que é a EvDigital */}
-          <section className="flex flex-col gap-md lg:gap-lg">
-            <p className="font-body text-caption font-medium tracking-[var(--letter-spacing-overline)] text-text-accent uppercase">
+      <main className="flex-1 px-lg md:px-xl lg:px-2xl">
+        <div className="mx-auto w-full max-w-[var(--grid-max-width)]">
+          <section className="flex flex-col gap-md pt-2xl pb-3xl lg:gap-lg lg:py-4xl">
+            <p className="font-mono text-caption tracking-[var(--letter-spacing-overline)] text-text-tertiary uppercase">
               {t.eyebrow}
             </p>
+            <h1 className="font-heading text-[length:var(--font-size-display-narrow)] leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-display)] text-text-primary lg:text-display">
+              {t.title}
+            </h1>
+            <p className="font-body text-body text-text-secondary lg:max-w-[680px] lg:text-body-lg">
+              {t.intro}
+            </p>
+          </section>
 
-            <div className="flex flex-col gap-md lg:max-w-[920px] lg:gap-lg">
-              {/* No narrow o .pen usa $font-size-headline-narrow (31), o mesmo valor de
-                  --text-title, mas com a entrelinha de headline. */}
-              <h1 className="font-heading text-title leading-[var(--line-height-headline)] font-bold tracking-[var(--letter-spacing-headline)] text-text-primary lg:text-display-sm lg:leading-[var(--line-height-display)] lg:tracking-[var(--letter-spacing-display)]">
-                {t.title}
-              </h1>
-
+          <section
+            aria-labelledby="sobre-porque-titulo"
+            className="flex flex-col gap-md pb-3xl lg:grid lg:grid-cols-12 lg:gap-x-lg lg:gap-y-0 lg:pb-4xl"
+          >
+            <h2
+              id="sobre-porque-titulo"
+              className="font-heading text-title leading-[var(--line-height-title)] font-semibold tracking-[var(--letter-spacing-title)] text-text-secondary lg:col-span-3 lg:text-title-sm"
+            >
+              {t.whyTitle}
+            </h2>
+            <div className="flex flex-col gap-md lg:col-span-9">
+              <p className="font-heading text-title leading-[var(--line-height-title)] font-semibold tracking-[var(--letter-spacing-title)] text-text-primary lg:max-w-[680px] lg:text-headline lg:leading-[var(--line-height-headline)] lg:tracking-[var(--letter-spacing-headline)]">
+                {t.whyLead}
+              </p>
               <p className="font-body text-body text-text-secondary lg:max-w-[760px] lg:text-body-lg">
-                {t.intro}
+                {t.whyP1}
+              </p>
+              <p className="font-body text-body text-text-secondary lg:max-w-[760px] lg:text-body-lg">
+                {t.whyP2}
               </p>
             </div>
           </section>
 
-          {/* Bloco 2 · Porque existimos */}
-          <section aria-labelledby="sobre-porque-titulo" className="flex flex-col gap-lg lg:gap-xl">
-            <h2 id="sobre-porque-titulo" className={tituloBloco}>
-              {t.whyTitle}
-            </h2>
-
-            <Card className="p-lg lg:p-2xl">
-              <div className="flex flex-col gap-md lg:max-w-[860px]">
-                <span className="h-[3px] w-14 rounded-[var(--radius-pill)] bg-accent-primary" />
-
-                <p className="font-heading text-body-lg leading-[var(--line-height-title)] font-semibold tracking-[var(--letter-spacing-title)] text-text-primary lg:text-title-sm">
-                  {t.whyLead}
-                </p>
-
-                <p className="font-body text-body text-text-secondary lg:text-body-lg">
-                  {t.whyP1}
-                </p>
-
-                <p className="font-body text-body text-text-secondary lg:text-body-lg">
-                  {t.whyP2}
-                </p>
-              </div>
-            </Card>
-          </section>
-
-          {/* Bloco 4 · Como trabalhamos */}
           <section
             aria-labelledby="sobre-como-titulo"
-            className="flex flex-col gap-lg lg:gap-xl"
+            className="flex flex-col gap-md pb-2xl lg:pb-3xl"
           >
-            <h2 id="sobre-como-titulo" className={tituloBloco}>
+            <h2
+              id="sobre-como-titulo"
+              className="font-heading text-title leading-[var(--line-height-title)] font-semibold tracking-[var(--letter-spacing-title)] text-text-primary"
+            >
               {t.howTitle}
             </h2>
-
-            <ul className="flex flex-col">
-              {t.how.map((texto, i) => {
-                const Icone = ICONES[i];
-                return (
-                <li
-                  key={texto}
-                  className="flex items-center gap-md border-t border-border-subtle py-md lg:gap-lg lg:py-lg"
-                >
-                  <Icone
-                    size={20}
-                    strokeWidth={2}
-                    aria-hidden
-                    className="shrink-0 text-text-accent lg:size-6"
-                  />
-                  <p className="font-heading text-body-lg leading-[var(--line-height-title)] font-semibold tracking-[var(--letter-spacing-title)] text-text-primary lg:text-title-sm">
-                    {texto}
-                  </p>
-                </li>
-                );
-              })}
-            </ul>
+            <ListaTexto>
+              {t.how.map((texto) => (
+                <LinhaTexto key={texto} variante="afirmacao">
+                  {texto}
+                </LinhaTexto>
+              ))}
+            </ListaTexto>
           </section>
 
-          {/* Fecho · CTA */}
           <section
             aria-label={t.ctaAria}
-            className="flex flex-col items-center gap-md rounded-[var(--radius-xl-ds)] border border-border-subtle bg-bg-surface p-xl text-center lg:gap-lg lg:p-2xl"
+            className="pb-2xl lg:grid lg:grid-cols-12 lg:gap-x-lg lg:pb-3xl"
           >
-            <p className="font-body text-body text-text-secondary lg:max-w-[640px] lg:text-body-lg">
-              {t.ctaText}
-            </p>
-
-            <ButtonLink href="/contacto" size="lg" className="w-full lg:w-auto">
-              {t.ctaButton}
-            </ButtonLink>
+            <FechoPagina
+              texto={t.ctaText}
+              acao={t.ctaButton}
+              href="/contacto"
+              className="lg:col-span-9 lg:col-start-4"
+            />
           </section>
         </div>
       </main>

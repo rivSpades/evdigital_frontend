@@ -15,6 +15,6 @@ export const projetos: typeof Source = {
   stackUsed: "Stack used",
   visitTitle: "See the project",
   visitText: "Live application, open to anyone who wants to try it.",
-  ctaText: "Thirty minutes, no commitment, to work out what makes sense to build.",
+  ctaText: "No commitment, to work out what makes sense to build.",
   ctaLabel: "Contact us",
 };

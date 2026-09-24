@@ -1,28 +1,31 @@
 import type { Metadata } from "next";
-import Link from "@/i18n/locale-link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
+import { BackLink } from "@/components/area-cliente/back-link";
 import { ArticleBody } from "@/components/blog/article-body";
-import { LevelBadge } from "@/components/blog/level-badge";
-import { PostMeta } from "@/components/blog/post-meta";
 import { RelatedPosts } from "@/components/blog/related-posts";
-import { Badge } from "@/components/ui/badge";
 import { getAllBlogPosts, getBlogPostBySlug } from "@/lib/content";
+import { fillCount, formatPostDate, levelLabel, readingMinutes } from "@/lib/blog";
 import { locales, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/i18n/metadata";
 
-// Artigo migrado dos frames U69qD (wide, 1440) e MWtZc (narrow, 390) do
-// design/design-system.pen.
+// Artigo migrado do grupo "Ecrã · Blog" de "v2 · A vez" (flhgP) do
+// design/design-system.pen: "Blog · artigo" (HPbU7 desktop 1280, ebHXa mobile 375; exemplo
+// de layout, o artigo do .pen é fictício).
+// - Secção · topo: ds/navigation/voltar ("Voltar ao blog") como primeira linha a seguir à
+//   barra de topo, alinhado à margem. Cabeçalho do artigo: em lg, a Margem · factos
+//   (colunas 1 a 3, padding-top $space-sm: nível caption $text-secondary, data e leitura
+//   $font-mono caption $text-tertiary, empilhados) e a coluna principal (título
+//   $font-size-display-sm e "Em resumo": rótulo caption $text-tertiary e resumo body-lg
+//   $text-primary de 760). Abaixo: factos numa linha (leitura curta), depois o título
+//   ($font-size-display-sm-narrow) e o resumo em body.
+// - Secção · corpo: ds/display/secao-leitura por secção, na coluna principal (760).
+// - Secção · continuar a ler: RelatedPosts.
 //
-// Enquanto content/blog/ estiver vazio (gate de privacidade, PRD §4.3) nenhuma rota
-// aponta para aqui e qualquer slug cai em notFound(). A página existe para funcionar
-// assim que o primeiro artigo revisto for publicado.
-//
-// O aviso "exemplo de layout" do frame é uma anotação do .pen sobre o conteúdo fictício,
-// não faz parte da página.
+// Enquanto content/blog/ estiver vazio (gate de privacidade, PRD §4.3) nenhuma rota aponta
+// para aqui e qualquer slug cai em notFound().
 
 export async function generateStaticParams() {
   return locales.flatMap((lang) =>
@@ -44,14 +47,20 @@ export async function generateMetadata({
   };
 }
 
+// Colunas da grelha de 12 em lg: Margem (1 a 3) e coluna principal (4 a 12, 760 de leitura).
+const grelha = "lg:grid lg:grid-cols-12 lg:gap-x-lg lg:gap-y-0";
+const colunaPrincipal = "lg:col-span-9 lg:col-start-4 lg:row-start-1 lg:max-w-[760px]";
+
 export default async function BlogPostPage({ params }: PageProps<"/[lang]/blog/[slug]">) {
   const { slug, lang } = await params;
-  const { blog: t } = await getDictionary(lang as Locale);
-  const post = getBlogPostBySlug(lang as Locale, slug);
+  const locale = lang as Locale;
+  const { blog: t } = await getDictionary(locale);
+  const post = getBlogPostBySlug(locale, slug);
   if (!post) notFound();
 
   const { frontmatter } = post;
-  const related = getAllBlogPosts(lang as Locale)
+  const minutes = readingMinutes(post.content);
+  const related = getAllBlogPosts(locale)
     .filter((other) => other.slug !== post.slug)
     .slice(0, 2);
 
@@ -59,59 +68,61 @@ export default async function BlogPostPage({ params }: PageProps<"/[lang]/blog/[
     <>
       <Nav currentPath="/blog" />
 
-      <main className="flex-1 px-lg pt-md pb-3xl md:px-xl lg:px-2xl lg:pt-xl lg:pb-4xl">
-        <div className="mx-auto flex max-w-[var(--grid-max-width)] flex-col items-center gap-xl lg:gap-3xl">
-          <article className="flex w-full flex-col gap-md lg:max-w-[760px] lg:gap-lg">
-            <Link
-              href="/blog"
-              className="inline-flex min-h-11 items-center gap-2xs self-start font-body text-body font-medium text-text-link transition-colors hover:text-text-accent"
-            >
-              <ArrowLeft size={18} strokeWidth={2} aria-hidden />
-              {t.backToBlog}
-            </Link>
+      <main className="flex-1 px-lg md:px-xl lg:px-2xl">
+        <div className="mx-auto w-full max-w-[var(--grid-max-width)]">
+          <article>
+            <header className="flex flex-col gap-md pt-lg pb-xl lg:gap-lg lg:pt-xl lg:pb-2xl">
+              <BackLink href="/blog" label={t.backToBlog} />
 
-            <div className="flex flex-wrap items-center gap-sm">
-              <LevelBadge level={frontmatter.level} />
-              <PostMeta post={post} />
-            </div>
+              <div className={`flex flex-col gap-sm ${grelha}`}>
+                <div className={`flex flex-col gap-lg ${colunaPrincipal}`}>
+                  <h1 className="font-heading text-[length:var(--font-size-display-sm-narrow)] leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-display)] text-text-primary lg:text-display-sm">
+                    {frontmatter.title}
+                  </h1>
+                  <div className="flex flex-col gap-2xs">
+                    <p className="font-body text-caption text-text-tertiary">{t.summaryOverline}</p>
+                    <p className="font-body text-body text-text-primary lg:text-body-lg">
+                      {frontmatter.description}
+                    </p>
+                  </div>
+                </div>
 
-            <h1 className="font-heading text-title font-bold leading-[var(--line-height-headline)] tracking-[var(--letter-spacing-headline)] text-text-primary lg:text-display-sm lg:tracking-[var(--letter-spacing-display)]">
-              {frontmatter.title}
-            </h1>
-
-            <div className="flex flex-col gap-xs rounded-[var(--radius-md)] border border-feedback-success-border bg-accent-primary-subtle p-md lg:p-lg">
-              <p className="font-body text-caption font-medium tracking-[var(--letter-spacing-overline)] text-text-accent">
-                {t.summaryOverline}
-              </p>
-              <p className="font-body text-body text-text-primary lg:text-body-lg">
-                {frontmatter.description}
-              </p>
-            </div>
-
-            <ArticleBody content={post.content} />
-
-            {frontmatter.tags.length > 0 ? (
-              <div className="flex flex-col gap-xs lg:flex-row lg:items-center">
-                <span
-                  id="etiquetas-do-artigo"
-                  className="font-body text-caption font-medium tracking-[var(--letter-spacing-overline)] text-text-tertiary"
-                >
-                  {t.tagsOverline}
-                </span>
-                <ul
-                  aria-labelledby="etiquetas-do-artigo"
-                  className="flex flex-wrap items-center gap-xs"
-                >
-                  {frontmatter.tags.map((tag) => (
-                    <li key={tag}>
-                      <Badge tone="outline" size="sm">
-                        {tag}
-                      </Badge>
-                    </li>
-                  ))}
-                </ul>
+                <p className="order-first flex flex-wrap gap-x-sm gap-y-2xs text-caption lg:order-none lg:col-span-3 lg:col-start-1 lg:row-start-1 lg:flex-col lg:gap-2xs lg:pt-sm">
+                  <span className="font-body tracking-[var(--letter-spacing-caption)] text-text-secondary">
+                    {levelLabel(t, frontmatter.level)}
+                  </span>
+                  <span className="font-mono text-text-tertiary">
+                    {formatPostDate(locale, frontmatter.publishedAt)}
+                  </span>
+                  <span className="font-mono text-text-tertiary">
+                    <span className="lg:hidden">{fillCount(t.readingShort, minutes)}</span>
+                    <span className="hidden lg:inline">{fillCount(t.readingLong, minutes)}</span>
+                  </span>
+                </p>
               </div>
-            ) : null}
+            </header>
+
+            <div className={`pb-2xl lg:pb-4xl ${grelha}`}>
+              <div className={`flex flex-col gap-lg lg:gap-xl ${colunaPrincipal}`}>
+                <ArticleBody content={post.content} />
+
+                {frontmatter.tags.length > 0 ? (
+                  <div className="flex flex-col gap-2xs">
+                    <p id="etiquetas-do-artigo" className="font-body text-caption text-text-tertiary">
+                      {t.tagsOverline}
+                    </p>
+                    <ul
+                      aria-labelledby="etiquetas-do-artigo"
+                      className="flex flex-wrap gap-x-sm gap-y-2xs font-mono text-caption text-text-secondary"
+                    >
+                      {frontmatter.tags.map((tag) => (
+                        <li key={tag}>{tag}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+              </div>
+            </div>
           </article>
 
           <RelatedPosts posts={related} />

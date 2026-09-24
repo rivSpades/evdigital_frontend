@@ -15,6 +15,6 @@ export const projetos: typeof Source = {
   stackUsed: "Użyty stos technologiczny",
   visitTitle: "Zobacz projekt",
   visitText: "Aplikacja działająca produkcyjnie, otwarta dla każdego, kto chce ją wypróbować.",
-  ctaText: "Trzydzieści minut, bez zobowiązań, by ustalić, co warto zbudować.",
+  ctaText: "Bez zobowiązań, by ustalić, co warto zbudować.",
   ctaLabel: "Skontaktuj się",
 };

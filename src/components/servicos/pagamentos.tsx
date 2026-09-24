@@ -1,68 +1,51 @@
-import { cn } from "@/lib/cn";
+import { LinhaTermo } from "@/components/ui/linha-termo";
 import { getPaymentMethods } from "@/lib/payments";
 import { getDictionary } from "@/i18n/dictionaries";
 import type { Locale } from "@/i18n/config";
 
-// Bloco "Como os seus clientes podem pagar", só na ficha da Loja online (`showPayments`
-// no frontmatter). Dados em src/lib/payments.ts — PRD-servicos.md §7.2.
+// "Secção · como os seus clientes podem pagar" da ficha da Loja online (SHykB desktop, vDYa2
+// mobile, grupo "Ecrã · Serviço (ficha)" de "v2 · A vez"). Só com `showPayments` no
+// frontmatter; dados em src/lib/payments.ts (PRD-servicos.md §7.2).
+// Gap $space-lg ($space-md em mobile), padding-bottom $space-4xl ($space-3xl em mobile).
+// Título $font-size-headline ($font-size-title em mobile), introdução body-lg (body) com 760
+// de largura em lg, registo de ds/display/linha-termo (os meios em destaque com o texto em
+// $text-primary) e as notas em $text-tertiary, gap $space-sm, padding-top $space-xs.
 
 export async function Pagamentos({ lang }: { lang: Locale }) {
   const t = (await getDictionary(lang)).servicos.pagamentos;
   return (
-    <section aria-labelledby="pagamentos-titulo" className="flex flex-col gap-lg">
-      <div className="flex flex-col gap-sm">
-        <h2
-          id="pagamentos-titulo"
-          className="font-heading text-headline font-bold tracking-[var(--letter-spacing-headline)] text-text-primary"
-        >
-          {t.titulo}
-        </h2>
-        <p className="font-body text-body-lg text-text-secondary lg:max-w-[720px]">
-          {t.intro}
-        </p>
-      </div>
+    <section
+      aria-labelledby="pagamentos-titulo"
+      className="flex flex-col gap-md pb-3xl lg:gap-lg lg:pb-4xl"
+    >
+      <h2
+        id="pagamentos-titulo"
+        className="font-heading text-title font-semibold tracking-[var(--letter-spacing-title)] text-text-primary lg:text-headline lg:tracking-[var(--letter-spacing-headline)]"
+      >
+        {t.titulo}
+      </h2>
+      <p className="font-body text-body text-text-secondary lg:max-w-[760px] lg:text-body-lg">
+        {t.intro}
+      </p>
 
-      <div className="overflow-hidden rounded-[var(--radius-lg)] border border-border-subtle">
-        {getPaymentMethods(lang, t).map((metodo, i) => {
-          const Icone = metodo.icon;
-          return (
-            <div
-              key={metodo.name}
-              className={cn(
-                "flex flex-col gap-xs px-lg py-md lg:flex-row lg:items-center lg:gap-lg",
-                i > 0 && "border-t border-border-subtle",
-                metodo.featured ? "bg-bg-surface-raised" : "bg-bg-surface",
-              )}
-            >
-              <div className="flex items-center gap-sm lg:w-[320px] lg:shrink-0">
-                <span
-                  className={cn(
-                    "flex size-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)]",
-                    metodo.featured ? "bg-accent-primary-subtle" : "bg-bg-surface-sunken",
-                  )}
-                >
-                  <Icone
-                    size={20}
-                    strokeWidth={2}
-                    aria-hidden
-                    className={metodo.featured ? "text-text-accent" : "text-text-secondary"}
-                  />
-                </span>
-                <p className="font-body text-label font-semibold text-text-primary">
-                  {metodo.name}
-                </p>
-              </div>
-              <p className="font-body text-body text-text-secondary">{metodo.why}</p>
-            </div>
-          );
-        })}
-      </div>
+      <ul className="flex flex-col border-t border-border-default">
+        {getPaymentMethods(lang, t).map((metodo) => (
+          <LinhaTermo
+            key={metodo.name}
+            termo={metodo.name}
+            texto={metodo.why}
+            destaque={metodo.featured}
+          />
+        ))}
+      </ul>
 
-      {t.notas.map((nota) => (
-        <p key={nota} className="font-body text-body text-text-tertiary">
-          {nota}
-        </p>
-      ))}
+      <div className="flex flex-col gap-sm pt-xs lg:max-w-[760px]">
+        {t.notas.map((nota) => (
+          <p key={nota} className="font-body text-body text-text-tertiary">
+            {nota}
+          </p>
+        ))}
+      </div>
     </section>
   );
 }

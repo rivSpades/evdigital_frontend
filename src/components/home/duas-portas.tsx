@@ -1,68 +1,71 @@
-import { ArrowRight, Globe } from "lucide-react";
 import { getDictionary } from "@/i18n/dictionaries";
-import { ButtonLink } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { LinkArrow } from "@/components/ui/link-arrow";
+import { Porta } from "@/components/ui/porta";
+import { Reveal } from "@/components/ui/reveal";
 
-// Frames: "Secção · As duas portas" (yDekf / l8jvzE).
-// A grelha do wide é deliberadamente assimétrica (660 / 516 dentro dos 1200 do
-// $grid-max-width), não duas colunas iguais.
+// Frames "v2 · A vez" / Ecrã · Início: "Secção · portas" (B2eP4 desktop, ybn4n mobile).
+// Padding-bottom $space-4xl. Título visível $font-size-title ($font-size-title-sm em
+// mobile) $font-weight-heading; a $space-lg dele, as duas ds/display/porta:
+// - lg: lado a lado, larguras assimétricas 653 / 467 (proporção do .pen dentro da
+//   coluna), gap $space-3xl, réguas superior e inferior hairline $border-default;
+// - abaixo: empilhadas, régua superior no contentor e divisor inferior em cada porta.
 //
-// `h2` invisível (`sr-only`): o `.pen` não desenha um título visível aqui — a secção é
-// só os dois cartões, logo a seguir ao hero. Sem ele, a hierarquia de títulos saltava de
-// h1 (Hero) para h3 (dentro dos cartões), o que o Lighthouse assinala como erro de
-// acessibilidade (heading-order) — apanhado na auditoria de 2026-09-05.
+// Movimento (storyboard, quadro 02): título primeiro, depois as portas pela ordem de
+// leitura. Cada porta é um grupo próprio: em mobile dispara quando ela própria chega aos
+// 20%; em lg as duas estão na mesma linha e entram com 70 ms entre elas.
+// O "Quem" de cada porta é a frase das fichas de serviço (servicos.inicial/avancado).
 
 export async function DuasPortas() {
-  const { home } = await getDictionary();
+  const { home, servicos } = await getDictionary();
   const t = home.doors;
+  const portas = [
+    {
+      quem: servicos.inicial.titulo,
+      frase: t.onlineTitle,
+      descricao: t.onlineBody,
+      href: "/servicos#comecar",
+      ligacao: t.onlineCta,
+      ordem: "[--reveal-i:1]",
+    },
+    {
+      quem: servicos.avancado.titulo,
+      frase: t.advancedTitle,
+      descricao: t.advancedBody,
+      href: "/servicos#avancadas",
+      ligacao: t.advancedCta,
+      ordem: "[--reveal-i:0] lg:[--reveal-i:2]",
+    },
+  ];
   return (
-    <section
-      aria-labelledby="duas-portas-titulo"
-      className="grid gap-md lg:grid-cols-[660fr_516fr] lg:gap-lg"
-    >
-      <h2 id="duas-portas-titulo" className="sr-only">
-        {t.title}
-      </h2>
-
-      <Card
-        surface="raised"
-        highlight
-        className="flex flex-col gap-sm p-lg lg:gap-md lg:p-xl"
-      >
-        <span className="flex size-12 items-center justify-center rounded-[var(--radius-md)] border border-border-interactive bg-accent-primary-subtle lg:size-14">
-          <Globe size={24} strokeWidth={2} aria-hidden className="text-text-accent lg:size-7" />
-        </span>
-
-        <h3 className="font-heading text-title-sm font-semibold tracking-[var(--letter-spacing-title)] text-text-primary lg:text-title">
-          {t.onlineTitle}
-        </h3>
-
-        <p className="font-body text-body text-text-secondary lg:text-body-lg">
-          {t.onlineBody}
-        </p>
-
-        <ButtonLink
-          href="/servicos#comecar"
-          variant="secondary"
-          className="h-12 w-full lg:w-auto lg:self-start"
+    <Reveal as="section" aria-labelledby="portas-titulo" className="pb-4xl">
+      <div className="flex flex-col gap-lg">
+        <h2
+          id="portas-titulo"
+          data-reveal=""
+          className="font-heading text-title-sm font-semibold tracking-[var(--letter-spacing-title)] text-text-primary lg:text-title"
         >
-          {t.onlineCta}
-          <ArrowRight size={20} strokeWidth={2} aria-hidden />
-        </ButtonLink>
-      </Card>
+          {t.title}
+        </h2>
 
-      <Card className="flex flex-col gap-sm p-lg lg:gap-md lg:p-xl">
-        <h3 className="font-heading text-body-lg font-semibold tracking-[var(--letter-spacing-title)] text-text-primary lg:text-title-sm">
-          {t.advancedTitle}
-        </h3>
-
-        <p className="font-body text-body text-text-secondary">
-          {t.advancedBody}
-        </p>
-
-        <LinkArrow href="/servicos#avancadas">{t.advancedCta}</LinkArrow>
-      </Card>
-    </section>
+        <ul className="flex flex-col border-t border-border-default lg:grid lg:grid-cols-[653fr_467fr] lg:gap-3xl lg:border-b">
+          {portas.map((porta) => (
+            <Reveal
+              as="li"
+              key={porta.href}
+              className="border-b border-border-default lg:border-b-0"
+            >
+              <Porta
+                data-reveal=""
+                className={porta.ordem}
+                quem={porta.quem}
+                frase={porta.frase}
+                descricao={porta.descricao}
+                href={porta.href}
+                ligacao={porta.ligacao}
+              />
+            </Reveal>
+          ))}
+        </ul>
+      </div>
+    </Reveal>
   );
 }

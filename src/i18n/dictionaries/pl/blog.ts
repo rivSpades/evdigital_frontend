@@ -28,6 +28,6 @@ export const blog: typeof Source = {
   relatedTitle: "Czytaj dalej",
   relatedAll: "Zobacz wszystkie artykuły",
   closingTitle: "Czy po lekturze mają Państwo jakieś wątpliwości?",
-  closingText: "Trzydzieści minut, bez zobowiązań, by ustalić, co ma sens w Państwa przypadku.",
+  closingText: "Bez zobowiązań, by ustalić, co ma sens w Państwa przypadku.",
   closingCta: "Skontaktuj się",
 };

@@ -11,6 +11,7 @@ export const areaCliente = {
     projetoDetalheTitle: "Detalhe do projeto",
     confirmarTitle: "Confirmar email",
     definicoesTitle: "Definições",
+    reporTitle: "Nova palavra-passe",
   },
   topbar: {
     area: "Área de Cliente",
@@ -85,6 +86,7 @@ export const areaCliente = {
     submitting: "A entrar...",
     errUnconfirmed: "Falta confirmar o seu email. Reenviámos a ligação agora.",
     errCredentials: "O email ou a palavra-passe não estão certos.",
+    errPasswordRequired: "Escreva a sua palavra-passe.",
     errLogin: "Não foi possível entrar agora. Tente outra vez.",
     createdTitle: "Falta confirmar o seu email.",
     createdBody:
@@ -99,9 +101,31 @@ export const areaCliente = {
     register: "Criar conta",
     registering: "A criar conta...",
     errRegister: "Não foi possível criar a conta agora. Tente outra vez.",
+    errEmailTaken: "Já existe uma conta com este email.",
     registerNote: "Depois de criar a conta enviamos-lhe um email para confirmar o endereço.",
-    contactPrompt: "Ainda não é cliente e quer falar connosco?",
-    contactCta: "Fale connosco",
+    // Pedir a ligação para repor a palavra-passe (/recuperar-palavra-passe; forgotPassword é a
+    // ligação no Entrar, backToLogin a seta da barra fixa).
+    forgotPassword: "Esqueceu a palavra-passe?",
+    backToLogin: "Voltar a entrar",
+    resetHeading: "Esqueceu a palavra-passe?",
+    resetIntro: "Escreva o email da sua conta. Enviamos uma ligação para definir uma nova.",
+    resetSubmit: "Enviar ligação",
+    resetSubmitting: "A enviar...",
+    resetSentTitle: "Veja o seu email.",
+    resetSentBody:
+      "Se houver uma conta com este endereço, enviámos uma ligação para definir uma nova palavra-passe. Veja também o lixo eletrónico.",
+    resetResend: "Enviar outra vez",
+    resetErr: "Tente outra vez daqui a nada. Se continuar, fale connosco.",
+    // Chegada de /repor-palavra-passe depois de definir a palavra-passe nova.
+    passwordResetTitle: "Palavra-passe alterada.",
+    passwordResetBody: "Entre com a palavra-passe nova.",
+  },
+  repor: {
+    heading: "Nova palavra-passe",
+    intro: "Escolha a palavra-passe nova da sua conta.",
+    invalidTitle: "Esta ligação já não é válida",
+    invalidBody: "Já foi usada ou expirou. Peça outra para definir uma palavra-passe nova.",
+    requestNew: "Pedir nova ligação",
   },
   confirmar: {
     okTitle: "Email confirmado",
@@ -138,9 +162,7 @@ export const areaCliente = {
     noResultsHint: "Experimente outros termos ou limpe os filtros.",
   },
   novoPedido: {
-    heading: "O que precisa?",
-    intro:
-      "Descreva com as suas palavras. Não é preciso saber termos técnicos, e se preferir falar, também pode.",
+    heading: "Novo pedido",
     breadcrumbCurrent: "Novo pedido",
     form: {
       typeQuestion: "Que tipo de pedido é?",
@@ -179,6 +201,9 @@ export const areaCliente = {
       attachments:
         "Anexos chegam numa próxima fase. Se ajudar, descreva o que veria numa fotografia do ecrã.",
       errGeneral: "Não foi possível enviar o pedido agora. Tente outra vez.",
+      errTitleRequired: "Escreva um título para o pedido.",
+      errDescriptionRequired: "Descreva o que precisa.",
+      errProjectInvalid: "Projeto inválido.",
       submit: "Enviar pedido",
       submitting: "A enviar...",
       cancel: "Cancelar",
@@ -186,9 +211,7 @@ export const areaCliente = {
     },
   },
   novoProjeto: {
-    heading: "Fale-nos do projeto que quer.",
-    intro:
-      "Descreva com as suas palavras o que precisa. Não é preciso saber termos técnicos, e se preferir falar, também pode.",
+    heading: "Novo projeto",
     breadcrumbCurrent: "Novo projeto",
     form: {
       urgencias: {
@@ -208,6 +231,8 @@ export const areaCliente = {
       attachments:
         "Anexos chegam numa próxima fase. Se ajudar, descreva o que veria numa fotografia do ecrã.",
       errGeneral: "Não foi possível enviar o pedido agora. Tente outra vez.",
+      errTitleRequired: "Escreva um título para o pedido.",
+      errDescriptionRequired: "Descreva o que precisa.",
       submit: "Enviar pedido",
       submitting: "A enviar...",
       cancel: "Cancelar",
@@ -235,6 +260,11 @@ export const areaCliente = {
       errSend: "Não foi possível enviar a mensagem agora. Tente outra vez.",
       submit: "Responder",
       submitting: "A enviar...",
+      // Conversa ainda vazia: não há nada a que responder.
+      startConversation: "Iniciar conversa",
+      placeholderFirst: "Escreva a sua mensagem.",
+      ariaLabelFirst: "Escreva a sua mensagem",
+      cancel: "Cancelar",
     },
   },
   definicoes: {
@@ -253,10 +283,11 @@ export const areaCliente = {
       companyPlaceholder: "Nome da empresa",
       nif: "NIF",
       nifPlaceholder: "123456789",
+      optional: "Opcional",
       errGeneral: "Não foi possível guardar as alterações agora. Tente outra vez.",
       submit: "Guardar alterações",
       submitting: "A guardar...",
-      success: "Perfil actualizado.",
+      success: "Perfil atualizado.",
     },
     seguranca: {
       heading: "Segurança",
@@ -268,12 +299,37 @@ export const areaCliente = {
       showPassword: "Mostrar palavra-passe",
       hidePassword: "Ocultar palavra-passe",
       errOldPassword: "A palavra-passe atual não está certa.",
+      errOldPasswordRequired: "Escreva a sua palavra-passe atual.",
       errNewPassword: "A palavra-passe precisa de pelo menos oito caracteres.",
       errPasswordMismatch: "As palavras-passe não coincidem.",
       errGeneral: "Não foi possível mudar a palavra-passe agora. Tente outra vez.",
       submit: "Mudar palavra-passe",
       submitting: "A mudar...",
       success: "Palavra-passe alterada.",
+      // Conta criada com Google (`has_usable_password === false`).
+      googleTitle: "A sua conta está ligada ao Google.",
+      googleBody:
+        "Entra com o Google. Se quiser, defina também uma palavra-passe para entrar com o email.",
+      googleSubmit: "Definir palavra-passe",
+      googleSubmitting: "A guardar...",
+      googleSuccessTitle: "Palavra-passe definida.",
+      googleSuccessBody: "Já pode entrar com o email e esta palavra-passe.",
+      googleErr: "Não foi possível definir a palavra-passe agora. Tente outra vez.",
+    },
+    apagar: {
+      title: "Apagar conta",
+      body: "Pedimos à equipa que apague a sua conta e os seus dados. Os projetos e pedidos deixam de aparecer aqui.",
+      cta: "Apagar conta",
+      modalTitle: "Apagar a sua conta?",
+      modalBody:
+        "Enviamos o pedido à equipa. Apagamos a conta e os seus dados, e os projetos e pedidos deixam de aparecer aqui. Não dá para desfazer.",
+      confirm: "Pedir apagamento",
+      sending: "A enviar...",
+      cancel: "Cancelar",
+      close: "Fechar",
+      sentTitle: "Pedido enviado.",
+      sentBody: "Respondemos por email.",
+      err: "Tente outra vez daqui a nada. Se continuar, fale connosco.",
     },
   },
   projetoDetalhe: {

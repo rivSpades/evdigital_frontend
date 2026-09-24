@@ -60,6 +60,6 @@ export const home: typeof Source = {
     ],
   },
   finalCta: {
-    body: "Trzydzieści minut, bez zobowiązań, żeby zrozumieć, gdzie Państwo są i co warto zrobić dalej.",
+    body: "Bez zobowiązań, żeby zrozumieć, gdzie Państwo są i co warto zrobić dalej.",
   },
 };

@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
-import Link from "@/i18n/locale-link";
+import { redirect } from "next/navigation";
+import { localizePath } from "@/i18n/config";
 import { getLocale, getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/i18n/metadata";
-import { ArrowLeft } from "lucide-react";
+import { AuthShell } from "@/components/area-cliente/auth-shell";
+import { publicSiteHref } from "@/lib/site-url";
 import { EntrarForm } from "@/components/area-cliente/entrar-form";
 
-// Ecrã "Área de Cliente · Entrar e criar conta" (m2pAVi) do design-system.pen.
+// Frames "Ecrã · Entrar" do grupo "v2 · A vez" (flhgP) do design-system.pen. Criar conta
+// é outra página (/criar-conta, mesmo `EntrarForm` com `pagina="criar-conta"`).
+//
+// Parâmetros de chegada:
+// - `?erro=google`  regresso falhado do OAuth (aviso de erro na folha)
+// - `?reposta=1`    a palavra-passe nova acabou de ser definida em /repor-palavra-passe
+// - `?repor=1`      URL antigo do pedido de ligação (era um estado deste ecrã): redirecciona
+//                   para /recuperar-palavra-passe, a rota própria desde 2026-09-24
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getLocale();
@@ -21,33 +30,31 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AreaClienteEntrar({
   searchParams,
 }: PageProps<"/[lang]/area-cliente/entrar">) {
-  const { erro } = await searchParams;
+  const { erro, reposta, repor } = await searchParams;
   const lang = await getLocale();
-  const { areaCliente: t } = await getDictionary(lang);
+  if (repor === "1") redirect(localizePath(lang, "/area-cliente/recuperar-palavra-passe"));
+  const { areaCliente: t, contacto } = await getDictionary(lang);
   return (
-    <div className="flex min-h-screen flex-col bg-bg-base">
-      <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border-subtle bg-bg-surface px-lg lg:px-2xl">
-        <span className="font-heading text-label font-bold tracking-[var(--letter-spacing-title)] text-text-primary">
-          <span className="text-text-accent">Ev</span>Digital
-        </span>
-        <Link
-          href="/"
-          className="flex h-11 items-center gap-xs px-xs font-body text-label font-medium text-text-link transition-colors hover:text-text-accent"
-        >
-          <ArrowLeft size={18} strokeWidth={2} aria-hidden />
-          {t.entrar.backToSite}
-        </Link>
-      </header>
-
-      <main className="flex flex-1 flex-col items-center gap-2xl px-lg py-3xl lg:py-4xl">
-        <div className="flex w-full max-w-[520px] flex-col items-center gap-sm text-center">
-          <h1 className="font-heading text-title font-semibold tracking-[var(--letter-spacing-title)] text-text-primary">
-            {t.entrar.heading}
-          </h1>
-        </div>
-
-        <EntrarForm erroGoogle={erro === "google"} lang={lang} t={t.entrar} />
-      </main>
-    </div>
+    <AuthShell
+      backToSite={t.entrar.backToSite}
+      area={t.entrar.heading}
+      siteHref={publicSiteHref(lang)}
+    >
+      <EntrarForm
+        pagina="entrar"
+        erroGoogle={erro === "google"}
+        reposta={reposta === "1"}
+        lang={lang}
+        campos={{
+          nameRequired: contacto.form.validation.nameRequired,
+          emailRequired: contacto.form.validation.emailRequired,
+          emailInvalid: contacto.form.validation.emailInvalid,
+          emailFormat: contacto.form.validation.emailFormat,
+          passwordLength: t.definicoes.seguranca.errNewPassword,
+          optional: t.definicoes.perfil.optional,
+        }}
+        t={t.entrar}
+      />
+    </AuthShell>
   );
 }

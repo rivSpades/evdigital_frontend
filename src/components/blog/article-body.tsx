@@ -1,10 +1,13 @@
-// Frames: "Corpo do artigo" (CHJcg no wide, gWTpy no narrow). O .pen modela o corpo como
-// secções (subtítulo H2 + parágrafos), com gap maior entre secções do que dentro delas.
+import { SecaoLeitura } from "@/components/ui/secao-leitura";
+
+// Frames "v2 · A vez" / Ecrã · Blog: "Corpo do artigo" (HPbU7 desktop, ebHXa mobile;
+// exemplo de layout). Cada secção do markdown (subtítulo + parágrafos) é uma
+// ds/display/secao-leitura; gap $space-xl entre secções em lg e $space-lg abaixo.
 //
 // O corpo dos artigos é markdown. O projeto não tem (ainda) um renderer de markdown: esta
 // função cobre o que o .pen desenha, que é também o que o pipeline editorial produz
-// (títulos de nível 2 e parágrafos). Quando o primeiro artigo real precisar de listas,
-// citações ou blocos de código, é aqui que entra um renderer a sério.
+// (títulos e parágrafos). Quando o primeiro artigo real precisar de listas, citações ou
+// blocos de código, é aqui que entra um renderer a sério.
 
 type ArticleSection = {
   heading?: string;
@@ -45,22 +48,11 @@ export function ArticleBody({ content }: { content: string }) {
   return (
     <div className="flex flex-col gap-lg lg:gap-xl">
       {sections.map((section, index) => (
-        <section
-          key={section.heading ?? index}
-          className="flex flex-col gap-xs lg:gap-sm"
-        >
-          {section.heading ? (
-            <h2 className="font-heading text-body-lg font-semibold leading-[var(--line-height-title)] tracking-[var(--letter-spacing-title)] text-text-primary lg:text-title-sm">
-              {section.heading}
-            </h2>
-          ) : null}
-
+        <SecaoLeitura key={section.heading ?? index} titulo={section.heading}>
           {section.paragraphs.map((paragraph) => (
-            <p key={paragraph} className="font-body text-body text-text-secondary">
-              {paragraph}
-            </p>
+            <p key={paragraph}>{paragraph}</p>
           ))}
-        </section>
+        </SecaoLeitura>
       ))}
     </div>
   );

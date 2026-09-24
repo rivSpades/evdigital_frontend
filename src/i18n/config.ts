@@ -22,6 +22,13 @@ export const htmlLang: Record<Locale, string> = {
   pl: "pl",
 };
 
+/** Locale de `Intl` (datas, plurais) por idioma do site. */
+export const intlLocale: Record<Locale, string> = {
+  pt: "pt-PT",
+  en: "en-GB",
+  pl: "pl-PL",
+};
+
 /** Valor de `og:locale`. */
 export const ogLocale: Record<Locale, string> = {
   pt: "pt_PT",

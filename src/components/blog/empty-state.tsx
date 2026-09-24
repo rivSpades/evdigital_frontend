@@ -1,24 +1,22 @@
-import { ButtonLink } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Ligacao } from "@/components/ui/ligacao";
+import { VazioTracejado } from "@/components/ui/vazio-tracejado";
 import { getDictionary } from "@/i18n/dictionaries";
 
-// Frames: "Estado B · sem artigos" (YJMi0 no wide, SZuC7 no narrow).
-// É o estado real do lançamento: content/blog/ está vazio por decisão de privacidade
-// (PRD §4.3), por isso este ecrã não é um erro, é a página tal como ela existe hoje.
-// Simplificado a pedido (2026-09-20): dizer só o que é verdade, sem enfeites.
+// Frames "v2 · A vez" / Ecrã · Blog: "Secção · sem artigos" (xV2O2 desktop 1280, jdOuF
+// mobile 375). É o estado real do lançamento: content/blog/ está vazio por decisão de
+// privacidade (PRD §4.3), por isso não é um erro, é a página tal como existe hoje.
+// ds/feedback/vazio-tracejado (704 de largura em lg) e a ds/action/ligacao "acao" para os
+// serviços, gap $space-sm.
 
 export async function BlogEmptyState() {
   const { blog: t } = await getDictionary();
 
   return (
-    <Card className="flex flex-col items-center gap-md px-lg py-2xl text-center">
-      <h2 className="font-heading text-title-sm font-semibold tracking-[var(--letter-spacing-title)] text-text-primary">
-        {t.emptyTitle}
-      </h2>
-
-      <ButtonLink href="/servicos" variant="tertiary">
+    <div className="flex flex-col gap-sm lg:max-w-[704px]">
+      <VazioTracejado>{t.emptyTitle}</VazioTracejado>
+      <Ligacao href="/servicos" variant="acao">
         {t.emptyCta}
-      </ButtonLink>
-    </Card>
+      </Ligacao>
+    </div>
   );
 }

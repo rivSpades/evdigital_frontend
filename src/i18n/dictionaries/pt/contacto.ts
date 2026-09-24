@@ -3,14 +3,14 @@ export const contacto = {
   metadata: {
     title: "Contacto",
     description:
-      "Trinta minutos, sem compromisso e sem custo. Se não fizer sentido avançar, dizemos-lhe.",
+      "Sem compromisso e sem custo. Se não fizer sentido avançar, dizemos-lhe.",
   },
   page: {
     title: "Vamos conversar",
   },
   steps: {
     describe: "Fale-nos do que precisa",
-    meeting: "Deseja marcar reunião?",
+    meeting: "Deseja marcar uma reunião?",
     summary: "Resumo",
   },
   form: {
@@ -24,6 +24,7 @@ export const contacto = {
       nameRequired: "Escreva o seu nome.",
       emailRequired: "Escreva o seu email.",
       emailInvalid: "Falta o @. Escreva assim: nome@empresa.pt",
+      emailFormat: "Este email não parece estar certo. Escreva assim: nome@empresa.pt",
       needRequired: "Escolha uma opção.",
       messageRequired: "Escreva o que precisa.",
     },
@@ -41,7 +42,7 @@ export const contacto = {
   },
   meeting: {
     question: "Deseja marcar uma reunião?",
-    hint: "É opcional. Trinta minutos, sem compromisso.",
+    hint: "É opcional. Sem compromisso.",
     yes: "Sim, quero marcar",
     no: "Não, só quero enviar a mensagem",
     loading: "A procurar horários...",
@@ -62,6 +63,9 @@ export const contacto = {
     meetingLabel: "Reunião",
     noMeeting: "Sem reunião marcada",
     notProvided: "Não indicado",
+    // Aviso antes de enviar; o rótulo da ligação vem de institucional.termos.form.privacyLinkLabel.
+    privacyBefore: "Usamos estes dados só para lhe responder. Saiba mais na ",
+    privacyAfter: ".",
   },
   actions: {
     continue: "Continuar",

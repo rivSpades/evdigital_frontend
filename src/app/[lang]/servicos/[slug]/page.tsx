@@ -1,42 +1,59 @@
+import { Fragment } from "react";
 import type { Metadata } from "next";
-import Link from "@/i18n/locale-link";
 import { notFound } from "next/navigation";
-import { ChevronRight } from "lucide-react";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
+import { BackLink } from "@/components/area-cliente/back-link";
 import { Accordion } from "@/components/ui/accordion";
 import { ButtonLink } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { LinkArrow } from "@/components/ui/link-arrow";
+import { FechoPagina } from "@/components/ui/fecho-pagina";
+import { Ligacao } from "@/components/ui/ligacao";
+import { LinhaTexto, ListaTexto } from "@/components/ui/linha-texto";
 import { ComoFunciona } from "@/components/servicos/como-funciona";
 import { GanhaExige } from "@/components/servicos/ganha-exige";
-import { IconeServico } from "@/components/servicos/icones";
-import { ListaVerificada } from "@/components/servicos/lista-verificada";
 import { Pagamentos } from "@/components/servicos/pagamentos";
 import { Tabela } from "@/components/servicos/tabela";
 import { getAllServices, getServiceBySlug } from "@/lib/content";
 import { getDictionary } from "@/i18n/dictionaries";
 import { hasLocale } from "@/i18n/config";
 import { pageMetadata } from "@/i18n/metadata";
+import { cn } from "@/lib/cn";
 
 type Props = { params: Promise<{ lang: string; slug: string }> };
 
-// Ficha de produto migrada do frame "Página · Serviço · Loja online (desktop)" (YSyrf)
-// do design/design-system.pen — o template partilhado pelos 7 produtos do catálogo
-// (PRD-servicos.md §4). Rota dinâmica: um ficheiro por produto em content/services/**.
+// Ficha de serviço migrada do grupo "Ecrã · Serviço (ficha)" de "v2 · A vez" (flhgP) do
+// design/design-system.pen: "Serviço · Loja online" (etpw3 desktop 1280, t85bq mobile 375)
+// e "Serviço · Automação e integrações (avançado)" (w4tfa, O4HUF). Uma rota para os
+// serviços de content/<lang>/services/**; os blocos aparecem conforme o frontmatter.
 //
-// Blocos condicionais do PRD (§4) que ficam de fora enquanto não houver conteúdo real:
-// projetos relacionados e testemunhos (`frontmatter.projects`/`testimonials` vazios na
-// V1 — decisão D7 do PRD.md, nunca uma secção "em breve").
+// Uma coluna com as margens de layout; em lg as secções com Margem usam a grelha de 12
+// (Margem = colunas 1 a 3, 278 no .pen; coluna principal = 4 a 12). Por secção:
+// - topo: ds/navigation/voltar ("Serviços") como primeira linha, título $font-size-display
+//   ($font-size-display-narrow em mobile), resultado body-lg (body) com 760 de largura, e as
+//   acções a $space-xs: botão primário (56) e ligações. Padding [$space-xl, 0, $space-4xl,
+//   0] ([$space-lg, 0, $space-3xl, 0] em mobile), gap $space-lg ($space-md).
+// - pagamentos (só Loja online) e "como funciona" (só `genericProcess`): componentes
+//   próprios em components/servicos/.
+// - "O que poderá incluir": família A como a Loja online (título $font-size-title e duas
+//   colunas de registo, gap $space-2xl); família B como a Automação (título na Margem e o
+//   registo na coluna principal). Em mobile, uma lista.
+// - perguntas frequentes: ds/disclosure/accordion-item "vez" (override da ficha); família A
+//   com o título na Margem, família B com o título por cima da lista na coluna principal.
+// - "Também pode interessar" e o fecho (ds/layout/fecho-pagina) na coluna principal.
+//
+// Blocos sem conteúdo real ficam de fora (nunca uma secção "em breve"): corpo do .md,
+// extraSections, "o que ganha / o que exige", projetos relacionados e testemunhos
+// (decisão D7 do PRD.md). Sem scroll reveal.
+
+const tituloSeccao =
+  "font-heading text-title font-semibold tracking-[var(--letter-spacing-title)] text-text-primary";
 
 export function generateStaticParams({ params }: { params: { lang: string } }) {
   if (!hasLocale(params.lang)) return [];
   return getAllServices(params.lang).map((servico) => ({ slug: servico.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang, slug } = await params;
   if (!hasLocale(lang)) return {};
   const servico = getServiceBySlug(lang, slug);
@@ -60,6 +77,7 @@ export default async function ServicoPage({ params }: Props) {
   const { frontmatter, content } = servico;
   const {
     title,
+    family,
     outcome,
     audience,
     extraSections,
@@ -71,6 +89,7 @@ export default async function ServicoPage({ params }: Props) {
     faq,
     related,
   } = frontmatter;
+  const avancado = family === "B";
 
   // O corpo do .md é texto simples separado por linhas em branco. Um bloco em que todas
   // as linhas começam por "- " é uma lista; qualquer outro é um parágrafo.
@@ -94,226 +113,248 @@ export default async function ServicoPage({ params }: Props) {
     .map((relatedSlug) => getServiceBySlug(lang, relatedSlug))
     .filter((s): s is NonNullable<typeof s> => s !== null);
 
+  const meio = Math.ceil(includes.length / 2);
+  const colunasIncluir = [includes.slice(0, meio), includes.slice(meio)].filter(
+    (coluna) => coluna.length > 0,
+  );
+
   return (
     <>
       <Nav currentPath="/servicos" />
 
-      <main className="flex-1 px-lg pt-lg pb-3xl md:px-xl lg:px-2xl lg:pt-xl lg:pb-4xl">
-        <div className="mx-auto flex max-w-[var(--grid-max-width)] flex-col gap-3xl lg:gap-4xl">
-          {/* Cabeçalho do produto */}
-          <div className="flex flex-col gap-lg">
-            <nav aria-label={t.ficha.breadcrumbAria} className="flex items-center gap-xs">
-              <Link
-                href="/servicos"
-                className="font-body text-caption font-medium text-text-link transition-colors hover:text-text-accent"
-              >
-                {t.ficha.breadcrumbServicos}
-              </Link>
-              <ChevronRight size={16} strokeWidth={2} aria-hidden className="text-text-tertiary" />
-              <span className="font-body text-caption text-text-tertiary">{title}</span>
-            </nav>
+      <main className="flex-1 px-lg md:px-xl lg:px-2xl">
+        <div className="mx-auto w-full max-w-[var(--grid-max-width)]">
+          {/* Secção · topo */}
+          <div className="flex flex-col gap-md pt-lg pb-3xl lg:gap-lg lg:pt-xl lg:pb-4xl">
+            <BackLink href="/servicos" label={t.ficha.breadcrumbServicos} />
 
-            <div className="flex items-start gap-lg">
-              <span className="hidden size-16 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-accent-primary-subtle lg:flex">
-                <IconeServico slug={servico.slug} size={32} className="text-text-accent" />
-              </span>
-              <div className="flex flex-col gap-md">
-                <h1 className="font-heading text-headline font-bold tracking-[var(--letter-spacing-headline)] text-text-primary lg:text-display-sm lg:tracking-[var(--letter-spacing-display)]">
-                  {title}
-                </h1>
-                {outcome ? (
-                  <p className="font-body text-body-lg text-text-secondary lg:max-w-[760px]">
-                    {outcome}
-                  </p>
-                ) : null}
-              </div>
+            <div className="flex flex-col gap-sm lg:gap-md">
+              <h1 className="font-heading text-[length:var(--font-size-display-narrow)] leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-display)] text-text-primary lg:text-display">
+                {title.split("/").map((parte, i) => (
+                  <Fragment key={parte}>
+                    {i > 0 ? (
+                      <>
+                        /<wbr />
+                      </>
+                    ) : null}
+                    {parte}
+                  </Fragment>
+                ))}
+              </h1>
+              {outcome ? (
+                <p className="font-body text-body text-text-secondary lg:max-w-[760px] lg:text-body-lg">
+                  {outcome}
+                </p>
+              ) : null}
             </div>
 
-            <div className="flex flex-col gap-sm lg:flex-row lg:items-center">
-              <ButtonLink href="/contacto" size="lg" className="w-full lg:w-auto">
-                {t.ficha.marcarConversa}
-              </ButtonLink>
+            <div className="flex flex-col items-start gap-xs pt-xs lg:flex-row lg:items-center lg:gap-lg">
               <ButtonLink
                 href={`/contacto?servico=${servico.slug}`}
-                variant="secondary"
-                size="lg"
-                className="w-full lg:w-auto"
+                size="action"
+                className="w-full tracking-[var(--letter-spacing-label)] md:w-auto"
               >
-                {t.ficha.pedirProposta}
-              </ButtonLink>
-              <ButtonLink
-                href="/area-cliente/pedidos/novo"
-                variant="tertiary"
-                size="lg"
-                className="w-full lg:w-auto"
-              >
-                {t.ficha.jaCliente}
+                {t.ficha.marcarConversa}
               </ButtonLink>
             </div>
           </div>
 
-          {/* O que é e para quem: só aparece se o serviço tiver texto no corpo do .md */}
+          {/* O que é e para quem: só com texto no corpo do .md */}
           {blocos.length > 0 ? (
-          <section aria-labelledby="o-que-e-titulo" className="flex flex-col gap-md">
-            <h2
-              id="o-que-e-titulo"
-              className="font-heading text-headline font-bold tracking-[var(--letter-spacing-headline)] text-text-primary"
+            <section
+              aria-labelledby="o-que-e-titulo"
+              className="flex flex-col gap-md pb-3xl lg:gap-lg lg:pb-4xl"
             >
-              {t.ficha.oQueEParaQuem}
-            </h2>
-            <div className="flex flex-col gap-md lg:max-w-[860px]">
+              <h2 id="o-que-e-titulo" className={tituloSeccao}>
+                {t.ficha.oQueEParaQuem}
+              </h2>
               {blocos.map((bloco) =>
                 bloco.tipo === "lista" ? (
-                  <ul key={bloco.itens[0]} className="flex flex-col gap-sm">
+                  <ListaTexto key={bloco.itens[0]}>
                     {bloco.itens.map((item) => (
-                      <li key={item} className="flex gap-sm">
-                        <span
-                          aria-hidden
-                          className="mt-[13px] size-1.5 shrink-0 rounded-full bg-text-accent"
-                        />
-                        <span className="font-body text-body-lg text-text-secondary">
-                          {item}
-                        </span>
-                      </li>
+                      <LinhaTexto key={item}>{item}</LinhaTexto>
                     ))}
-                  </ul>
+                  </ListaTexto>
                 ) : (
-                  <p key={bloco.texto} className="font-body text-body-lg text-text-secondary">
+                  <p
+                    key={bloco.texto}
+                    className="font-body text-body text-text-secondary lg:max-w-[760px] lg:text-body-lg"
+                  >
                     {bloco.texto}
                   </p>
-                )
+                ),
               )}
-            </div>
-          </section>
+            </section>
           ) : null}
 
-          {/* Blocos 3 e 7: opções e conteúdo específico do produto */}
+          {/* Opções e conteúdo específico do produto (PRD-servicos.md §4, blocos 3 e 7) */}
           {extraSections.map((secao) => (
-            <section key={secao.title} className="flex flex-col gap-lg">
-              <h2 className="font-heading text-headline font-bold tracking-[var(--letter-spacing-headline)] text-text-primary">
-                {secao.title}
-              </h2>
+            <section key={secao.title} className="flex flex-col gap-md pb-3xl lg:gap-lg lg:pb-4xl">
+              <h2 className={tituloSeccao}>{secao.title}</h2>
 
-              {secao.intro.length > 0 ? (
-                <div className="flex flex-col gap-md lg:max-w-[860px]">
-                  {secao.intro.map((p) => (
-                    <p key={p} className="font-body text-body-lg text-text-secondary">
-                      {p}
-                    </p>
-                  ))}
-                </div>
-              ) : null}
+              {secao.intro.map((p) => (
+                <p
+                  key={p}
+                  className="font-body text-body text-text-secondary lg:max-w-[760px] lg:text-body-lg"
+                >
+                  {p}
+                </p>
+              ))}
 
-              {secao.table ? <Tabela
+              {secao.table ? (
+                <Tabela
                   columns={secao.table.columns}
                   rows={secao.table.rows}
                   recommendedLabel={t.tabela.recomendacao}
-                /> : null}
+                />
+              ) : null}
 
               {secao.items.length > 0 && !secao.table ? (
                 secao.ordered ? (
-                  <ol className="flex flex-col gap-md">
+                  <ol className="flex flex-col border-t border-border-default">
                     {secao.items.map((item, i) => (
-                      <li key={item} className="flex gap-md">
-                        <span
-                          aria-hidden
-                          className="w-8 shrink-0 font-mono text-body-lg font-semibold text-text-accent"
-                        >
-                          {String(i + 1).padStart(2, "0")}
+                      <LinhaTexto key={item}>
+                        <span className="flex gap-md">
+                          <span aria-hidden className="w-8 shrink-0 font-mono text-text-tertiary">
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
+                          <span>{item}</span>
                         </span>
-                        <p className="font-body text-body text-text-secondary">{item}</p>
-                      </li>
+                      </LinhaTexto>
                     ))}
                   </ol>
                 ) : (
-                  <ul className="flex flex-col gap-sm">
+                  <ListaTexto>
                     {secao.items.map((item) => (
-                      <li key={item} className="flex gap-sm">
-                        <span
-                          aria-hidden
-                          className="mt-[11px] size-1.5 shrink-0 rounded-full bg-text-tertiary"
-                        />
-                        <p className="font-body text-body text-text-secondary">{item}</p>
-                      </li>
+                      <LinhaTexto key={item}>{item}</LinhaTexto>
                     ))}
-                  </ul>
+                  </ListaTexto>
                 )
               ) : null}
 
               {secao.note ? (
-                <p className="font-body text-body text-text-tertiary italic">{secao.note}</p>
+                <p className="font-body text-body text-text-tertiary">{secao.note}</p>
               ) : null}
             </section>
           ))}
 
           {showPayments ? <Pagamentos lang={lang} /> : null}
 
-          {/* O que está incluído */}
-          <section aria-labelledby="incluido-titulo" className="flex flex-col gap-lg">
-            <h2
-              id="incluido-titulo"
-              className="font-heading text-headline font-bold tracking-[var(--letter-spacing-headline)] text-text-primary"
-            >
+          {/* Secção · o que poderá incluir */}
+          <section
+            aria-labelledby="incluido-titulo"
+            className={cn(
+              "flex flex-col gap-md pb-3xl lg:pb-4xl",
+              avancado ? "lg:grid lg:grid-cols-12 lg:gap-x-lg lg:gap-y-0" : "lg:gap-lg",
+            )}
+          >
+            <h2 id="incluido-titulo" className={cn(tituloSeccao, avancado && "lg:col-span-3")}>
               {t.ficha.oQuePodeIncluir}
             </h2>
-            <ListaVerificada items={includes} />
+            {avancado ? (
+              <ListaTexto className="lg:col-span-9">
+                {includes.map((item) => (
+                  <LinhaTexto key={item} grande>
+                    {item}
+                  </LinhaTexto>
+                ))}
+              </ListaTexto>
+            ) : (
+              <div className="flex flex-col lg:grid lg:grid-cols-2 lg:gap-2xl">
+                {colunasIncluir.map((coluna, i) => (
+                  <ul
+                    key={coluna[0]}
+                    className={cn(
+                      "flex flex-col border-border-default",
+                      // Em mobile é uma só lista: a segunda coluna não repete a régua de cima.
+                      i === 0 ? "border-t" : "lg:border-t",
+                    )}
+                  >
+                    {coluna.map((item) => (
+                      <LinhaTexto key={item}>{item}</LinhaTexto>
+                    ))}
+                  </ul>
+                ))}
+              </div>
+            )}
           </section>
 
-          {/* O que ganha / o que isto exige */}
           {benefits.length > 0 && requires.length > 0 ? (
-            <GanhaExige lang={lang} beneficios={benefits} exigencias={requires} tratamento={tratamento} />
+            <GanhaExige
+              lang={lang}
+              beneficios={benefits}
+              exigencias={requires}
+              tratamento={tratamento}
+            />
           ) : null}
 
           {genericProcess ? <ComoFunciona lang={lang} /> : null}
 
-          {/* Perguntas frequentes */}
-          <section aria-labelledby="faq-titulo" className="flex flex-col gap-lg">
-            <h2
-              id="faq-titulo"
-              className="font-heading text-headline font-bold tracking-[var(--letter-spacing-headline)] text-text-primary"
+          {/* Secção · perguntas frequentes */}
+          <section
+            aria-labelledby="faq-titulo"
+            className={cn(
+              "flex flex-col gap-md pb-2xl lg:grid lg:grid-cols-12 lg:gap-x-lg lg:gap-y-0 lg:pb-3xl",
+              !avancado && "lg:pt-2xl",
+            )}
+          >
+            <div
+              className={cn(
+                "flex flex-col gap-md",
+                avancado ? "lg:col-span-9 lg:col-start-4" : "lg:contents",
+              )}
             >
-              {t.ficha.perguntasFrequentes}
-            </h2>
-            <Accordion
-              items={faq.map((f) => ({ question: f.q, answer: f.a }))}
-              className="lg:max-w-[880px]"
-            />
+              <h2 id="faq-titulo" className={cn(tituloSeccao, !avancado && "lg:col-span-3")}>
+                {t.ficha.perguntasFrequentes}
+              </h2>
+              <Accordion
+                items={faq.map((f) => ({ question: f.q, answer: f.a }))}
+                variant="vez-ficha"
+                className={cn("border-t border-border-default", !avancado && "lg:col-span-9")}
+              />
+            </div>
           </section>
 
-          {/* Serviços relacionados — liga a ficha a outras, exigido pelo PRD (§3: nada
-              de páginas órfãs). */}
+          {/* Secção · também pode interessar: liga a ficha a outras (PRD §3, sem órfãs) */}
           {relacionados.length > 0 ? (
-            <section aria-labelledby="relacionados-titulo" className="flex flex-col gap-md">
-              <h2
-                id="relacionados-titulo"
-                className="font-heading text-title-sm font-semibold tracking-[var(--letter-spacing-title)] text-text-primary"
-              >
-                {t.ficha.tambemInteressar}
-              </h2>
-              <div className="flex flex-wrap gap-lg">
-                {relacionados.map((r) => (
-                  <LinkArrow key={r.slug} href={`/servicos/${r.slug}`}>
-                    {r.frontmatter.title}
-                  </LinkArrow>
-                ))}
+            <section
+              aria-labelledby="relacionados-titulo"
+              className="pb-lg lg:grid lg:grid-cols-12 lg:gap-x-lg lg:py-xl"
+            >
+              <div className="flex flex-col gap-2xs lg:col-span-9 lg:col-start-4">
+                <h2
+                  id="relacionados-titulo"
+                  className="font-heading text-title-sm font-semibold tracking-[var(--letter-spacing-title)] text-text-primary"
+                >
+                  {t.ficha.tambemInteressar}
+                </h2>
+                <ul className="flex flex-col lg:flex-row lg:flex-wrap lg:gap-x-lg">
+                  {relacionados.map((r) => (
+                    <li key={r.slug}>
+                      <Ligacao href={`/servicos/${r.slug}`} variant="acao">
+                        {r.frontmatter.title}
+                      </Ligacao>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </section>
           ) : null}
 
-          <Card className="flex flex-col gap-md p-lg lg:flex-row lg:items-center lg:justify-between lg:gap-2xl lg:p-2xl">
-            <div className="flex flex-col gap-md lg:gap-xs">
-              <h2 className="font-heading text-title-sm font-semibold tracking-[var(--letter-spacing-title)] text-text-primary lg:text-title">
-                {t.ficha.ctaTitulo}
-              </h2>
-              <p className="font-body text-body text-text-secondary">
-                {t.ficha.ctaTexto}
-              </p>
-            </div>
-
-            <ButtonLink href="/contacto" size="lg" className="w-full lg:w-auto">
-              {t.ficha.marcarConversa}
-            </ButtonLink>
-          </Card>
+          {/* Secção · fecho */}
+          <section
+            aria-labelledby="fecho-titulo"
+            className="pb-2xl lg:grid lg:grid-cols-12 lg:gap-x-lg lg:pb-3xl"
+          >
+            <FechoPagina
+              titulo={t.ficha.ctaTitulo}
+              tituloId="fecho-titulo"
+              texto={t.ficha.ctaTexto}
+              acao={t.ficha.marcarConversa}
+              href="/contacto"
+              className="lg:col-span-9 lg:col-start-4"
+            />
+          </section>
         </div>
       </main>
 

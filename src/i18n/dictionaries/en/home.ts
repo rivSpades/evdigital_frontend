@@ -60,6 +60,6 @@ export const home: typeof Source = {
     ],
   },
   finalCta: {
-    body: "Thirty minutes, no obligation, to understand where you are and what makes sense to do next.",
+    body: "No obligation, to understand where you are and what makes sense to do next.",
   },
 };

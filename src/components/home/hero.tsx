@@ -1,49 +1,48 @@
 import { getDictionary } from "@/i18n/dictionaries";
 import { ButtonLink } from "@/components/ui/button";
-import { cn } from "@/lib/cn";
+import { Ligacao } from "@/components/ui/ligacao";
 
-// Frames: wzYyU/"Secção · Hero" (mJENw) e EZ3bZ/"Secção · Hero" (weryh).
-// O fundo do .pen é $bg-base com um gradiente radial de $accent-primary-subtle: no
-// Pencil o `size` é o diâmetro normalizado, por isso em CSS o raio é metade
-// (1.5 x 1.9 -> 75% 95%, no narrow 2 x 1.6 -> 100% 80%).
+// Frames "v2 · A vez" / Ecrã · Início: "Secção · hero" (rFFQD desktop 1280, h6S10
+// mobile 375). Sem fundo próprio (é o $bg-base da página), padding [$space-4xl, 0] em lg e
+// [$space-2xl, 0, $space-3xl, 0] empilhado. Texto (gap $space-lg): overline $font-mono
+// caption $text-tertiary com $letter-spacing-overline; título $font-size-display
+// ($font-size-display-sm-narrow em mobile) $font-weight-display; subtítulo body-lg
+// $text-secondary, 680 de largura em lg. Acções a $space-xl do texto: botão primário (56)
+// e ds/action/ligacao primária, lado a lado com gap $space-lg em lg, empilhados com gap
+// $space-md abaixo.
+//
+// Movimento: o título (LCP) e a overline estão visíveis desde o primeiro paint; o
+// subtítulo e a acção entram com um fade curto por CSS (.reveal-load, globals.css), sem
+// esperar por scroll nem pelo JavaScript.
 
 export async function Hero() {
   const { common, home } = await getDictionary();
   const t = home.hero;
   return (
-    <section
-      className={cn(
-        "bg-bg-base px-lg py-3xl md:px-xl",
-        "lg:flex lg:min-h-[620px] lg:items-center lg:px-2xl lg:py-0",
-        "bg-[radial-gradient(ellipse_100%_80%_at_15%_5%,var(--color-accent-primary-subtle)_0%,var(--color-bg-base)_100%)]",
-        "lg:bg-[radial-gradient(ellipse_75%_95%_at_18%_10%,var(--color-accent-primary-subtle)_0%,var(--color-bg-base)_100%)]",
-      )}
-    >
-      <div className="mx-auto flex w-full max-w-[var(--grid-max-width)] flex-col gap-lg">
-        <p className="font-body text-caption font-medium tracking-[var(--letter-spacing-overline)] text-text-accent uppercase">
-          {t.overline}
-        </p>
+    <section aria-labelledby="hero-titulo" className="pt-2xl pb-3xl lg:py-4xl">
+      <div className="flex flex-col gap-xl">
+        <div className="flex flex-col gap-lg">
+          <p className="font-mono text-caption tracking-[var(--letter-spacing-overline)] text-text-tertiary uppercase">
+            {t.overline}
+          </p>
+          <h1
+            id="hero-titulo"
+            className="font-heading text-[length:var(--font-size-display-sm-narrow)] leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-headline)] text-text-primary lg:text-display lg:tracking-[var(--letter-spacing-display)]"
+          >
+            {t.title}
+          </h1>
+          <p className="reveal-load font-body text-body-lg text-text-secondary [--reveal-i:1] lg:max-w-[680px]">
+            {t.lead}
+          </p>
+        </div>
 
-        <h1 className="font-heading text-headline font-bold tracking-[var(--letter-spacing-headline)] text-text-primary lg:max-w-[1080px] lg:text-display lg:tracking-[var(--letter-spacing-display)]">
-          {t.title}
-        </h1>
-
-        <p className="font-body text-body text-text-secondary lg:max-w-[720px] lg:text-body-lg">
-          {t.lead}
-        </p>
-
-        <div className="flex flex-col gap-sm md:flex-row md:gap-md">
-          <ButtonLink href="/contacto" size="lg" className="w-full md:w-auto">
+        <div className="reveal-load flex flex-col items-start gap-md [--reveal-i:2] lg:flex-row lg:items-center lg:gap-lg">
+          <ButtonLink href="/contacto" size="action" className="tracking-[var(--letter-spacing-label)]">
             {common.cta}
           </ButtonLink>
-          <ButtonLink
-            href="/servicos"
-            variant="secondary"
-            size="lg"
-            className="w-full md:w-auto"
-          >
+          <Ligacao href="/servicos" className="tracking-[var(--letter-spacing-label)]">
             {t.secondaryCta}
-          </ButtonLink>
+          </Ligacao>
         </div>
       </div>
     </section>

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { BackendError, backendFetch } from "@/lib/area-cliente/backend";
+import { respostaErros400, respostaPedidoInvalido } from "@/lib/area-cliente/erros";
 import { getSessionToken } from "@/lib/area-cliente/session";
 import type { Perfil } from "@/lib/area-cliente/types";
 
@@ -24,7 +25,7 @@ export async function PATCH(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "pedido_invalido" }, { status: 400 });
+    return respostaPedidoInvalido();
   }
 
   try {
@@ -44,9 +45,8 @@ export async function PATCH(request: Request) {
       if (erro.status === 401 || erro.status === 403) {
         return NextResponse.json({ error: "sem_sessao" }, { status: 401 });
       }
-      if (erro.status === 400) {
-        return NextResponse.json(erro.body, { status: 400 });
-      }
+      // O formulário só tem erro por campo no nome; telefone, empresa e NIF caem em `geral`.
+      if (erro.status === 400) return respostaErros400(erro.body, ["name"]);
     }
     console.error("Falha ao actualizar o perfil na Área de Cliente:", erro);
     return NextResponse.json({ error: "indisponivel" }, { status: 502 });

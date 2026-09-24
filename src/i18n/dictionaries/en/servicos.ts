@@ -17,14 +17,12 @@ export const servicos: typeof Source = {
     breadcrumbAria: "Breadcrumb",
     breadcrumbServicos: "Services",
     marcarConversa: "Contact us",
-    pedirProposta: "Request a proposal",
-    jaCliente: "Already a client? Submit a request in your area",
     oQueEParaQuem: "What it is and who it is for",
     oQuePodeIncluir: "What it may include",
     perguntasFrequentes: "Frequently asked questions",
     tambemInteressar: "You may also be interested in",
     ctaTitulo: "Shall we talk about what you need?",
-    ctaTexto: "Thirty minutes, no commitment, to see whether this makes sense for you.",
+    ctaTexto: "No commitment, to see whether this makes sense for you.",
   },
   ganhaExige: {
     ganha: "What you gain",
@@ -33,19 +31,6 @@ export const servicos: typeof Source = {
   },
   comoFunciona: {
     titulo: "How it works",
-    passos: [
-      { titulo: "We talk.", descricao: "One meeting, no commitment, to understand your business." },
-      { titulo: "We propose.", descricao: "What makes sense to do, in what order, and how much it costs." },
-      {
-        titulo: "We build.",
-        descricao: "You follow the development in the client area and in meetings.",
-      },
-      {
-        titulo: "We stay.",
-        descricao:
-          "Once delivered, you keep getting support whenever you need it: new requests, tickets, consulting, and more.",
-      },
-    ],
   },
   tabela: {
     recomendacao: "Our recommendation",
