@@ -8,7 +8,8 @@ import { cn } from "@/lib/cn";
 //
 // Slots: Conteúdo (gap $space-lg) e Acções no fundo (padding-top $space-xs, gap $space-sm)
 // só com a acção que avança. Nunca "Voltar" dentro da folha (design-guardrails.md §6).
-// Em mobile as Acções são sticky (coladas ao fundo do ecrã enquanto a folha está à vista).
+// Em mobile as Acções são sticky (coladas ao fundo do ecrã enquanto a folha está à vista), numa
+// barra transparente com o botão centrado e a toda a largura.
 //
 // A largura vem do contentor (448 nos ecrãs de autenticação, 704 na coluna das páginas de
 // formulário da Área de Cliente: Novo pedido, Novo projeto, Definições).
@@ -44,10 +45,12 @@ export function Folha({
         <div
           className={cn(
             "flex flex-col gap-sm pt-xs",
-            // Mobile (< md): as acções ficam coladas ao fundo do ecrã enquanto a folha está à
-            // vista (pedido do dono, 2026-09-24), com fundo opaco e régua horizontal em cima,
-            // esticadas até às bordas da folha e com a área segura do iOS por baixo.
-            "max-md:sticky max-md:bottom-0 max-md:z-20 max-md:-mx-md max-md:-mb-lg max-md:border-t max-md:border-border-subtle max-md:bg-bg-surface max-md:px-md max-md:pt-md max-md:pb-[calc(var(--spacing-lg)+env(safe-area-inset-bottom))]",
+            // Mobile (< md): o botão fica colado ao fundo do ecrã enquanto a folha está à vista
+            // (pedido do dono, 2026-09-24). A barra é TRANSPARENTE (sem fundo nem régua): só o
+            // botão se vê, centrado e a toda a largura da folha, com a área segura do iOS por
+            // baixo. `w-full` no botão mesmo quando a acção vem alinhada à direita (wizard).
+            "max-md:sticky max-md:bottom-0 max-md:z-20 max-md:bg-transparent max-md:pt-0 max-md:pb-[calc(var(--spacing-md)+env(safe-area-inset-bottom))]",
+            "max-md:[&_a]:w-full max-md:[&_button]:w-full max-md:[&>*]:w-full max-md:[&>*]:justify-center",
           )}
         >
           {actions}
