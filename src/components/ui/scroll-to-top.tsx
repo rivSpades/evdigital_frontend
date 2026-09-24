@@ -7,10 +7,11 @@ import { ArrowUp } from "lucide-react";
 const SHOW_AFTER_PX = 400;
 
 // Botão flutuante "Voltar ao topo" (montado no layout de [lang]).
-// - Aparece depois de SHOW_AFTER_PX de scroll e esconde-se enquanto o rodapé (<footer>)
-//   estiver no ecrã: fixo no canto inferior direito, tapava as ligações do rodapé (o
-//   seletor de idioma "PL" a 375, 768 e 1280). No rodapé o topo fica a um gesto e há
-//   navegação própria.
+// - Aparece depois de SHOW_AFTER_PX de scroll e fica SEMPRE visível (também no fim da página).
+//   Fixo no canto inferior direito, tapava as ligações do rodapé (o seletor de idioma "PL"
+//   a 375, 768 e 1280): por isso, quando o rodapé (<footer>) entra no ecrã, o botão SOBE a
+//   altura visível do rodapé e fica por cima dele, encostado ao seu topo. Esconder o botão
+//   no fim da página foi um erro (2026-09-24): é aí que mais falta faz.
 // - O rodapé muda a cada página (e há páginas sem ele, ex. Área de Cliente), por isso o
 //   observador volta a ligar-se a cada mudança de rota.
 // - Scroll suave, excepto com prefers-reduced-motion: aí é instantâneo.
@@ -18,9 +19,10 @@ const SHOW_AFTER_PX = 400;
 export function ScrollToTop({ label }: { label: string }) {
   const pathname = usePathname();
   const [passouLimite, setPassouLimite] = useState(false);
-  // Guardado com o caminho em que foi medido: numa página sem rodapé (ou antes da primeira
-  // medição) conta como não visível, sem ter de repor o estado dentro do efeito.
-  const [rodape, setRodape] = useState({ caminho: "", visivel: false });
+  // Altura (px) do rodapé que está visível no ecrã, guardada com o caminho em que foi medida:
+  // numa página sem rodapé (ou antes da primeira medição) conta como 0, sem ter de repor o
+  // estado dentro do efeito.
+  const [rodape, setRodape] = useState({ caminho: "", altura: 0 });
 
   useEffect(() => {
     const onScroll = () => setPassouLimite(window.scrollY > SHOW_AFTER_PX);
@@ -32,15 +34,22 @@ export function ScrollToTop({ label }: { label: string }) {
   useEffect(() => {
     const elemento = document.querySelector("footer");
     if (!elemento) return;
-    const observer = new IntersectionObserver(([entrada]) =>
-      setRodape({ caminho: pathname, visivel: entrada?.isIntersecting ?? false }),
+    // Limiares finos: a altura visível acompanha o scroll sem listener de scroll próprio.
+    const limiares = Array.from({ length: 101 }, (_, i) => i / 100);
+    const observer = new IntersectionObserver(
+      ([entrada]) =>
+        setRodape({
+          caminho: pathname,
+          altura: entrada?.isIntersecting ? Math.round(entrada.intersectionRect.height) : 0,
+        }),
+      { threshold: limiares },
     );
     observer.observe(elemento);
     return () => observer.disconnect();
   }, [pathname]);
 
-  const rodapeVisivel = rodape.caminho === pathname && rodape.visivel;
-  const visible = passouLimite && !rodapeVisivel;
+  const alturaRodape = rodape.caminho === pathname ? rodape.altura : 0;
+  const visible = passouLimite;
 
   function voltarAoTopo() {
     const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -54,7 +63,8 @@ export function ScrollToTop({ label }: { label: string }) {
       tabIndex={visible ? 0 : -1}
       aria-hidden={!visible}
       onClick={voltarAoTopo}
-      className={`fixed cursor-pointer bottom-lg right-lg z-40 flex size-12 items-center justify-center rounded-pill bg-accent-primary text-text-on-accent shadow-elevation-2 transition-[opacity,transform,background-color,visibility] duration-200 motion-reduce:transition-none hover:bg-accent-primary-hover active:bg-accent-primary-pressed ${
+      style={{ bottom: `calc(var(--spacing-lg) + ${alturaRodape}px)` }}
+      className={`fixed cursor-pointer right-lg z-40 flex size-12 items-center justify-center rounded-pill bg-accent-primary text-text-on-accent shadow-elevation-2 transition-[opacity,transform,background-color,visibility] duration-200 motion-reduce:transition-none hover:bg-accent-primary-hover active:bg-accent-primary-pressed ${
         visible ? "translate-y-0 opacity-100" : "pointer-events-none invisible translate-y-2 opacity-0"
       }`}
     >
