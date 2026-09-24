@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { BackendError, backendFetch } from "@/lib/area-cliente/backend";
-import type { PedidoDetalhe, Projeto } from "@/lib/area-cliente/types";
+import type { PedidoDetalhe, PedidoResumo, Projeto } from "@/lib/area-cliente/types";
 
 // Leituras de detalhe partilhadas entre `generateMetadata` e a página no mesmo pedido
 // (`cache` do React): o título da página depende de o recurso existir (404 → título do
@@ -13,6 +13,14 @@ export const getPedidoDetalhe = cache((token: string, id: string) =>
 
 export const getProjeto = cache((token: string, id: string) =>
   backendFetch<Projeto>(`/api/me/projects/${id}/`, { token }),
+);
+
+/**
+ * Pedidos de um projeto. O layout de projetos/[id] arranca esta leitura ao mesmo tempo que a
+ * do projeto (a página só renderiza depois do layout), e a página recebe a mesma promessa.
+ */
+export const getPedidosDoProjeto = cache((token: string, id: string) =>
+  backendFetch<PedidoResumo[]>(`/api/me/requests/?project=${encodeURIComponent(id)}`, { token }),
 );
 
 /** `true` se a leitura falhar com 404 (recurso inexistente ou de outra conta). */

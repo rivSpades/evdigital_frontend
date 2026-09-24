@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { Notice } from "@/components/ui/notice";
 import { ZonaPerigo } from "@/components/ui/zona-perigo";
-import { localizePath, type Locale } from "@/i18n/config";
+import { useHrefAreaCliente } from "@/i18n/area-cliente-host";
+import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 
 // Zona de perigo "Apagar conta" do separador Segurança (frames YxRui / Kcf0c por
@@ -26,6 +27,7 @@ export function ApagarConta({
   t: Dictionary["areaCliente"]["definicoes"]["apagar"];
 }) {
   const router = useRouter();
+  const hrefAreaCliente = useHrefAreaCliente();
   const [aberto, setAberto] = useState(false);
   const [aEnviar, setAEnviar] = useState(false);
   const [erro, setErro] = useState(false);
@@ -48,7 +50,7 @@ export function ApagarConta({
     try {
       const resposta = await fetch("/api/area-cliente/apagar-conta", { method: "POST" });
       if (resposta.status === 401) {
-        router.push(localizePath(lang, "/area-cliente/entrar"));
+        router.push(hrefAreaCliente(lang, "/area-cliente/entrar"));
         return;
       }
       if (!resposta.ok) {

@@ -5,7 +5,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { getLocale, getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/i18n/metadata";
 import { backendFetch } from "@/lib/area-cliente/backend";
-import { requireSession } from "@/lib/area-cliente/session";
+import { daConta, requireToken } from "@/lib/area-cliente/session";
 import type { PedidoResumo } from "@/lib/area-cliente/types";
 
 // "Os seus pedidos" (lista completa com filtros). O .pen não tem um frame deste ecrã:
@@ -26,8 +26,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AreaClientePedidos() {
   const lang = await getLocale();
   const { areaCliente: t } = await getDictionary(lang);
-  const { token } = await requireSession(lang);
-  const pedidos = await backendFetch<PedidoResumo[]>("/api/me/requests/", { token });
+  // Um só pedido ao backend por navegação: a lista valida a sessão (401 → Entrar).
+  const token = await requireToken(lang);
+  const pedidos = await daConta(lang, backendFetch<PedidoResumo[]>("/api/me/requests/", { token }));
 
   return (
     <main className="flex flex-1 flex-col px-lg md:px-xl lg:px-2xl">

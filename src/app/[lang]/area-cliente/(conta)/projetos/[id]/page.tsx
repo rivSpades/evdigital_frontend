@@ -8,10 +8,10 @@ import { ButtonLink } from "@/components/ui/button";
 import { Metadado, Metadados } from "@/components/ui/metadado";
 import { Registo } from "@/components/ui/registo-linha";
 import { getLocale, getDictionary } from "@/i18n/dictionaries";
-import { BackendError, backendFetch } from "@/lib/area-cliente/backend";
-import { getProjeto, naoExiste } from "@/lib/area-cliente/dados";
+import { BackendError } from "@/lib/area-cliente/backend";
+import { getPedidosDoProjeto, getProjeto, naoExiste } from "@/lib/area-cliente/dados";
 import { formatarDataCurta, projetoStatusLabel, servicoLabel } from "@/lib/area-cliente/format";
-import { getSessionToken, requireSession } from "@/lib/area-cliente/session";
+import { daConta, getSessionToken, requireToken } from "@/lib/area-cliente/session";
 import { cn } from "@/lib/cn";
 import type { PedidoResumo, Projeto } from "@/lib/area-cliente/types";
 
@@ -46,18 +46,22 @@ export default async function AreaClienteProjetoDetalhe({
   const { id } = await params;
   const lang = await getLocale();
   const { areaCliente: t } = await getDictionary(lang);
-  const { token } = await requireSession(lang);
+  const token = await requireToken(lang);
   const data = (iso: string | null) => (iso ? formatarDataCurta(lang, iso) : t.projetoDetalhe.sheetPending);
 
   let projeto: Projeto;
+  let pedidos: PedidoResumo[];
   try {
-    projeto = await getProjeto(token, id);
+    // As duas leituras em paralelo (o layout já as arrancou; `cache` do React).
+    [projeto, pedidos] = await daConta(
+      lang,
+      Promise.all([getProjeto(token, id), getPedidosDoProjeto(token, id)]),
+    );
   } catch (erro) {
     if (erro instanceof BackendError && erro.status === 404) notFound();
     throw erro;
   }
 
-  const pedidos = await backendFetch<PedidoResumo[]>(`/api/me/requests/?project=${id}`, { token });
   const servico = servicoLabel(t, projeto.service, projeto.service_label);
 
   return (

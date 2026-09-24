@@ -11,7 +11,8 @@ import { Notice } from "@/components/ui/notice";
 import { OpcaoRadio } from "@/components/ui/opcao-radio";
 import { Ligacao } from "@/components/ui/ligacao";
 import { Select, type SelectOption } from "@/components/ui/select";
-import { localizePath, type Locale } from "@/i18n/config";
+import { useHrefAreaCliente } from "@/i18n/area-cliente-host";
+import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { Projeto } from "@/lib/area-cliente/types";
 
@@ -75,6 +76,7 @@ export function NovoPedidoForm({
     label: t.urgencias[value],
   }));
   const router = useRouter();
+  const hrefAreaCliente = useHrefAreaCliente();
   const [tipo, setTipo] = useState<(typeof TIPOS)[number] | "">("");
   const [projeto, setProjeto] = useState(projetoFixo?.id ?? "");
   const [titulo, setTitulo] = useState("");
@@ -128,7 +130,7 @@ export function NovoPedidoForm({
       });
 
       if (resposta.status === 401) {
-        router.push(localizePath(lang, "/area-cliente/entrar"));
+        router.push(hrefAreaCliente(lang, "/area-cliente/entrar"));
         return;
       }
 
@@ -171,7 +173,10 @@ export function NovoPedidoForm({
       }
 
       const criado = await resposta.json();
-      router.push(localizePath(lang, `/area-cliente/pedidos/${criado.id}`));
+      router.push(hrefAreaCliente(lang, `/area-cliente/pedidos/${criado.id}`));
+      // As páginas visitadas ficam em cache no cliente (`staleTimes.dynamic`, next.config):
+      // sem isto, voltar às listas nos segundos seguintes mostrava-as sem o pedido novo.
+      router.refresh();
     } catch {
       mostrarErros({ geral: t.errGeneral });
     } finally {

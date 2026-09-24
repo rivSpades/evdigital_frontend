@@ -7,7 +7,8 @@ import { Folha } from "@/components/ui/folha";
 import { Field, Input } from "@/components/ui/input";
 import { aoMudar, aoSair, primeiroInvalido, useFocoPendente } from "@/components/ui/formulario";
 import { Notice } from "@/components/ui/notice";
-import { localizePath, type Locale } from "@/i18n/config";
+import { useHrefAreaCliente } from "@/i18n/area-cliente-host";
+import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { Perfil } from "@/lib/area-cliente/types";
 
@@ -37,6 +38,7 @@ export function PerfilForm({
   t: Dictionary["areaCliente"]["definicoes"]["perfil"];
 }) {
   const router = useRouter();
+  const hrefAreaCliente = useHrefAreaCliente();
   const [nome, setNome] = useState(perfil.name);
   const [telefone, setTelefone] = useState(perfil.phone);
   const [empresa, setEmpresa] = useState(perfil.company);
@@ -90,7 +92,7 @@ export function PerfilForm({
       });
 
       if (resposta.status === 401) {
-        router.push(localizePath(lang, "/area-cliente/entrar"));
+        router.push(hrefAreaCliente(lang, "/area-cliente/entrar"));
         return;
       }
 

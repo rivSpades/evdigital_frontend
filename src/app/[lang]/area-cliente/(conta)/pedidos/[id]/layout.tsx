@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getLocale } from "@/i18n/dictionaries";
 import { getPedidoDetalhe, naoExiste } from "@/lib/area-cliente/dados";
-import { requireSession } from "@/lib/area-cliente/session";
+import { requireToken } from "@/lib/area-cliente/session";
 
 // Pedido inexistente (ou de outra conta, a que o backend também responde 404): o
 // `notFound()` tem de acontecer ANTES do loading.tsx deste segmento. Com o esqueleto já
@@ -9,7 +9,8 @@ import { requireSession } from "@/lib/area-cliente/session";
 // <meta name="robots" content="noindex"> (node_modules/next/dist/docs/01-app/02-guides/
 // streaming.md, "The HTTP contract"). O layout fica fora do Suspense do loading.tsx, por
 // isso aqui o 404 ainda chega ao status. A leitura é a mesma da página (`cache` do React):
-// o backend só é chamado uma vez por pedido. O ecrã é o de (conta)/not-found.tsx.
+// o backend só é chamado uma vez por pedido. Sem /api/me/ antes: o token chega (um 401 aqui
+// leva a Entrar na página, `daConta`), e a leitura do pedido já não espera por outra. O ecrã é o de (conta)/not-found.tsx.
 //
 // Pela mesma razão a lista (page + loading) vive no grupo `(lista)`: um loading.tsx em
 // pedidos/ envolveria também este segmento.
@@ -19,7 +20,7 @@ export default async function PedidoDetalheLayout({
   params,
 }: LayoutProps<"/[lang]/area-cliente/pedidos/[id]">) {
   const { id } = await params;
-  const { token } = await requireSession(await getLocale());
+  const token = await requireToken(await getLocale());
   if (await naoExiste(getPedidoDetalhe(token, id))) notFound();
   return children;
 }

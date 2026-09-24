@@ -3,7 +3,7 @@ import { PaginaFormulario } from "@/components/area-cliente/cabecalho-pagina";
 import { NovoProjetoForm } from "@/components/area-cliente/novo-projeto-form";
 import { getLocale, getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/i18n/metadata";
-import { requireSession } from "@/lib/area-cliente/session";
+import { requireToken } from "@/lib/area-cliente/session";
 
 // Frames "Novo projeto" do grupo "v2 · A vez" do design-system.pen, na estrutura comum das
 // páginas de formulário (`PaginaFormulario`: Voltar à margem da página, coluna centrada de
@@ -22,7 +22,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AreaClienteNovoProjeto() {
   const lang = await getLocale();
   const { areaCliente: t } = await getDictionary(lang);
-  await requireSession(lang);
+  // Sem dados a ler: basta o cookie (a casca valida a sessão no carregamento completo, e o
+  // envio do formulário leva a Entrar num 401).
+  await requireToken(lang);
 
   return (
     <PaginaFormulario

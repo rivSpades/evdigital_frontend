@@ -7,7 +7,8 @@ import { Folha } from "@/components/ui/folha";
 import { Field, PasswordInput } from "@/components/ui/input";
 import { aoMudar, aoSair, primeiroInvalido, useFocoPendente } from "@/components/ui/formulario";
 import { Notice } from "@/components/ui/notice";
-import { localizePath, type Locale } from "@/i18n/config";
+import { useHrefAreaCliente } from "@/i18n/area-cliente-host";
+import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 
 // Frames "Definições · Segurança" do grupo "v2 · A vez" do design-system.pen.
@@ -50,6 +51,7 @@ export function PasswordForm({
   t: Dictionary["areaCliente"]["definicoes"]["seguranca"];
 }) {
   const router = useRouter();
+  const hrefAreaCliente = useHrefAreaCliente();
   const google = !temPassword;
   const [passwordAntiga, setPasswordAntiga] = useState("");
   const [passwordNova, setPasswordNova] = useState("");
@@ -109,7 +111,7 @@ export function PasswordForm({
       });
 
       if (resposta.status === 401) {
-        router.push(localizePath(lang, "/area-cliente/entrar"));
+        router.push(hrefAreaCliente(lang, "/area-cliente/entrar"));
         return;
       }
 

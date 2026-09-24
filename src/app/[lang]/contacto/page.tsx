@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
-import { ContactoWizard } from "@/components/contacto/contacto-wizard";
-import { getAllServices, getServiceBySlug } from "@/lib/content";
+import { ContactoWizardUrl } from "@/components/contacto/contacto-wizard-url";
+import { getAllServices } from "@/lib/content";
 import { getDictionary } from "@/i18n/dictionaries";
 import { hasLocale } from "@/i18n/config";
 import { pageMetadata } from "@/i18n/metadata";
@@ -13,8 +13,9 @@ import { notFound } from "next/navigation";
 // contacto-wizard.tsx). A página é Server Component; só o wizard é cliente.
 //
 // `?servico=<slug>` chega da CTA "Pedir uma proposta" das fichas de /servicos/[slug]
-// (PRD-servicos.md §6). Um slug desconhecido ou ausente é tratado como "sem produto
-// pré-selecionado" — nunca um erro 404 nesta página.
+// (PRD-servicos.md §6) e lê-se no cliente (`ContactoWizardUrl`): a página não lê
+// `searchParams` para continuar estática. Um slug desconhecido ou ausente é tratado como
+// "sem produto pré-selecionado" — nunca um erro 404 nesta página.
 
 export async function generateMetadata({
   params,
@@ -25,10 +26,7 @@ export async function generateMetadata({
   return { ...contacto.metadata, ...pageMetadata(lang, "/contacto") };
 }
 
-export default async function Contacto({
-  params,
-  searchParams,
-}: PageProps<"/[lang]/contacto">) {
+export default async function Contacto({ params }: PageProps<"/[lang]/contacto">) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
   const {
@@ -39,10 +37,6 @@ export default async function Contacto({
     home,
     servicos: servicosT,
   } = await getDictionary(lang);
-  const { servico: servicoSlug } = await searchParams;
-  const slug = typeof servicoSlug === "string" ? servicoSlug : undefined;
-  const servico = slug ? getServiceBySlug(lang, slug) : null;
-  const servicoInicial = servico?.slug;
 
   // Ordem do "O que precisa" (contacto-wizard.tsx): família A antes de B, mesma leitura
   // simples → avançado do catálogo em /servicos.
@@ -61,13 +55,12 @@ export default async function Contacto({
           dos passos 2 e 3 é a primeira linha da página, antes do título). */}
       <main className="flex-1 px-lg pb-4xl md:px-xl lg:px-2xl">
         <div className="mx-auto flex max-w-[var(--grid-max-width)] flex-col">
-          <ContactoWizard
+          <ContactoWizardUrl
             lang={lang}
             t={t}
             titulo={t.page.title}
             servicos={servicos}
             grupos={{ A: servicosT.inicial.titulo, B: servicosT.avancado.titulo }}
-            servicoInicial={servicoInicial}
             privacyLinkLabel={institucional.termos.form.privacyLinkLabel}
             optionalLabel={areaCliente.definicoes.perfil.optional}
             retryLabel={erros.pagina.retry}

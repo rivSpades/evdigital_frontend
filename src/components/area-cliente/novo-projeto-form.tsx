@@ -8,7 +8,8 @@ import { aoMudar, aoSair, primeiroInvalido, useFocoPendente } from "@/components
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { Notice } from "@/components/ui/notice";
 import { Select, type SelectOption } from "@/components/ui/select";
-import { localizePath, type Locale } from "@/i18n/config";
+import { useHrefAreaCliente } from "@/i18n/area-cliente-host";
+import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 
 // Frames "Novo projeto" do grupo "v2 · A vez" do design-system.pen (x850Vs/YNsGT, erros
@@ -44,6 +45,7 @@ export function NovoProjetoForm({
     label: t.urgencias[value],
   }));
   const router = useRouter();
+  const hrefAreaCliente = useHrefAreaCliente();
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
   const [urgencia, setUrgencia] = useState("quando_possivel");
@@ -88,7 +90,7 @@ export function NovoProjetoForm({
       });
 
       if (resposta.status === 401) {
-        router.push(localizePath(lang, "/area-cliente/entrar"));
+        router.push(hrefAreaCliente(lang, "/area-cliente/entrar"));
         return;
       }
 
@@ -121,7 +123,10 @@ export function NovoProjetoForm({
       }
 
       const criado = await resposta.json();
-      router.push(localizePath(lang, `/area-cliente/pedidos/${criado.id}`));
+      router.push(hrefAreaCliente(lang, `/area-cliente/pedidos/${criado.id}`));
+      // As páginas visitadas ficam em cache no cliente (`staleTimes.dynamic`, next.config):
+      // sem isto, voltar às listas nos segundos seguintes mostrava-as sem o pedido novo.
+      router.refresh();
     } catch {
       mostrarErros({ geral: t.errGeneral });
     } finally {

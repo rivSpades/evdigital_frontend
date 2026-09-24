@@ -25,7 +25,7 @@ import {
   pedidoStatus,
   referenciaPedido,
 } from "@/lib/area-cliente/format";
-import { getSessionToken, requireSession } from "@/lib/area-cliente/session";
+import { daConta, getSessionToken, requireToken } from "@/lib/area-cliente/session";
 import { pedidoEsperaCliente, pedidoTom } from "@/lib/area-cliente/tons";
 import { cn } from "@/lib/cn";
 import type { PedidoDetalhe } from "@/lib/area-cliente/types";
@@ -73,11 +73,11 @@ export default async function AreaClientePedidoDetalhe({
   const { id } = await params;
   const lang = await getLocale();
   const { areaCliente: t } = await getDictionary(lang);
-  const { token } = await requireSession(lang);
+  const token = await requireToken(lang);
 
   let pedido: PedidoDetalhe;
   try {
-    pedido = await getPedidoDetalhe(token, id);
+    pedido = await daConta(lang, getPedidoDetalhe(token, id));
   } catch (erro) {
     if (erro instanceof BackendError && erro.status === 404) notFound();
     throw erro;

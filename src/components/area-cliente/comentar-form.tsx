@@ -4,7 +4,8 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { CompositorThread } from "@/components/ui/compositor-thread";
-import { localizePath, type Locale } from "@/i18n/config";
+import { useHrefAreaCliente } from "@/i18n/area-cliente-host";
+import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 
 // "Responder" do Detalhe do pedido. Divulgação progressiva (design-guardrails.md §6, "Um
@@ -127,6 +128,7 @@ export function ComentarForm({
   conversaVazia: boolean;
 }) {
   const router = useRouter();
+  const hrefAreaCliente = useHrefAreaCliente();
   const { aberto, abrir, fechar } = useResposta();
   const [texto, setTexto] = useState("");
   const [erroCampo, setErroCampo] = useState("");
@@ -161,7 +163,7 @@ export function ComentarForm({
       });
 
       if (resposta.status === 401) {
-        router.push(localizePath(lang, "/area-cliente/entrar"));
+        router.push(hrefAreaCliente(lang, "/area-cliente/entrar"));
         return;
       }
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { localizePath } from "@/i18n/config";
+import { caminhoAreaCliente } from "@/i18n/area-cliente-href";
 import { getLocale, getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/i18n/metadata";
 import { AuthShell } from "@/components/area-cliente/auth-shell";
@@ -32,7 +32,7 @@ export default async function AreaClienteEntrar({
 }: PageProps<"/[lang]/area-cliente/entrar">) {
   const { erro, reposta, repor } = await searchParams;
   const lang = await getLocale();
-  if (repor === "1") redirect(localizePath(lang, "/area-cliente/recuperar-palavra-passe"));
+  if (repor === "1") redirect(caminhoAreaCliente(lang, "/area-cliente/recuperar-palavra-passe"));
   const { areaCliente: t, contacto } = await getDictionary(lang);
   return (
     <AuthShell

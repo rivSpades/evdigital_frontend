@@ -14,7 +14,8 @@ import { Field, Input, PasswordInput } from "@/components/ui/input";
 import { Ligacao } from "@/components/ui/ligacao";
 import { Notice } from "@/components/ui/notice";
 import { SeparadoresPaginas } from "@/components/ui/separadores";
-import { localizePath, type Locale } from "@/i18n/config";
+import { useHrefAreaCliente } from "@/i18n/area-cliente-host";
+import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 
 // Frames "Ecrã · Entrar" do grupo "v2 · A vez" (flhgP) do design-system.pen: entrar
@@ -96,6 +97,7 @@ export function EntrarForm({
   t: Dictionary["areaCliente"]["entrar"];
 }) {
   const router = useRouter();
+  const hrefAreaCliente = useHrefAreaCliente();
 
   // Validação, erros do backend e foco no primeiro inválido: partilhados com o
   // `RecuperarForm` (formulario-auth.tsx, micro-interacções de design-guardrails.md §6).
@@ -170,7 +172,7 @@ export function EntrarForm({
         return;
       }
 
-      router.push(localizePath(lang, "/area-cliente/projetos"));
+      router.push(hrefAreaCliente(lang, "/area-cliente/projetos"));
       router.refresh();
     } catch {
       setErrosEntrar({ geral: t.errLogin });

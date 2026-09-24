@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { getDictionary } from "@/i18n/dictionaries";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { hasLocale, htmlLang, locales } from "@/i18n/config";
+import { hostDoAmbiente } from "@/i18n/area-cliente-href";
+import { AreaClienteHostProvider } from "@/i18n/area-cliente-host";
 import "../globals.css";
 
 const sora = Sora({
@@ -51,7 +53,12 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
       className={`${sora.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg-base text-text-primary font-body">
-        {children}
+        {/* Ligações para a Área de Cliente saem com o host final (ver area-cliente-href.ts).
+            Nas páginas estáticas o valor fica fixado no build: CLIENTES_URL e SITE_URL têm
+            de existir no ambiente do build tal como em runtime. */}
+        <AreaClienteHostProvider value={hostDoAmbiente(false)}>
+          {children}
+        </AreaClienteHostProvider>
         <ScrollToTop label={common.scrollToTop} />
       </body>
     </html>

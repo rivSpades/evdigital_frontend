@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/footer";
 import { BlogEmptyState } from "@/components/blog/empty-state";
 import { BlogClosingCta } from "@/components/blog/closing-cta";
 import { LevelFilter, type BlogLevelFilter } from "@/components/blog/level-filter";
+import { PorNivel } from "@/components/blog/por-nivel";
 import { PostList } from "@/components/blog/post-list";
 import { getAllBlogPosts } from "@/lib/content";
 
@@ -32,19 +33,36 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/blog">): P
   };
 }
 
-function parseLevel(value: string | string[] | undefined): BlogLevelFilter {
-  if (value === "simples" || value === "tecnico") return value;
-  return "todos";
-}
+// O filtro `?nivel=` escolhe-se no cliente (`PorNivel`) para a página continuar estática:
+// as três variantes da secção renderizam-se aqui, no build.
 
-export default async function BlogPage({ params, searchParams }: PageProps<"/[lang]/blog">) {
+export default async function BlogPage({ params }: PageProps<"/[lang]/blog">) {
   const lang = (await params).lang as Locale;
   const { blog: t } = await getDictionary(lang);
-  const { nivel } = await searchParams;
-  const level = parseLevel(nivel);
 
   const posts = getAllBlogPosts(lang);
-  const visible = level === "todos" ? posts : posts.filter((p) => p.frontmatter.level === level);
+
+  const secao = (level: BlogLevelFilter) => {
+    const visible = level === "todos" ? posts : posts.filter((p) => p.frontmatter.level === level);
+    return (
+      <section
+        aria-label={t.title}
+        className="flex flex-col gap-md pb-xl lg:grid lg:grid-cols-12 lg:gap-x-lg lg:gap-y-0 lg:pb-2xl"
+      >
+        <LevelFilter current={level} total={visible.length} className="lg:col-span-3" />
+
+        <div className="lg:col-span-9">
+          {visible.length > 0 ? (
+            <PostList posts={visible} destacarPrimeiro />
+          ) : (
+            <p className="font-body text-body text-text-secondary lg:max-w-[704px]">
+              {t.filterEmpty}
+            </p>
+          )}
+        </div>
+      </section>
+    );
+  };
 
   return (
     <>
@@ -64,22 +82,9 @@ export default async function BlogPage({ params, searchParams }: PageProps<"/[la
             </section>
           ) : (
             <>
-              <section
-                aria-label={t.title}
-                className="flex flex-col gap-md pb-xl lg:grid lg:grid-cols-12 lg:gap-x-lg lg:gap-y-0 lg:pb-2xl"
-              >
-                <LevelFilter current={level} total={visible.length} className="lg:col-span-3" />
-
-                <div className="lg:col-span-9">
-                  {visible.length > 0 ? (
-                    <PostList posts={visible} destacarPrimeiro />
-                  ) : (
-                    <p className="font-body text-body text-text-secondary lg:max-w-[704px]">
-                      {t.filterEmpty}
-                    </p>
-                  )}
-                </div>
-              </section>
+              <PorNivel
+                variantes={{ todos: secao("todos"), simples: secao("simples"), tecnico: secao("tecnico") }}
+              />
 
               <BlogClosingCta />
             </>

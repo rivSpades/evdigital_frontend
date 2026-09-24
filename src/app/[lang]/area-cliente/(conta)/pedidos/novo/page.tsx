@@ -4,7 +4,7 @@ import { NovoPedidoForm } from "@/components/area-cliente/novo-pedido-form";
 import { getLocale, getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/i18n/metadata";
 import { backendFetch } from "@/lib/area-cliente/backend";
-import { requireSession } from "@/lib/area-cliente/session";
+import { daConta, requireToken } from "@/lib/area-cliente/session";
 import type { Projeto } from "@/lib/area-cliente/types";
 
 // Frames "Novo pedido" do grupo "v2 · A vez" do design-system.pen, na estrutura comum das
@@ -27,8 +27,8 @@ export default async function AreaClienteNovoPedido({
 }: PageProps<"/[lang]/area-cliente/pedidos/novo">) {
   const lang = await getLocale();
   const { areaCliente: t } = await getDictionary(lang);
-  const { token } = await requireSession(lang);
-  const projetos = await backendFetch<Projeto[]>("/api/me/projects/", { token });
+  const token = await requireToken(lang);
+  const projetos = await daConta(lang, backendFetch<Projeto[]>("/api/me/projects/", { token }));
 
   const { project: projectParam } = await searchParams;
   const projetoFixo =

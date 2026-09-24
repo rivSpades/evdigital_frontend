@@ -8,7 +8,8 @@ import {
   requestLocale,
   siteOrigin,
 } from "@/lib/area-cliente/google";
-import { hasLocale, localizePath } from "@/i18n/config";
+import { hasLocale } from "@/i18n/config";
+import { caminhoAreaCliente } from "@/i18n/area-cliente-href";
 import { cookieOptions } from "@/lib/area-cliente/session";
 
 // Regresso do Google: valida state, troca o código por tokens, entrega o id_token ao
@@ -21,7 +22,7 @@ export async function GET(request: Request) {
   // seletor / Accept-Language.
   const lang = hasLocale(cookieLang) ? cookieLang : requestLocale(request);
   const falha = () => {
-    const r = NextResponse.redirect(`${origem}${localizePath(lang, "/area-cliente/entrar?erro=google")}`);
+    const r = NextResponse.redirect(`${origem}${caminhoAreaCliente(lang, "/area-cliente/entrar?erro=google")}`);
     r.cookies.delete({ name: GOOGLE_STATE_COOKIE, path: "/api/area-cliente/google" });
     return r;
   };
@@ -59,7 +60,7 @@ export async function GET(request: Request) {
       clientIp: clientIpFrom(request),
     });
 
-    const resposta = NextResponse.redirect(`${origem}${localizePath(lang, "/area-cliente/projetos")}`);
+    const resposta = NextResponse.redirect(`${origem}${caminhoAreaCliente(lang, "/area-cliente/projetos")}`);
     resposta.cookies.set(AC_COOKIE_NAME, dados.token, cookieOptions());
     resposta.cookies.delete({ name: GOOGLE_STATE_COOKIE, path: "/api/area-cliente/google" });
     return resposta;

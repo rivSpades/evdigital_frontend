@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogOut, Settings } from "lucide-react";
 import Link from "@/i18n/locale-link";
-import { localizePath, type Locale } from "@/i18n/config";
+import { useHrefAreaCliente } from "@/i18n/area-cliente-host";
+import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { cn } from "@/lib/cn";
 import type { MeInfo } from "@/lib/area-cliente/session";
@@ -41,6 +42,7 @@ export function AccountMenu({
   t: Dictionary["areaCliente"];
 }) {
   const router = useRouter();
+  const hrefAreaCliente = useHrefAreaCliente();
   const [isOpen, setIsOpen] = useState(false);
   const [focoInicial, setFocoInicial] = useState<"primeiro" | "ultimo">("primeiro");
   const [aSair, setASair] = useState(false);
@@ -112,7 +114,7 @@ export function AccountMenu({
     try {
       await fetch("/api/area-cliente/sair", { method: "POST" });
     } finally {
-      router.push(localizePath(lang, "/area-cliente/entrar"));
+      router.push(hrefAreaCliente(lang, "/area-cliente/entrar"));
       router.refresh();
     }
   }

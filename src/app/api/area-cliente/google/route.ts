@@ -7,7 +7,7 @@ import {
   requestLocale,
   siteOrigin,
 } from "@/lib/area-cliente/google";
-import { localizePath } from "@/i18n/config";
+import { caminhoAreaCliente } from "@/i18n/area-cliente-href";
 
 // Início do "Continuar com Google": guarda state + PKCE verifier + idioma num cookie httpOnly de
 // vida curta e redireciona para o Google. O regresso é em ./callback.
@@ -17,7 +17,7 @@ export async function GET(request: Request) {
   const config = googleConfig();
   if (!config) {
     return NextResponse.redirect(
-      `${siteOrigin(request)}${localizePath(lang, "/area-cliente/entrar?erro=google")}`,
+      `${siteOrigin(request)}${caminhoAreaCliente(lang, "/area-cliente/entrar?erro=google")}`,
     );
   }
 

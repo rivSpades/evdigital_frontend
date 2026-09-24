@@ -149,6 +149,30 @@ Páginas no estilo «A vez» (todas em `src/app/[lang]/**`):
 - `src/proxy.ts` conhece os segmentos novos `criar-conta`, `repor-palavra-passe` e
   `recuperar-palavra-passe`.
 
+### Navegação rápida (2026-09-24)
+
+- **Ligações sem redirects numa só camada:** `LocaleLink` e `useHrefAreaCliente()` (router.push)
+  resolvem `/area-cliente/...` com `src/i18n/area-cliente-href.ts` + `AreaClienteHostProvider`
+  (montado em `[lang]/layout.tsx` e `[lang]/area-cliente/layout.tsx`, valores de
+  `CLIENTES_URL`/`SITE_URL`). No subdomínio saem sem o segmento (`/pt/pedidos`); do site
+  público saem absolutas (`https://clientes…/pt/entrar`); dentro da Área de Cliente as
+  páginas públicas saem com o host do site. Sem `CLIENTES_URL` tudo fica relativo com
+  `/area-cliente`. Os `redirect()` do servidor usam `caminhoAreaCliente()`. No código continua
+  a escrever-se `/area-cliente/...`. `SITE_PUBLICO_SEGMENTS` é partilhado com `src/proxy.ts`.
+  Páginas estáticas fixam `CLIENTES_URL`/`SITE_URL` no build: têm de existir no build.
+- **Backend:** um só pedido de sessão por página. `(conta)/layout.tsx` não espera pelo
+  /api/me/ (só a barra de topo espera), as páginas usam `requireToken` + `daConta` (401/403 →
+  Entrar) em vez de /api/me/ antes dos dados, e `lerPerfil` (`cache`) é partilhado com
+  `area-cliente/not-found.tsx`, que o Next renderiza em todas as páginas do segmento.
+- **Cache do cliente:** `experimental.staleTimes` `{ dynamic: 30, static: 180 }`
+  (`next.config.ts`). Toda a mutação da Área de Cliente chama `router.refresh()` (invalida a
+  cache toda); os formulários de criar fazem `push` + `refresh`.
+- **Prefetch por intenção:** dentro da Área de Cliente o `LocaleLink` passa a
+  `prefetch={true}` ao passar o rato, tocar ou focar. Razão: com `loading.tsx`, o React segura
+  a troca esqueleto → conteúdo pelo menos 300 ms, mesmo com o servidor a responder em 10 ms.
+- `/contacto` (`?servico=`, `ContactoWizardUrl`) e `/blog` (`?nivel=`, `PorNivel`) leem o
+  parâmetro no cliente e são estáticas (●).
+
 ### Route handlers da Área de Cliente (contratos novos ou alterados)
 
 Formato de erro único em `src/lib/area-cliente/erros.ts`: `400 → { errors: { <campo>:

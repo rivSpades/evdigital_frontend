@@ -11,7 +11,8 @@ import { getDictionary, getLocale } from "@/i18n/dictionaries";
 //   $text-primary $font-weight-body-strong com aria-current; as outras em $text-secondary
 //   $font-weight-label. Em lg empilhadas na Margem (colunas 1 a 3); abaixo lado a lado
 //   com gap $space-md.
-// O estado vive no URL (?nivel=), por isso é um Server Component.
+// O estado vive no URL (?nivel=); a página renderiza as três variantes no build e
+// `PorNivel` (cliente) escolhe a do URL, por isso continua a ser um Server Component.
 
 export type BlogLevelFilter = "todos" | "simples" | "tecnico";
 

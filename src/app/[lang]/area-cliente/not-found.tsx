@@ -2,8 +2,7 @@ import { AuthShell } from "@/components/area-cliente/auth-shell";
 import { Topbar } from "@/components/area-cliente/topbar";
 import { NaoEncontrada } from "@/components/erros/nao-encontrada";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
-import { backendFetch } from "@/lib/area-cliente/backend";
-import { getSessionToken } from "@/lib/area-cliente/session";
+import { getSessionToken, lerPerfil } from "@/lib/area-cliente/session";
 import { publicSiteHref } from "@/lib/site-url";
 import type { Perfil } from "@/lib/area-cliente/types";
 
@@ -21,7 +20,9 @@ async function contaAtual(): Promise<Perfil | null> {
   const token = await getSessionToken();
   if (!token) return null;
   try {
-    return await backendFetch<Perfil>("/api/me/", { token });
+    // O mesmo pedido da casca `(conta)` (`lerPerfil`, `cache` do React): este componente é
+    // renderizado em cada página do segmento, mesmo sem 404.
+    return await lerPerfil(token);
   } catch {
     return null;
   }

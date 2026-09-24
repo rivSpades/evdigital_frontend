@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { LOCALE_COOKIE, hasLocale, matchLocale } from "@/i18n/config";
+import { SITE_PUBLICO_SEGMENTS } from "@/i18n/area-cliente-href";
 
 // Duas responsabilidades:
 // 1. Deteção automática de idioma. Ordem: prefixo já presente no URL > cookie da escolha
@@ -11,20 +12,8 @@ import { LOCALE_COOKIE, hasLocale, matchLocale } from "@/i18n/config";
 // /_next e ficheiros estáticos ficam de fora (ver `matcher`); /api passa por aqui para
 // que as rotas da Área de Cliente só respondam no subdomínio.
 
-/**
- * Primeiros segmentos das páginas do site público (`[lang]/**` fora da Área de Cliente).
- * No subdomínio da Área de Cliente redirecionam para o site; qualquer outro segmento
- * desconhecido fica no subdomínio e mostra o 404 da Área de Cliente. "projetos" não
- * entra aqui: no subdomínio é a lista de projetos da conta.
- */
-const SITE_PUBLICO_SEGMENTS = new Set([
-  "servicos",
-  "blog",
-  "contacto",
-  "sobre",
-  "privacidade",
-  "termos",
-]);
+// Primeiros segmentos das páginas do site público: `SITE_PUBLICO_SEGMENTS`, partilhado com
+// as ligações (`area-cliente-href.ts`), que já os apontam para o site sem passar por aqui.
 
 const AREA_CLIENTE_API = "/api/area-cliente";
 

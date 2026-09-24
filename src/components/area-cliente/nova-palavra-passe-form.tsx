@@ -8,7 +8,8 @@ import { Folha } from "@/components/ui/folha";
 import { Field, PasswordInput } from "@/components/ui/input";
 import { aoMudar, aoSair, primeiroInvalido, useFocoPendente } from "@/components/ui/formulario";
 import { Notice } from "@/components/ui/notice";
-import { localizePath, type Locale } from "@/i18n/config";
+import { useHrefAreaCliente } from "@/i18n/area-cliente-host";
+import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 
 // Frames "Nova palavra-passe" (default W0bUT / Scas6, palavra-passe fraca fCpsK, ligação
@@ -49,6 +50,7 @@ export function NovaPalavraPasseForm({
   tSeguranca: Dictionary["areaCliente"]["definicoes"]["seguranca"];
 }) {
   const router = useRouter();
+  const hrefAreaCliente = useHrefAreaCliente();
   const [invalida, setInvalida] = useState(ligacao === null);
   const [passwordNova, setPasswordNova] = useState("");
   const [confirmar, setConfirmar] = useState("");
@@ -111,7 +113,7 @@ export function NovaPalavraPasseForm({
         return;
       }
 
-      router.push(localizePath(lang, "/area-cliente/entrar?reposta=1"));
+      router.push(hrefAreaCliente(lang, "/area-cliente/entrar?reposta=1"));
     } catch {
       mostrarErros({ geral: tSeguranca.errGeneral });
     } finally {

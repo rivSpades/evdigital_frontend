@@ -14,7 +14,7 @@ import {
   referenciaPedido,
   servicoLabel,
 } from "@/lib/area-cliente/format";
-import { requireSession } from "@/lib/area-cliente/session";
+import { daConta, requireToken } from "@/lib/area-cliente/session";
 import { pedidoEsperaCliente, projetoTom } from "@/lib/area-cliente/tons";
 import type { PedidoResumo, Projeto } from "@/lib/area-cliente/types";
 
@@ -44,12 +44,15 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AreaClienteProjetos() {
   const lang = await getLocale();
   const { areaCliente: t } = await getDictionary(lang);
-  const { token } = await requireSession(lang);
-
-  const [projetos, pedidos] = await Promise.all([
-    backendFetch<Projeto[]>("/api/me/projects/", { token }),
-    backendFetch<PedidoResumo[]>("/api/me/requests/", { token }),
-  ]);
+  // As duas leituras em paralelo, sem /api/me/ antes: validam a sessão (401 → Entrar).
+  const token = await requireToken(lang);
+  const [projetos, pedidos] = await daConta(
+    lang,
+    Promise.all([
+      backendFetch<Projeto[]>("/api/me/projects/", { token }),
+      backendFetch<PedidoResumo[]>("/api/me/requests/", { token }),
+    ]),
+  );
 
   // Pedidos "projeto novo" ainda não são projetos (o `Project` só é criado mais tarde):
   // ficam numa lista própria, fora do resumo de pedidos.
