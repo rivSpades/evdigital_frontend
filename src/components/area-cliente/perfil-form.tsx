@@ -145,7 +145,7 @@ export function PerfilForm({
         ) : null}
         {sucesso ? <Notice id="perfil-ok" focavel tone="ok" role="status" title={t.success} /> : null}
 
-        <Field htmlFor="perfil-nome" label={t.name} error={erros.name} variant="folha">
+        <Field htmlFor="perfil-nome" label={t.name} error={erros.name}>
           <Input
             id="perfil-nome"
             autoComplete="name"
@@ -159,7 +159,7 @@ export function PerfilForm({
           />
         </Field>
 
-        <Field htmlFor="perfil-email" label={t.email} hint={t.emailNote} variant="folha">
+        <Field htmlFor="perfil-email" label={t.email} hint={t.emailNote}>
           <Input id="perfil-email" value={perfil.email} disabled />
         </Field>
 
@@ -168,7 +168,6 @@ export function PerfilForm({
           label={t.phone}
           optional
           optionalLabel={t.optional}
-          variant="folha"
         >
           <Input
             id="perfil-telefone"
@@ -185,7 +184,6 @@ export function PerfilForm({
           label={t.company}
           optional
           optionalLabel={t.optional}
-          variant="folha"
         >
           <Input
             id="perfil-empresa"
@@ -201,7 +199,6 @@ export function PerfilForm({
           label={t.nif}
           optional
           optionalLabel={t.optional}
-          variant="folha"
         >
           <Input
             id="perfil-nif"

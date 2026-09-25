@@ -141,7 +141,7 @@ export function NovaPalavraPasseForm({
       <form noValidate onSubmit={onSubmit} className="w-full max-w-[448px]">
         <Folha
           actions={
-            <Button type="submit" size="action" fullWidth busy={aMudar}>
+            <Button type="submit" size="action" busy={aMudar}>
               {aMudar ? tSeguranca.submitting : tSeguranca.submit}
             </Button>
           }
@@ -154,7 +154,6 @@ export function NovaPalavraPasseForm({
             label={tSeguranca.newPassword}
             hint={tSeguranca.newPasswordHint}
             error={erros.newPassword}
-            variant="folha"
           >
             <PasswordInput
               id="repor-password-nova"
@@ -175,7 +174,6 @@ export function NovaPalavraPasseForm({
             htmlFor="repor-password-confirmar"
             label={tSeguranca.confirmPassword}
             error={erros.confirmPassword}
-            variant="folha"
           >
             <PasswordInput
               id="repor-password-confirmar"

@@ -6,13 +6,11 @@ import { separadorId, separadorPainelId } from "@/components/ui/separadores-ids"
 import { cn } from "@/lib/cn";
 
 // Espelha ds/navigation/separadores (b6ChC) e ds/navigation/separador (z8F3y) do
-// design-system.pen (direcção "A vez"; em código substitui o TabSegments nas Definições).
-// Calha $bg-surface-sunken com contorno hairline $border-subtle, padding e gap $space-2xs.
-// Raio (Shape Consistency Lock, design-guardrails.md §2): cada separador usa o raio dos
-// botões (--button-radius), não pílula, para ficar igual aos campos e botões ao lado; a
-// calha é concêntrica (raio do botão + o padding de $space-2xs). Separador escolhido: $bg-surface-raised, contorno hairline
-// $border-strong, rótulo $text-primary em $font-weight-body-strong. Não escolhido: sem
-// fundo nem contorno, rótulo $text-secondary em $font-weight-label. Nunca verde. Alvo 44.
+// design-system.pen (direcção «B · Registo em linhas»; em código substitui o TabSegments nas
+// Definições). Sem caixa: trilho de 1px $border-subtle em baixo, cada separador com 44 de
+// altura. Escolhido: $text-primary em $font-weight-body-strong com um indicador de
+// $border-width-thick $accent-primary na base (inset, para não crescer). Não escolhido:
+// $text-secondary em $font-weight-label. O verde é só o indicador. Alvo 44.
 //
 // O estado vive no URL (cada separador é uma ligação), mas a semântica é de separadores:
 // role="tablist"/"tab" com aria-selected e aria-controls para o painel, tabindex móvel e
@@ -22,19 +20,17 @@ import { cn } from "@/lib/cn";
 
 export type Separador = { value: string; label: string; href: string };
 
-const calhaClasses =
-  "flex items-center gap-2xs rounded-[calc(var(--button-radius)+var(--spacing-2xs))] border border-border-subtle bg-bg-surface-sunken p-2xs";
+const calhaClasses = "flex items-stretch border-b border-border-subtle";
 
 function separadorClasses(escolhido: boolean) {
   return cn(
-    "flex h-11 items-center justify-center rounded-[var(--button-radius)] border px-lg",
+    "flex h-11 items-center justify-center px-lg",
     "font-body text-label transition-colors",
     escolhido
-      ? "border-border-strong bg-bg-surface-raised font-semibold text-text-primary"
-      : "border-transparent font-medium text-text-secondary hover:bg-bg-surface-hover hover:text-text-primary",
+      ? "font-semibold text-text-primary shadow-[inset_0_calc(-1*var(--border-width-thick))_0_var(--color-accent-primary)]"
+      : "font-medium text-text-secondary hover:text-text-primary",
   );
 }
-
 
 export function Separadores({
   id,
@@ -67,7 +63,7 @@ export function Separadores({
     <div
       role="tablist"
       aria-label={label}
-      className={cn(calhaClasses, "w-fit", className)}
+      className={cn(calhaClasses, "w-full", className)}
     >
       {items.map((item, index) => {
         const escolhido = item.value === current;

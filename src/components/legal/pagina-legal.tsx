@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { BarraPagina } from "@/components/layout/barra-pagina";
 
 // Casca partilhada pelas páginas legais, migrada do grupo "Ecrã · Páginas legais" de
 // "v2 · A vez" (flhgP) do design/design-system.pen: Privacidade (T5Uao3 desktop 1280,
@@ -17,22 +18,23 @@ export function PaginaLegal({
   atualizadoRotulo,
   atualizadoData,
   intro,
+  voltarLabel,
   children,
 }: {
   titulo: string;
   atualizadoRotulo: string;
   atualizadoData: string;
   intro: string;
+  /** Nome acessível da seta para a Início. */
+  voltarLabel: string;
   children: ReactNode;
 }) {
   return (
     <main className="flex-1 px-lg md:px-xl lg:px-2xl">
+      <BarraPagina titulo={titulo} voltarHref="/" voltarLabel={voltarLabel} />
       <div className="mx-auto w-full max-w-[var(--grid-max-width)]">
-        <header className="flex flex-col gap-md py-2xl lg:grid lg:grid-cols-12 lg:gap-x-lg lg:gap-y-0 lg:pt-4xl lg:pb-3xl">
+        <header className="flex flex-col gap-md pt-lg pb-2xl lg:grid lg:grid-cols-12 lg:gap-x-lg lg:gap-y-0 lg:pt-xl lg:pb-3xl">
           <div className="flex flex-col gap-md lg:col-span-9 lg:col-start-4 lg:row-start-1 lg:max-w-[760px]">
-            <h1 className="font-heading text-[length:var(--font-size-display-sm-narrow)] leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-display)] text-text-primary lg:text-display-sm">
-              {titulo}
-            </h1>
             <p className="font-body text-body text-text-secondary lg:text-body-lg">{intro}</p>
           </div>
           <p className="flex flex-col gap-3xs text-caption lg:col-span-3 lg:col-start-1 lg:row-start-1 lg:pt-md">

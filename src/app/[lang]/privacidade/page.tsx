@@ -26,7 +26,7 @@ export async function generateMetadata({
 export default async function Privacidade({ params }: PageProps<"/[lang]/privacidade">) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
-  const { institucional } = await getDictionary(lang);
+  const { institucional, erros } = await getDictionary(lang);
   const t = institucional.privacidade;
 
   return (
@@ -37,6 +37,7 @@ export default async function Privacidade({ params }: PageProps<"/[lang]/privaci
         atualizadoRotulo={institucional.legal.updatedPrefix}
         atualizadoData={t.updatedAt}
         intro={t.intro}
+        voltarLabel={erros.naoEncontrada.home}
       >
         <SecaoLeitura titulo={t.controller.title}>
           <p>{t.controller.p1}</p>

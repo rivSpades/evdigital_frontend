@@ -1,15 +1,13 @@
 import { getDictionary } from "@/i18n/dictionaries";
 import { ButtonLink } from "@/components/ui/button";
-import { Ligacao } from "@/components/ui/ligacao";
 
 // Frames "v2 · A vez" / Ecrã · Início: "Secção · hero" (rFFQD desktop 1280, h6S10
 // mobile 375). Sem fundo próprio (é o $bg-base da página), padding [$space-4xl, 0] em lg e
 // [$space-2xl, 0, $space-3xl, 0] empilhado. Texto (gap $space-lg): overline $font-mono
 // caption $text-tertiary com $letter-spacing-overline; título $font-size-display
 // ($font-size-display-sm-narrow em mobile) $font-weight-display; subtítulo body-lg
-// $text-secondary, 680 de largura em lg. Acções a $space-xl do texto: botão primário (56)
-// e ds/action/ligacao primária, lado a lado com gap $space-lg em lg, empilhados com gap
-// $space-md abaixo.
+// $text-secondary, 680 de largura em lg. Acção a $space-xl do texto: botão primário (56)
+// só (a ligação «Ver o que fazemos» saiu por pedido do dono, 2026-09-25).
 //
 // Movimento: o título (LCP) e a overline estão visíveis desde o primeiro paint; o
 // subtítulo e a acção entram com um fade curto por CSS (.reveal-load, globals.css), sem
@@ -40,9 +38,6 @@ export async function Hero() {
           <ButtonLink href="/contacto" size="action" className="tracking-[var(--letter-spacing-label)]">
             {common.cta}
           </ButtonLink>
-          <Ligacao href="/servicos" className="tracking-[var(--letter-spacing-label)]">
-            {t.secondaryCta}
-          </Ligacao>
         </div>
       </div>
     </section>

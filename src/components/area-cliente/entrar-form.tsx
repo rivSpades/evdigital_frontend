@@ -370,9 +370,8 @@ export function EntrarForm({
         {google}
         <form noValidate onSubmit={onEntrar} className="w-full pt-lg">
           <Folha
-            contentGap="xl"
             actions={
-              <Button type="submit" size="action" fullWidth busy={aEntrar}>
+              <Button type="submit" size="action" busy={aEntrar}>
                 {aEntrar ? t.submitting : t.submit}
               </Button>
             }
@@ -389,7 +388,7 @@ export function EntrarForm({
             {errosEntrar.geral ? (
               <Notice id="entrar-erro" focavel tone="error" role="alert" title={errosEntrar.geral} />
             ) : null}
-            <Field htmlFor="entrar-email" label={t.email} error={errosEntrar.email} variant="folha">
+            <Field htmlFor="entrar-email" label={t.email} error={errosEntrar.email}>
               <Input
                 id="entrar-email"
                 type="email"
@@ -407,7 +406,6 @@ export function EntrarForm({
               htmlFor="entrar-password"
               label={t.password}
               error={errosEntrar.password}
-              variant="folha"
               aside={
                 <Ligacao href="/area-cliente/recuperar-palavra-passe" variant="em-linha">
                   {t.forgotPassword}
@@ -442,9 +440,8 @@ export function EntrarForm({
       {google}
       <form noValidate onSubmit={onRegistar} className="w-full pt-lg">
         <Folha
-          contentGap="xl"
           actions={
-            <Button type="submit" size="action" fullWidth busy={aRegistar}>
+            <Button type="submit" size="action" busy={aRegistar}>
               {aRegistar ? t.registering : t.register}
             </Button>
           }
@@ -452,7 +449,7 @@ export function EntrarForm({
           {errosRegisto.geral ? (
             <Notice id="registo-erro" focavel tone="error" role="alert" title={errosRegisto.geral} />
           ) : null}
-          <Field htmlFor="registo-nome" label={t.name} error={errosRegisto.name} variant="folha">
+          <Field htmlFor="registo-nome" label={t.name} error={errosRegisto.name}>
             <Input
               id="registo-nome"
               autoComplete="name"
@@ -465,7 +462,7 @@ export function EntrarForm({
               onBlur={(e) => aoSair(setErrosRegisto, "name", validarNome(e.target.value))}
             />
           </Field>
-          <Field htmlFor="registo-email" label={t.email} error={errosRegisto.email} variant="folha">
+          <Field htmlFor="registo-email" label={t.email} error={errosRegisto.email}>
             <Input
               id="registo-email"
               type="email"
@@ -484,7 +481,6 @@ export function EntrarForm({
             label={t.phone}
             optional
             optionalLabel={campos.optional}
-            variant="folha"
           >
             <Input
               id="registo-telefone"
@@ -500,7 +496,6 @@ export function EntrarForm({
             label={t.password}
             hint={t.passwordHint}
             error={errosRegisto.password}
-            variant="folha"
           >
             <PasswordInput
               id="registo-password"
@@ -525,7 +520,6 @@ export function EntrarForm({
             htmlFor="registo-confirmar-password"
             label={t.confirmPassword}
             error={errosRegisto.confirmPassword}
-            variant="folha"
           >
             <PasswordInput
               id="registo-confirmar-password"
@@ -543,7 +537,7 @@ export function EntrarForm({
             />
           </Field>
           {/* «Nota» do .pen: última linha do conteúdo da folha, antes da acção. */}
-          <p className="font-body text-caption tracking-[var(--letter-spacing-caption)] text-text-tertiary">
+          <p className="py-md font-body text-caption tracking-[var(--letter-spacing-caption)] text-text-tertiary">
             {t.registerNote}
           </p>
         </Folha>

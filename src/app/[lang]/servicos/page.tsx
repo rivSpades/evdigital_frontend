@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Nav } from "@/components/layout/nav";
+import { BarraPagina } from "@/components/layout/barra-pagina";
 import { Footer } from "@/components/layout/footer";
 import { FamiliaAvancada, FamiliaInicial } from "@/components/servicos/familia-servicos";
 import { FechoPagina } from "@/components/ui/fecho-pagina";
@@ -33,19 +34,18 @@ export async function generateMetadata({
 export default async function Servicos({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
-  const { common, home, servicos } = await getDictionary(lang);
+  const { common, home, servicos, erros } = await getDictionary(lang);
   return (
     <>
       <Nav currentPath="/servicos" />
 
       <main className="flex-1 px-lg md:px-xl lg:px-2xl">
-        <div className="mx-auto w-full max-w-[var(--grid-max-width)]">
-          <div className="py-2xl lg:pt-4xl lg:pb-3xl">
-            <h1 className="font-heading text-[length:var(--font-size-display-narrow)] leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-display)] text-text-primary lg:text-display">
-              {servicos.meta.title}
-            </h1>
-          </div>
-
+        <BarraPagina
+          titulo={servicos.meta.title}
+          voltarHref="/"
+          voltarLabel={erros.naoEncontrada.home}
+        />
+        <div className="mx-auto w-full max-w-[var(--grid-max-width)] pt-lg lg:pt-xl">
           <FamiliaInicial lang={lang} />
           <FamiliaAvancada lang={lang} />
 

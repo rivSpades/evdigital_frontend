@@ -10,82 +10,66 @@ import {
   type ComponentPropsWithoutRef,
   type ReactNode,
 } from "react";
-import { CircleAlert, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { ErroCampo } from "@/components/ui/erro-campo";
 import { cn } from "@/lib/cn";
 
 // Espelha os swatches ds/form/input-field--* do frame "Inventário · Lote A" (EoIvi) e as
-// instâncias reais dos frames Contacto (M9S6m / uhCIg) do design-system.pen.
+// instâncias reais dos ecrãs de formulário do design-system.pen (direcção «B · Registo em
+// linhas», 2026-09-25).
 //
-// Anatomia fixada no .pen: rótulo sempre acima do campo e nunca em maiúsculas; o
-// placeholder é um exemplo e nunca substitui o rótulo; ajuda e mensagem de erro a
-// $font-size-body; erro sempre abaixo do campo e sempre com ícone além da cor.
+// Anatomia: cada campo é uma LINHA. Em md+ a etiqueta ocupa a coluna da esquerda (168,
+// $font-size-label, $font-weight-label) e o controlo, a ajuda e o erro a coluna da direita
+// (gap $space-lg); abaixo de md a linha empilha, etiqueta por cima com gap $space-xs. Padding
+// vertical $space-md e régua $border-subtle de 1px no topo de cada linha (a `Folha` tira a
+// da primeira). O placeholder é um exemplo e nunca substitui o rótulo. A ajuda fica por baixo
+// do controlo e o erro (ds/form/erro-campo: glifo + caption, sempre além da cor) substitui-a.
 //
-// Métricas: altura $input-height (44), raio $input-radius, inset $input-inset-x,
-// fundo $input-bg, contorno $input-border, foco $input-border-focus.
-//
-// Variante "folha" (direcção "A vez", campos dentro de ds/layout/folha): o campo é a coisa
-// mais escura e mais contornada da folha ($bg-surface-sunken + contorno $border-strong),
-// rótulo com gap $space-2xs, ajuda em $font-size-caption $text-tertiary e erro no formato
-// ds/form/erro-campo (glifo "!" + caption). O `Field` passa a variante aos controlos por
-// contexto: um formulário numa `Folha` só precisa de `variant="folha"` em cada `Field`.
-//
-// O .pen desenha os estados de foco e de erro com um contorno de $border-width-thick
-// (2px). Em CSS isso passaria a caixa a saltar 1px ao focar, por isso o segundo pixel é
-// um fio interior (inset box-shadow) sobre a borda hairline, nunca um halo exterior
-// (design-guardrails.md §1). O anel de foco exterior já vem do :focus-visible global.
+// Controlo: sem fundo, sem contorno em cima e nos lados; só a linha de base de 1px
+// $border-strong (≥3:1), raio 0, padding horizontal 0, altura $input-height (44). Hover:
+// $border-interactive. Foco e erro: a linha passa a 2px (a borda hairline + um fio inset de
+// 1px, para o layout não crescer), $border-focus e $feedback-error-fg. Desactivado:
+// $text-disabled e $border-subtle.
 //
 // Acessibilidade: o `Field` liga ajuda e erro ao controlo por `aria-describedby` (via
 // contexto) e o erro é anunciado (`role="alert"`).
 
-export type FieldVariant = "default" | "folha";
+type FieldContextValue = { describedBy?: string; invalid: boolean };
 
-type FieldContextValue = { variant: FieldVariant; describedBy?: string; invalid: boolean };
+const FieldContext = createContext<FieldContextValue>({ invalid: false });
 
-const FieldContext = createContext<FieldContextValue>({ variant: "default", invalid: false });
+const ICON_INSET = "left-0";
 
-const ICON_INSET = "left-[var(--input-inset-x)]";
+// ícone (20) + gap $space-sm (12) = 32
+const withIconPadding = "pl-8";
 
-// inset (16) + ícone (20) + gap $space-sm (12) = 48
-const withIconPadding = "pl-12";
-
-function controlBase(variant: FieldVariant) {
-  return cn(
-    "w-full rounded-[var(--input-radius)]",
-    variant === "folha"
-      ? "border border-border-strong bg-bg-surface-sunken"
-      : "border border-[var(--input-border)] bg-[var(--input-bg)]",
-    "font-body text-body text-text-primary placeholder:text-text-tertiary",
-    "transition-colors",
-    "hover:border-border-interactive",
-    variant === "default" && "hover:bg-bg-surface-hover",
-    // O foco do campo é o anel interior (borda + fio inset, 2px no total, contraste > 3:1).
-    // O anel exterior global (:focus-visible, em globals.css) somava-se e, por ter offset,
-    // parecia uma segunda borda: em campos de texto o foco é sempre visível, até ao clicar.
-    // Só aqui é suprimido. O `!` é obrigatório: o :focus-visible global está fora de
-    // camadas e ganharia a uma utilidade normal (que vive em @layer utilities).
-    "focus:border-[var(--input-border-focus)]",
-    "focus:shadow-[inset_0_0_0_1px_var(--input-border-focus)]",
-    "focus-visible:outline-none!",
-    // Autofill do browser no tema escuro: o fundo claro do Chrome fica tapado por uma
-    // sombra interior da cor do campo (o fundo do UA não se pode mudar) e o texto mantém
-    // $text-primary. Com foco, o fio interior de foco vai por cima.
-    variant === "folha"
-      ? "autofill:shadow-[inset_0_0_0_1000px_var(--color-bg-surface-sunken)]"
-      : "autofill:shadow-[inset_0_0_0_1000px_var(--input-bg)]",
-    variant === "folha"
-      ? "autofill:focus:shadow-[inset_0_0_0_1px_var(--input-border-focus),inset_0_0_0_1000px_var(--color-bg-surface-sunken)]"
-      : "autofill:focus:shadow-[inset_0_0_0_1px_var(--input-border-focus),inset_0_0_0_1000px_var(--input-bg)]",
-    "autofill:[-webkit-text-fill-color:var(--color-text-primary)] autofill:[caret-color:var(--color-text-primary)]",
-    "disabled:cursor-not-allowed disabled:border-border-subtle disabled:bg-bg-disabled",
-    "disabled:text-text-disabled disabled:placeholder:text-text-disabled",
-  );
-}
+const controlBase = cn(
+  "w-full rounded-none border-0 border-b border-border-strong bg-transparent px-0",
+  "font-body text-body text-text-primary placeholder:text-text-tertiary",
+  "transition-colors",
+  "hover:border-border-interactive",
+  // O foco é a linha de base a 2px (borda + fio inset, sem crescer o layout). O anel
+  // exterior global (:focus-visible, em globals.css) é suprimido só nos campos de texto. O
+  // `!` é obrigatório: o :focus-visible global está fora de camadas e ganharia a uma
+  // utilidade normal (que vive em @layer utilities).
+  "focus:border-[var(--input-border-focus)]",
+  "focus:shadow-[inset_0_-1px_0_var(--input-border-focus)]",
+  "focus-visible:outline-none!",
+  // Autofill do browser no tema escuro: o fundo claro do Chrome fica tapado por uma sombra
+  // interior da cor da página (o fundo do UA não se pode mudar) e o texto mantém
+  // $text-primary. Com foco, o fio inset da linha de base vai por cima.
+  "autofill:shadow-[inset_0_0_0_1000px_var(--color-bg-base)]",
+  "autofill:focus:shadow-[inset_0_-1px_0_var(--input-border-focus),inset_0_0_0_1000px_var(--color-bg-base)]",
+  "autofill:[-webkit-text-fill-color:var(--color-text-primary)] autofill:[caret-color:var(--color-text-primary)]",
+  "disabled:cursor-not-allowed disabled:border-border-subtle disabled:bg-transparent",
+  "disabled:text-text-disabled disabled:placeholder:text-text-disabled",
+);
 
 const controlInvalid = cn(
-  "border-feedback-error-border",
-  "shadow-[inset_0_0_0_1px_var(--color-feedback-error-border)]",
-  "hover:border-feedback-error-border",
+  "border-feedback-error-fg",
+  "shadow-[inset_0_-1px_0_var(--color-feedback-error-fg)]",
+  "hover:border-feedback-error-fg focus:border-feedback-error-fg",
+  "focus:shadow-[inset_0_-1px_0_var(--color-feedback-error-fg)]",
 );
 
 /**
@@ -108,7 +92,6 @@ export function Field({
   optionalLabel = "Opcional",
   hint,
   error,
-  variant = "default",
   aside,
   after,
   children,
@@ -120,8 +103,10 @@ export function Field({
   optionalLabel?: string;
   hint?: string;
   error?: string;
-  variant?: FieldVariant;
-  /** Acção em linha à direita do rótulo (ex. "Esqueceu a palavra-passe?"). */
+  /**
+   * Acção por baixo da etiqueta, na coluna da esquerda (ex. "Esqueceu a palavra-passe?"),
+   * com alvo de 44.
+   */
   aside?: ReactNode;
   /**
    * Acção por baixo do campo (e do erro), depois do controlo na ordem de tabulação (ex.
@@ -132,86 +117,50 @@ export function Field({
 }) {
   const hintId = hint ? `${htmlFor}-ajuda` : undefined;
   const errorId = error ? `${htmlFor}-erro` : undefined;
-  const folha = variant === "folha";
 
   return (
     <FieldContext.Provider
-      value={{ variant, describedBy: joinIds(hintId, errorId), invalid: Boolean(error) }}
+      value={{ describedBy: joinIds(error ? undefined : hintId, errorId), invalid: Boolean(error) }}
     >
-      <div className={cn("flex flex-col", folha ? "gap-2xs" : "gap-xs")}>
-        {/* Com `aside` a linha pode partir: se o rótulo e a acção não cabem lado a lado
-            (ex. "Esqueceu a palavra-passe?" a 375), a acção desce e fica à direita, em vez
-            de sair da folha. */}
-        <div
-          className={cn(
-            "flex items-center",
-            folha ? "gap-2xs" : "gap-xs",
-            Boolean(aside) && "flex-wrap justify-between",
-          )}
-        >
-          <div className={cn("flex items-center", folha ? "gap-2xs" : "gap-xs")}>
+      <div
+        className={cn(
+          "flex flex-col gap-xs border-t border-border-subtle py-md",
+          "md:grid md:grid-cols-[168px_minmax(0,1fr)] md:items-start md:gap-x-lg",
+        )}
+      >
+        <div className="flex flex-col md:pt-[10px]">
+          <div className="flex flex-wrap items-baseline gap-x-xs">
             <label
               htmlFor={htmlFor}
-              className={cn(
-                "font-body text-label font-medium text-text-primary",
-                Boolean(aside) && "whitespace-nowrap",
-              )}
+              className="font-body text-label font-medium text-text-primary"
             >
               {label}
             </label>
             {optional ? (
-              // Na folha o .pen escreve "Opcional" ao tamanho do rótulo ($font-size-label,
-              // $font-weight-body, $text-tertiary): Entrar · criar conta e Definições.
-              <span
-                className={cn(
-                  "font-body text-text-tertiary",
-                  folha
-                    ? "text-label font-normal"
-                    : "text-caption tracking-[var(--letter-spacing-caption)]",
-                )}
-              >
+              <span className="font-body text-label font-normal text-text-tertiary">
                 {optionalLabel}
               </span>
             ) : null}
           </div>
-          {aside ? <div className="ml-auto flex">{aside}</div> : null}
+          {aside ? <div className="flex">{aside}</div> : null}
         </div>
 
-        {hint ? (
-          <p
-            id={hintId}
-            className={cn(
-              "font-body",
-              folha ? "text-caption text-text-tertiary" : "text-body text-text-secondary",
-            )}
-          >
-            {hint}
-          </p>
-        ) : null}
+        <div className="flex min-w-0 flex-col gap-xs">
+          {children}
 
-        {children}
-
-        {error ? (
-          folha ? (
-            <ErroCampo id={errorId}>{error}</ErroCampo>
-          ) : (
+          {hint && !error ? (
             <p
-              id={errorId}
-              role="alert"
-              className="flex gap-xs font-body text-body text-feedback-error-fg"
+              id={hintId}
+              className="font-body text-caption tracking-[var(--letter-spacing-caption)] text-text-tertiary"
             >
-              <CircleAlert
-                size={20}
-                strokeWidth={2}
-                aria-hidden
-                className="mt-[3px] shrink-0"
-              />
-              {error}
+              {hint}
             </p>
-          )
-        ) : null}
+          ) : null}
 
-        {after ? <div className="flex">{after}</div> : null}
+          {error ? <ErroCampo id={errorId}>{error}</ErroCampo> : null}
+
+          {after ? <div className="flex">{after}</div> : null}
+        </div>
       </div>
     </FieldContext.Provider>
   );
@@ -245,8 +194,8 @@ export function Input({ invalid, icon, className, ...rest }: InputProps) {
         aria-invalid={isInvalid || undefined}
         aria-describedby={field.describedBy}
         className={cn(
-          controlBase(field.variant),
-          "h-11 px-[var(--input-inset-x)]",
+          controlBase,
+          "h-11",
           icon ? withIconPadding : undefined,
           isInvalid && controlInvalid,
           className,
@@ -309,8 +258,8 @@ export function PasswordInput({
         aria-invalid={isInvalid || undefined}
         aria-describedby={field.describedBy}
         className={cn(
-          controlBase(field.variant),
-          "h-11 px-[var(--input-inset-x)] pr-12",
+          controlBase,
+          "h-11 pr-11",
           isInvalid && controlInvalid,
           className,
         )}
@@ -326,7 +275,7 @@ export function PasswordInput({
         // juntos anunciavam o estado duas vezes, e de forma contraditória.
         aria-label={visivel ? hideLabel : showLabel}
         className={cn(
-          "absolute top-0 right-0 flex size-11 items-center justify-center rounded-[var(--input-radius)]",
+          "absolute top-0 right-0 flex size-11 items-center justify-center rounded-[var(--radius-sm)]",
           "text-text-tertiary transition-colors hover:text-text-primary",
         )}
       >
@@ -354,8 +303,8 @@ export function Textarea({ invalid, className, ...rest }: TextareaProps) {
       aria-invalid={isInvalid || undefined}
       aria-describedby={field.describedBy}
       className={cn(
-        controlBase(field.variant),
-        "block min-h-[120px] resize-y p-[var(--input-inset-x)]",
+        controlBase,
+        "block min-h-[112px] resize-y py-[10px]",
         "leading-[var(--line-height-body)]",
         isInvalid && controlInvalid,
         className,

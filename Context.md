@@ -110,7 +110,8 @@ Next.js (App Router) + TypeScript + Tailwind CSS v4 (config CSS-first via `@them
 
 Plano: [`../docs/plans/active/2026-09-23-redesenho-checklists-design.md`](../docs/plans/active/2026-09-23-redesenho-checklists-design.md).
 Regras vivas: [`../design-guardrails.md`](../design-guardrails.md). Fonte visual: grupo
-`v2 · A vez` do `.pen`. Folha neutra para formulários, bloco da vez sem fundo, registos
+`v2 · A vez` do `.pen`. Formulários em «B · Registo em linhas» (2026-09-25): campo em linha
+de base, etiqueta à esquerda em md+, `Folha` aberta sem caixa; bloco da vez sem fundo, registos
 (linhas com régua) em vez de cartões, verde só em botão, foco e ligações.
 
 Páginas no estilo «A vez» (todas em `src/app/[lang]/**`):
@@ -220,12 +221,13 @@ vez») não vão para código.
   pointer` em tudo o que é clicável (botões, `a[href]`, `summary`, `label[for]`, roles
   button/tab/menuitem/option, etc.) e `not-allowed` no que está desactivado. Não repetir
   `cursor-pointer` componente a componente; um utilitário sobrepõe-na quando preciso.
-- **Foco dos campos** (`ui/input.tsx`, `ui/select.tsx`): anel interior (borda
-  `--input-border-focus` + `box-shadow` inset de 1px). O anel exterior global
+- **Foco dos campos** (`ui/input.tsx`, `ui/select.tsx`, `ui/compositor-thread.tsx`): a
+  linha de base passa a 2px (borda `--input-border-focus` + `box-shadow` inset de 1px, só
+  em baixo; erro com `feedback-error-fg`). O anel exterior global
   (`:focus-visible` em `globals.css`) é suprimido só nos campos com
   `focus-visible:outline-none!`; o `!` é obrigatório porque o `:focus-visible` global
   está fora de camadas e ganharia a um utilitário normal (`@layer utilities`).
-- Autofill com tema escuro: sombra interior da cor do campo (`autofill:shadow-[...]`).
+- Autofill com tema escuro: sombra interior da cor da página (`autofill:shadow-[...]`).
 
 ### Movimento (scroll reveal da Início)
 

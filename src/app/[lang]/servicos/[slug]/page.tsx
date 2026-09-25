@@ -2,8 +2,8 @@ import { Fragment } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Nav } from "@/components/layout/nav";
+import { BarraPagina } from "@/components/layout/barra-pagina";
 import { Footer } from "@/components/layout/footer";
-import { BackLink } from "@/components/area-cliente/back-link";
 import { Accordion } from "@/components/ui/accordion";
 import { ButtonLink } from "@/components/ui/button";
 import { FechoPagina } from "@/components/ui/fecho-pagina";
@@ -123,30 +123,28 @@ export default async function ServicoPage({ params }: Props) {
       <Nav currentPath="/servicos" />
 
       <main className="flex-1 px-lg md:px-xl lg:px-2xl">
-        <div className="mx-auto w-full max-w-[var(--grid-max-width)]">
-          {/* Secção · topo */}
-          <div className="flex flex-col gap-md pt-lg pb-3xl lg:gap-lg lg:pt-xl lg:pb-4xl">
-            <BackLink href="/servicos" label={t.ficha.breadcrumbServicos} />
-
-            <div className="flex flex-col gap-sm lg:gap-md">
-              <h1 className="font-heading text-[length:var(--font-size-display-narrow)] leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-display)] text-text-primary lg:text-display">
-                {title.split("/").map((parte, i) => (
-                  <Fragment key={parte}>
-                    {i > 0 ? (
-                      <>
-                        /<wbr />
-                      </>
-                    ) : null}
-                    {parte}
-                  </Fragment>
-                ))}
-              </h1>
-              {outcome ? (
-                <p className="font-body text-body text-text-secondary lg:max-w-[760px] lg:text-body-lg">
-                  {outcome}
-                </p>
+        <BarraPagina
+          titulo={title.split("/").map((parte, i) => (
+            <Fragment key={parte}>
+              {i > 0 ? (
+                <>
+                  /<wbr />
+                </>
               ) : null}
-            </div>
+              {parte}
+            </Fragment>
+          ))}
+          voltarHref="/servicos"
+          voltarLabel={t.ficha.breadcrumbServicos}
+        />
+        <div className="mx-auto w-full max-w-[var(--grid-max-width)]">
+          {/* Secção · topo (o título e o «voltar» vivem na BarraPagina) */}
+          <div className="flex flex-col gap-md pt-lg pb-3xl lg:gap-lg lg:pt-xl lg:pb-4xl">
+            {outcome ? (
+              <p className="font-body text-body text-text-secondary lg:max-w-[760px] lg:text-body-lg">
+                {outcome}
+              </p>
+            ) : null}
 
             <div className="flex flex-col items-start gap-xs pt-xs lg:flex-row lg:items-center lg:gap-lg">
               <ButtonLink

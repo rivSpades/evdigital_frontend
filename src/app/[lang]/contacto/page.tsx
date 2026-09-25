@@ -58,7 +58,7 @@ export default async function Contacto({ params }: PageProps<"/[lang]/contacto">
           <ContactoWizardUrl
             lang={lang}
             t={t}
-            titulo={t.page.title}
+            titulo={t.metadata.title}
             servicos={servicos}
             grupos={{ A: servicosT.inicial.titulo, B: servicosT.avancado.titulo }}
             privacyLinkLabel={institucional.termos.form.privacyLinkLabel}

@@ -96,7 +96,7 @@ export function AuthShell({
 }
 
 /**
- * Secção de autenticação: a coluna de 448 centrada na horizontal e encostada ao topo, com
+ * Secção de autenticação: a coluna de 680 centrada na horizontal e encostada ao topo, com
  * a mesma margem superior em todos os ecrãs ($space-xl em mobile, $space-2xl a partir de
  * md) e $space-3xl no fundo. Sem centragem vertical: cada ecrã fica com a sua altura
  * natural e a coluna não salta ao passar de um para o outro (pedido do dono, 2026-09-24).
@@ -114,7 +114,7 @@ export function AuthSection({
   return (
     <section className="flex flex-col gap-md pt-xl pb-3xl md:gap-lg md:pt-2xl">
       {back ? <div className="flex">{back}</div> : null}
-      <div className="mx-auto flex w-full max-w-[448px] flex-col">{children}</div>
+      <div className="mx-auto flex w-full max-w-[680px] flex-col">{children}</div>
     </section>
   );
 }

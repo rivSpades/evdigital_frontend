@@ -1,7 +1,7 @@
 import { cn } from "@/lib/cn";
 
 // Espelha ds/form/escolha-dia (vdLWY) do design-system.pen (direcção "A vez"): um dia
-// escolhível do agendamento (Contacto, passo 2). Cartão de 68 x 72, $input-radius, gap
+// escolhível do agendamento (Contacto, passo 2). Cartão de 68 x 72, $radius-md, gap
 // $space-3xs, conteúdo centrado: Dia da semana (body caption $letter-spacing-caption
 // $text-tertiary), Dia ($font-mono body-lg, entrelinha de title, $text-primary) e Mês (mono
 // caption $text-tertiary). Sem marcador.
@@ -34,10 +34,10 @@ export function EscolhaDia({
       onClick={onEscolher}
       className={cn(
         "flex h-[72px] w-[68px] shrink-0 flex-col items-center justify-center gap-3xs",
-        "rounded-[var(--input-radius)] border transition-colors",
+        "rounded-[var(--radius-md)] border transition-colors",
         escolhido
-          ? "border-text-primary bg-bg-surface-raised shadow-[inset_0_0_0_1px_var(--color-text-primary)]"
-          : "border-border-default bg-bg-surface-sunken hover:border-border-strong",
+          ? "border-accent-primary bg-accent-primary-subtle shadow-[inset_0_0_0_1px_var(--color-accent-primary)]"
+          : "border-border-default bg-transparent hover:border-border-strong",
       )}
     >
       <span className="font-body text-caption tracking-[var(--letter-spacing-caption)] text-text-tertiary">

@@ -129,15 +129,14 @@ export function RecuperarForm({
             className="w-full pt-xl"
           >
             <Folha
-              contentGap="xl"
               actions={
-                <Button type="submit" size="action" fullWidth busy={aPedir}>
+                <Button type="submit" size="action" busy={aPedir}>
                   {aPedir ? t.resetSubmitting : t.resetSubmit}
                 </Button>
               }
             >
               {erros.geral ? <Notice id={ID_ERRO} focavel tone="error" role="alert" title={erros.geral} /> : null}
-              <Field htmlFor="recuperar-email" label={t.email} error={erros.email} variant="folha">
+              <Field htmlFor="recuperar-email" label={t.email} error={erros.email}>
                 <Input
                   id="recuperar-email"
                   type="email"

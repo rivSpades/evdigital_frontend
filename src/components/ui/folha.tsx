@@ -2,53 +2,52 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 // Espelha ds/layout/folha (i0lScq) e ds/layout/folha--mobile (tbpmM) do design-system.pen
-// (direcção "A vez"): onde se escreve, um formulário e mais nada. Preenchida e neutra:
-// $bg-surface, contorno hairline $border-subtle a toda a volta, $radius-none, nunca verde.
-// Padding [$space-lg, $space-md] abaixo de md (folha--mobile) e $space-xl a partir de md.
+// (direcção «B · Registo em linhas»): onde se escreve, uma lista de campos em linha e mais
+// nada. Já não é uma caixa: sem fundo, sem contorno e sem padding, os campos ficam abertos
+// sobre a página, e só uma régua $border-subtle de 1px fecha a lista. A primeira linha não
+// leva régua de topo (cada `Field` traz a sua).
 //
-// Slots: Conteúdo (gap $space-lg) e Acções no fundo (padding-top $space-xs, gap $space-sm)
-// só com a acção que avança. Nunca "Voltar" dentro da folha (design-guardrails.md §6).
-// Em mobile as Acções são sticky (coladas ao fundo do ecrã enquanto a folha está à vista), numa
-// barra transparente com o botão centrado e a toda a largura.
+// Slots: Conteúdo (linhas de campo) e Acções no fundo, só com a acção que avança: à direita
+// em md+, a toda a largura abaixo de md, onde ficam sticky (coladas ao fundo do ecrã enquanto
+// a folha está à vista), numa barra transparente. Nunca "Voltar" dentro da folha
+// (design-guardrails.md §6).
 //
-// A largura vem do contentor (448 nos ecrãs de autenticação, 704 na coluna das páginas de
+// A largura vem do contentor (680 nos ecrãs de autenticação e na coluna das páginas de
 // formulário da Área de Cliente: Novo pedido, Novo projeto, Definições).
 
 export function Folha({
   children,
   actions,
-  contentGap = "lg",
+  contentGap = "none",
   className,
 }: {
   children: ReactNode;
   actions?: ReactNode;
   /**
-   * Gap do Conteúdo: $space-lg (o master) ou $space-xl, mais folgado, nos formulários de
-   * Entrar e Criar conta e entre grupos de campos em Novo pedido / Novo projeto (pedido do
-   * dono, 2026-09-24).
+   * Espaço entre blocos do Conteúdo. Por omissão nenhum: cada linha de campo traz o seu
+   * padding e a sua régua. `xl` afasta grupos de linhas (Novo pedido / Novo projeto).
    */
-  contentGap?: "lg" | "xl";
+  contentGap?: "none" | "xl";
   className?: string;
 }) {
   return (
-    <div
-      className={cn(
-        "flex w-full flex-col gap-lg rounded-[var(--radius-none)] border border-border-subtle bg-bg-surface",
-        "px-md py-lg md:p-xl",
-        className,
-      )}
-    >
-      <div className={cn("flex flex-col", contentGap === "xl" ? "gap-xl" : "gap-lg")}>
+    <div className={cn("flex w-full flex-col gap-lg", className)}>
+      <div
+        className={cn(
+          "flex flex-col border-b border-border-subtle [&>:first-child]:border-t-0",
+          contentGap === "xl" && "gap-xl",
+        )}
+      >
         {children}
       </div>
       {actions ? (
         <div
           className={cn(
-            "flex flex-col gap-sm pt-xs",
+            "flex flex-col gap-sm md:flex-row md:justify-end",
             // Mobile (< md): o botão fica colado ao fundo do ecrã enquanto a folha está à vista
             // (pedido do dono, 2026-09-24). A barra é TRANSPARENTE (sem fundo nem régua): só o
             // botão se vê, centrado e a toda a largura da folha, com a área segura do iOS por
-            // baixo. `w-full` no botão mesmo quando a acção vem alinhada à direita (wizard).
+            // baixo.
             "max-md:sticky max-md:bottom-0 max-md:z-20 max-md:bg-transparent max-md:pt-0 max-md:pb-[calc(var(--spacing-md)+env(safe-area-inset-bottom))]",
             "max-md:[&_a]:w-full max-md:[&_button]:w-full max-md:[&>*]:w-full max-md:[&>*]:justify-center",
           )}

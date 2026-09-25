@@ -24,6 +24,7 @@ quickFacts:
     value: Backend, frontend i interfejs
   - label: Status
     value: Na produkcji, publicznie dostępny
+cover: /projects/evplanner.png
 url: https://app.evplanner.eu
 testimonials: []
 audience: ["A", "B"]

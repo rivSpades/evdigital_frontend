@@ -187,7 +187,6 @@ export function NovoPedidoForm({
   return (
     <form noValidate onSubmit={onSubmit} className="w-full">
       <Folha
-        contentGap="xl"
         actions={
           <Button
             type="submit"
@@ -205,7 +204,7 @@ export function NovoPedidoForm({
           </p>
         ) : null}
 
-        <div className="flex flex-col gap-lg">
+        <div className="flex flex-col">
           {/* role="radiogroup" (permitido num fieldset) para o grupo poder dizer
               aria-invalid; o nome continua a ser a legenda. Ao sair do grupo (foco fora
               dele) mostra-se o erro, como no blur de um campo. */}
@@ -218,7 +217,7 @@ export function NovoPedidoForm({
               if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
               aoSair(setErros, "type", validarTipo(tipo));
             }}
-            className="flex flex-col gap-sm"
+            className="flex flex-col gap-sm pb-md"
           >
             <legend id="pedido-tipo-legenda" className="pb-sm font-body text-label font-medium tracking-[var(--letter-spacing-label)] text-text-primary">
               {t.typeQuestion}
@@ -244,7 +243,18 @@ export function NovoPedidoForm({
             {erros.type ? <ErroCampo id="pedido-tipo-erro">{erros.type}</ErroCampo> : null}
           </fieldset>
 
-          <Field htmlFor="pedido-projeto" label={t.projectLabel} error={erros.project} variant="folha">
+          <Field
+            htmlFor="pedido-projeto"
+            label={t.projectLabel}
+            error={erros.project}
+            after={
+              !projetoFixo && opcoesProjeto.length === 0 ? (
+                <Ligacao href="/area-cliente/projetos/novo" variant="acao">
+                  {criarProjeto}
+                </Ligacao>
+              ) : undefined
+            }
+          >
             {projetoFixo ? (
               <Input id="pedido-projeto" value={projetoFixo.title} disabled readOnly />
             ) : opcoesProjeto.length > 0 ? (
@@ -258,21 +268,15 @@ export function NovoPedidoForm({
                 }}
                 options={opcoesProjeto}
                 placeholder={t.projectPlaceholder}
-                appearance="folha"
               />
             ) : (
               <Input id="pedido-projeto" value="" placeholder={t.projectPlaceholder} disabled readOnly />
             )}
           </Field>
-          {!projetoFixo && opcoesProjeto.length === 0 ? (
-            <Ligacao href="/area-cliente/projetos/novo" variant="acao" className="-mt-sm">
-              {criarProjeto}
-            </Ligacao>
-          ) : null}
         </div>
 
-        <div className="flex flex-col gap-lg">
-          <Field htmlFor="pedido-titulo" label={t.titleLabel} error={erros.title} variant="folha">
+        <div className="flex flex-col">
+          <Field htmlFor="pedido-titulo" label={t.titleLabel} error={erros.title}>
             <Input
               id="pedido-titulo"
               placeholder={t.titlePlaceholder}
@@ -290,7 +294,6 @@ export function NovoPedidoForm({
             label={t.descriptionLabel}
             hint={t.descriptionHint}
             error={erros.description}
-            variant="folha"
           >
             <Textarea
               id="pedido-descricao"
@@ -306,7 +309,7 @@ export function NovoPedidoForm({
             />
           </Field>
 
-          <Field htmlFor="pedido-urgencia" label={t.urgencyLabel} hint={t.urgencyHint} variant="folha">
+          <Field htmlFor="pedido-urgencia" label={t.urgencyLabel} hint={t.urgencyHint}>
             <Select
               id="pedido-urgencia"
               name="priority"
@@ -314,12 +317,11 @@ export function NovoPedidoForm({
               onChange={setUrgencia}
               options={urgencias}
               placeholder={t.urgencyPlaceholder}
-              appearance="folha"
             />
           </Field>
         </div>
 
-        <div className="flex flex-col gap-lg">
+        <div className="flex flex-col gap-lg py-lg">
           <Notice tone="info" discreto title={t.attachments} />
           {erros.geral ? (
             <Notice id="pedido-erro" focavel tone="error" role="alert" title={erros.geral} />

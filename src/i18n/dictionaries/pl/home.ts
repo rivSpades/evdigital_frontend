@@ -12,11 +12,11 @@ export const home: typeof Source = {
     secondaryCta: "Zobacz, co robimy",
   },
   doors: {
-    title: "Od czego chcą Państwo zacząć",
+    title: "Na jakim etapie jest Państwa firma?",
     onlineTitle: "Chcę wprowadzić swoją firmę do internetu",
     onlineBody:
       "Nie mają Państwo jeszcze strony albo obecna już Państwa nie reprezentuje. Zaczynamy od zera, w Państwa tempie, i wszystko tłumaczymy bez technicznego żargonu.",
-    onlineCta: "Zobacz, jak zaczynamy",
+    onlineCta: "Zobacz podstawowe usługi",
     advancedTitle: "Chcę wynieść swoją firmę na wyższy poziom",
     advancedBody:
       "Mają już Państwo obecność w internecie. Brakuje automatyzacji procesów, integracji systemów i zastosowania AI tam, gdzie daje realne korzyści.",

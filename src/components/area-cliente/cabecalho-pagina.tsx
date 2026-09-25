@@ -51,7 +51,7 @@ export function CabecalhoLista({
 }
 
 /** Largura da coluna das páginas de formulário (a da folha em desktop). */
-export const colunaFormularioClasses = "mx-auto w-full max-w-[704px]";
+export const colunaFormularioClasses = "mx-auto w-full max-w-[680px]";
 
 export function PaginaFormulario({
   voltarHref,

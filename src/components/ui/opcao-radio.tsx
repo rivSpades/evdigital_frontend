@@ -1,13 +1,13 @@
 import { cn } from "@/lib/cn";
 
-// Espelha as instâncias de ds/form/radio (m87SJ) nas folhas de "Novo pedido" do
-// design-system.pen (direcção "A vez"): uma opção de escolha única com rótulo e descrição,
-// padding $space-md, $input-radius, gap $space-sm.
-// - Por escolher: $bg-surface-sunken com contorno hairline $border-default (interior).
-// - Escolhida: $bg-surface-raised com contorno $border-width-thick $text-primary. Em CSS o
-//   segundo pixel é um fio interior (inset box-shadow), para a caixa não saltar ao escolher.
-// - Círculo de 20 ($bg-surface-sunken, contorno $border-width-thick $border-strong; na
-//   escolhida $accent-primary com o ponto de 8): é o controlo, não um marcador de texto.
+// Espelha as instâncias de ds/form/radio (m87SJ) do design-system.pen (direcção «B · Registo
+// em linhas»): uma opção de escolha única com rótulo e descrição, altura ≥ $tap-target-min,
+// padding $space-md, raio $radius-md, gap $space-sm, sem fundo por omissão.
+// - Por escolher: contorno hairline $border-default; hover $border-strong.
+// - Escolhida: contorno $accent-primary (hairline + fio interior de 1px, para a caixa não
+//   saltar ao escolher) e fundo $accent-primary-subtle.
+// - Círculo de 20 sem fundo (contorno $border-width-thick $border-strong; na escolhida
+//   $accent-primary com o ponto de 8): é o controlo, não um marcador de texto.
 // - Rótulo: body $font-weight-label $text-primary; Descrição: body $text-secondary.
 //
 // É um <input type="radio"> nativo (setas mudam a escolha dentro do grupo, espaço
@@ -43,13 +43,13 @@ export function OpcaoRadio({
     <label
       htmlFor={id}
       className={cn(
-        "flex w-full gap-sm rounded-[var(--input-radius)] border transition-colors",
+        "flex w-full gap-sm rounded-[var(--radius-md)] border transition-colors",
         compacta ? "items-center px-md py-sm" : "items-start p-md",
         "has-[input:focus-visible]:[outline:var(--border-width-focus)_solid_var(--color-border-focus)]",
         "has-[input:focus-visible]:[outline-offset:var(--focus-ring-offset)]",
         checked
-          ? "border-text-primary bg-bg-surface-raised shadow-[inset_0_0_0_1px_var(--color-text-primary)]"
-          : "border-border-default bg-bg-surface-sunken hover:border-border-strong",
+          ? "border-accent-primary bg-accent-primary-subtle shadow-[inset_0_0_0_1px_var(--color-accent-primary)]"
+          : "border-border-default bg-transparent hover:border-border-strong",
       )}
     >
       <input
@@ -66,7 +66,7 @@ export function OpcaoRadio({
         aria-hidden
         className={cn(
           compacta ? undefined : "mt-3xs",
-          "flex size-5 shrink-0 items-center justify-center rounded-[var(--radius-pill)] border-2 bg-bg-surface-sunken",
+          "flex size-5 shrink-0 items-center justify-center rounded-[var(--radius-pill)] border-2",
           checked ? "border-accent-primary" : "border-border-strong",
         )}
       >

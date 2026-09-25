@@ -10,11 +10,11 @@ export const home = {
     secondaryCta: "Ver o que fazemos",
   },
   doors: {
-    title: "Por onde quer começar",
+    title: "Em que ponto está o seu negócio?",
     onlineTitle: "Quero pôr o meu negócio online",
     onlineBody:
       "Ainda não tem site, ou o que tem já não o representa. Começamos do zero, ao seu ritmo, e explicamos tudo sem termos técnicos.",
-    onlineCta: "Ver como começamos",
+    onlineCta: "Ver serviços essenciais",
     advancedTitle: "Quero levar a minha empresa ao próximo nível",
     advancedBody:
       "Já tem presença digital. Falta automatizar processos, integrar sistemas e aplicar IA onde ela dá retorno real.",

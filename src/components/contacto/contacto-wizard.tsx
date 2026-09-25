@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { BackLink } from "@/components/area-cliente/back-link";
+import { BarraPagina } from "@/components/layout/barra-pagina";
 import { AProcurar } from "@/components/ui/a-procurar";
 import { BlocoDaVez } from "@/components/ui/bloco-da-vez";
 import { Button, ButtonLink } from "@/components/ui/button";
@@ -438,24 +438,18 @@ export function ContactoWizard({
         ? () => setPasso("reuniao")
         : null;
 
-  // Introdução: no passo 1 (e no fim) o título abre a página; nos passos 2 e 3 o Voltar é a
-  // primeira linha, antes do título (paddings de cada frame do .pen).
+  // Primeira linha da página: a BarraPagina (seta + título «Contacto»). Nos passos 2 e 3 a seta
+  // volta ao passo anterior; no passo 1 (e no fim) leva à Início. Vai directamente (sem
+  // wrapper) para o sticky ter a coluna inteira como bloco de contenção.
   const introducao = (
-    <div
-      className={cn(
-        "flex flex-col pb-xl lg:pb-2xl",
-        voltar ? "gap-md pt-lg lg:gap-lg lg:pt-xl" : "pt-lg lg:pt-xl",
-      )}
-    >
-      {voltar ? (
-        <div className="flex">
-          <BackLink onClick={voltar} disabled={estado === "a-enviar"} label={t.actions.back} />
-        </div>
-      ) : null}
-      {/* O título «Vamos conversar» não se vê (pedido do dono, 2026-09-24): a página mantém o
-          seu h1 para leitores de ecrã e para a estrutura de cabeçalhos. */}
-      <h1 className="sr-only">{titulo}</h1>
-    </div>
+    <BarraPagina
+      className="mb-md lg:mb-lg"
+      titulo={titulo}
+      voltarLabel={voltar ? t.actions.back : homeLabel}
+      voltarHref={voltar ? undefined : "/"}
+      onVoltar={voltar ?? undefined}
+      voltarDisabled={estado === "a-enviar"}
+    />
   );
 
   if (terminado) {
@@ -557,7 +551,7 @@ export function ContactoWizard({
           )}
         >
           <div className="flex flex-col gap-lg pb-xl">
-            <Field htmlFor="nome" label={t.form.nameLabel} error={erros.nome} variant="folha">
+            <Field htmlFor="nome" label={t.form.nameLabel} error={erros.nome}>
               <Input
                 id="nome"
                 name="nome"
@@ -575,7 +569,7 @@ export function ContactoWizard({
 
             <div className="flex flex-col gap-lg md:flex-row">
               <div className="min-w-0 flex-1">
-                <Field htmlFor="email" label={t.form.emailLabel} error={erros.email} variant="folha">
+                <Field htmlFor="email" label={t.form.emailLabel} error={erros.email}>
                   <Input
                     id="email"
                     name="email"
@@ -599,7 +593,6 @@ export function ContactoWizard({
                   label={t.form.phoneLabel}
                   optional
                   optionalLabel={optionalLabel}
-                  variant="folha"
                 >
                   <Input
                     id="telefone"
@@ -615,11 +608,10 @@ export function ContactoWizard({
               </div>
             </div>
 
-            <Field htmlFor="assunto" label={t.form.needLabel} error={erros.assunto} variant="folha">
+            <Field htmlFor="assunto" label={t.form.needLabel} error={erros.assunto}>
               <Select
                 id="assunto"
                 name="assunto"
-                appearance="folha"
                 value={assunto}
                 options={OPCOES}
                 placeholder={t.form.needPlaceholder}
@@ -631,7 +623,7 @@ export function ContactoWizard({
               />
             </Field>
 
-            <Field htmlFor="mensagem" label={t.form.messageLabel} error={erros.mensagem} variant="folha">
+            <Field htmlFor="mensagem" label={t.form.messageLabel} error={erros.mensagem}>
               <Textarea
                 id="mensagem"
                 name="mensagem"

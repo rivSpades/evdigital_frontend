@@ -3,6 +3,7 @@ import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/i18n/metadata";
 import { Nav } from "@/components/layout/nav";
+import { BarraPagina } from "@/components/layout/barra-pagina";
 import { Footer } from "@/components/layout/footer";
 import { BlogEmptyState } from "@/components/blog/empty-state";
 import { BlogClosingCta } from "@/components/blog/closing-cta";
@@ -38,7 +39,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/blog">): P
 
 export default async function BlogPage({ params }: PageProps<"/[lang]/blog">) {
   const lang = (await params).lang as Locale;
-  const { blog: t } = await getDictionary(lang);
+  const { blog: t, erros } = await getDictionary(lang);
 
   const posts = getAllBlogPosts(lang);
 
@@ -69,13 +70,8 @@ export default async function BlogPage({ params }: PageProps<"/[lang]/blog">) {
       <Nav currentPath="/blog" />
 
       <main className="flex-1 px-lg md:px-xl lg:px-2xl">
-        <div className="mx-auto w-full max-w-[var(--grid-max-width)]">
-          <header className="pt-2xl pb-xl lg:pt-4xl lg:pb-2xl">
-            <h1 className="font-heading text-[length:var(--font-size-display-narrow)] leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-display)] text-text-primary lg:text-display">
-              {t.title}
-            </h1>
-          </header>
-
+        <BarraPagina titulo={t.title} voltarHref="/" voltarLabel={erros.naoEncontrada.home} />
+        <div className="mx-auto w-full max-w-[var(--grid-max-width)] pt-lg lg:pt-xl">
           {posts.length === 0 ? (
             <section aria-label={t.title} className="pb-4xl lg:pb-5xl">
               <BlogEmptyState />

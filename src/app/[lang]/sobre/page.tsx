@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Nav } from "@/components/layout/nav";
+import { BarraPagina } from "@/components/layout/barra-pagina";
 import { Footer } from "@/components/layout/footer";
 import { FechoPagina } from "@/components/ui/fecho-pagina";
 import { LinhaTexto, ListaTexto } from "@/components/ui/linha-texto";
@@ -36,7 +37,7 @@ export async function generateMetadata({
 export default async function Sobre({ params }: PageProps<"/[lang]/sobre">) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
-  const { institucional } = await getDictionary(lang);
+  const { institucional, erros } = await getDictionary(lang);
   const t = institucional.sobre;
 
   return (
@@ -44,14 +45,12 @@ export default async function Sobre({ params }: PageProps<"/[lang]/sobre">) {
       <Nav currentPath="/sobre" />
 
       <main className="flex-1 px-lg md:px-xl lg:px-2xl">
+        <BarraPagina titulo={t.eyebrow} voltarHref="/" voltarLabel={erros.naoEncontrada.home} />
         <div className="mx-auto w-full max-w-[var(--grid-max-width)]">
-          <section className="flex flex-col gap-md pt-2xl pb-3xl lg:gap-lg lg:py-4xl">
-            <p className="font-mono text-caption tracking-[var(--letter-spacing-overline)] text-text-tertiary uppercase">
-              {t.eyebrow}
-            </p>
-            <h1 className="font-heading text-[length:var(--font-size-display-narrow)] leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-display)] text-text-primary lg:text-display">
+          <section className="flex flex-col gap-md pt-lg pb-3xl lg:gap-lg lg:pt-xl lg:pb-4xl">
+            <p className="font-heading text-[length:var(--font-size-display-narrow)] leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-display)] text-text-primary lg:text-display">
               {t.title}
-            </h1>
+            </p>
             <p className="font-body text-body text-text-secondary lg:max-w-[680px] lg:text-body-lg">
               {t.intro}
             </p>

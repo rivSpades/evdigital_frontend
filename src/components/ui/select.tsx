@@ -8,25 +8,17 @@ import { cn } from "@/lib/cn";
 // Espelha os swatches ds/overlay/dropdown-menu--* do frame "Inventário · Lote A" (EoIvi)
 // e o "Campo · O que precisa" dos frames Contacto (M9S6m / uhCIg) do design-system.pen.
 //
-// O gatilho segue as métricas do campo de formulário (altura $input-height, raio
-// $input-radius, inset $input-inset-x) e não as do botão, porque no .pen ele vive dentro
-// da coluna do formulário, ao lado dos restantes campos. Aberto passa a
-// $bg-surface-pressed com contorno $border-interactive de $border-width-thick.
+// O gatilho é um campo em linha de base (direcção «B · Registo em linhas», ver `ui/input.tsx`):
+// sem fundo nem contorno em cima e nos lados, só a linha de base de 1px $border-strong, altura
+// $input-height, raio 0, padding horizontal 0, valor em body $font-weight-body e seta de 20 à
+// direita. Aberto ou focado, a linha passa a 2px $border-focus (borda + fio inset, sem anel
+// exterior); em erro, $feedback-error-fg.
 //
-// O painel é $bg-surface-raised com $radius-md, contorno $border-subtle e fio de luz
-// interior a $border-highlight (nunca um halo exterior). Cada item tem 44px de altura
-// ($tap-target-min), raio $radius-sm, e o item escolhido fica a $bg-surface-selected com
-// visto a $text-accent.
-
-//
-// `appearance="folha"` (ds/form/select, direcção "A vez", Contacto): o gatilho é um campo da
-// folha ($bg-surface-sunken, contorno hairline $input-border, valor em body
-// $font-weight-body, seta de 16); aberto ou focado, o foco é o anel interior do campo
-// ($input-border-focus, 2px, sem anel exterior, como em `ui/input.tsx`). A lista fica a
-// $radius-none com contorno $border-default, itens a direito, e o visto em $text-primary
-// (o verde fica para botão, foco e ligação). `group` numa opção abre um rótulo de grupo
-// (caption $font-weight-label $text-tertiary) antes da primeira opção desse grupo; as
-// opções desse grupo ficam num role="group" com esse rótulo em aria-labelledby.
+// A lista é $bg-surface-raised com $radius-none e contorno $border-default, itens a direito,
+// 44px de altura ($tap-target-min) e o visto em $text-primary (o verde fica para botão, foco e
+// ligação). `group` numa opção abre um rótulo de grupo (caption $font-weight-label
+// $text-tertiary) antes da primeira opção desse grupo; as opções desse grupo ficam num
+// role="group" com esse rótulo em aria-labelledby.
 
 export type SelectOption = { value: string; label: string; group?: string };
 
@@ -39,7 +31,6 @@ export function Select({
   placeholder,
   invalid: invalidProp,
   describedBy: describedByProp,
-  appearance = "default",
   onBlur,
 }: {
   id: string;
@@ -52,14 +43,12 @@ export function Select({
   invalid?: boolean;
   /** Por omissão vem do `Field` à volta (ids da ajuda e do erro). */
   describedBy?: string;
-  appearance?: "default" | "folha";
   /**
    * O foco saiu do campo (para mostrar o erro em blur, design-guardrails.md §6). Escolher
    * uma opção com o rato não conta: a lista não tira o foco ao gatilho.
    */
   onBlur?: () => void;
 }) {
-  const folha = appearance === "folha";
   const field = useFieldContext();
   const invalid = invalidProp ?? field.invalid;
   const describedBy = describedByProp ?? field.describedBy;
@@ -160,7 +149,7 @@ export function Select({
         onClick={() => choose(index)}
         className={cn(
           "flex h-11 shrink-0 cursor-pointer items-center gap-sm px-sm",
-          folha ? "rounded-[var(--radius-none)]" : "rounded-[var(--radius-sm)]",
+          "rounded-[var(--radius-none)]",
           "font-body text-body text-text-primary",
           isSelected && "bg-bg-surface-selected",
           !isSelected && index === activeIndex && "bg-bg-surface-hover",
@@ -168,12 +157,7 @@ export function Select({
       >
         <span className="flex-1">{option.label}</span>
         {isSelected ? (
-          <Check
-            size={20}
-            strokeWidth={2}
-            aria-hidden
-            className={folha ? "text-text-primary" : "text-text-accent"}
-          />
+          <Check size={20} strokeWidth={2} aria-hidden className="text-text-primary" />
         ) : null}
       </div>
     );
@@ -200,31 +184,23 @@ export function Select({
           onBlur?.();
         }}
         className={cn(
-          "flex h-11 w-full items-center justify-between",
-          "rounded-[var(--input-radius)] px-[var(--input-inset-x)]",
-          "border font-body transition-colors",
-          folha ? "gap-sm text-body" : "gap-xs text-label font-medium",
-          folha
-            ? cn(
-                "bg-bg-surface-sunken focus-visible:outline-none",
-                isOpen
-                  ? "border-[var(--input-border-focus)] shadow-[inset_0_0_0_1px_var(--input-border-focus)]"
-                  : "border-[var(--input-border)] hover:border-border-interactive focus:border-[var(--input-border-focus)] focus:shadow-[inset_0_0_0_1px_var(--input-border-focus)]",
-              )
-            : isOpen
-              ? "border-border-interactive bg-bg-surface-pressed shadow-[inset_0_0_0_1px_var(--color-border-interactive)]"
-              : "border-[var(--input-border)] bg-[var(--input-bg)] hover:border-border-interactive hover:bg-bg-surface-hover",
+          "flex h-11 w-full items-center justify-between gap-sm",
+          "rounded-none border-0 border-b bg-transparent px-0",
+          "font-body text-body transition-colors focus-visible:outline-none!",
+          isOpen
+            ? "border-[var(--input-border-focus)] shadow-[inset_0_-1px_0_var(--input-border-focus)]"
+            : "border-border-strong hover:border-border-interactive focus:border-[var(--input-border-focus)] focus:shadow-[inset_0_-1px_0_var(--input-border-focus)]",
           invalid &&
             !isOpen &&
-            "border-feedback-error-border shadow-[inset_0_0_0_1px_var(--color-feedback-error-border)] hover:border-feedback-error-border",
+            "border-feedback-error-fg shadow-[inset_0_-1px_0_var(--color-feedback-error-fg)] hover:border-feedback-error-fg",
           selected ? "text-text-primary" : "text-text-tertiary",
         )}
       >
         <span className="truncate">{selected ? selected.label : placeholder}</span>
         {isOpen ? (
-          <ChevronUp size={folha ? 16 : 20} strokeWidth={2} aria-hidden className="shrink-0 text-text-secondary" />
+          <ChevronUp size={20} strokeWidth={2} aria-hidden className="shrink-0 text-text-secondary" />
         ) : (
-          <ChevronDown size={folha ? 16 : 20} strokeWidth={2} aria-hidden className="shrink-0 text-text-secondary" />
+          <ChevronDown size={20} strokeWidth={2} aria-hidden className="shrink-0 text-text-secondary" />
         )}
       </button>
 
@@ -238,9 +214,7 @@ export function Select({
           className={cn(
             "absolute top-[calc(100%+var(--spacing-xs))] right-0 left-0 z-30",
             "flex max-h-[280px] flex-col overflow-auto p-2xs bg-bg-surface-raised",
-            folha
-              ? "max-h-[360px] rounded-[var(--radius-none)] border border-border-default"
-              : "gap-3xs rounded-[var(--radius-md)] border border-border-subtle shadow-[inset_0_1px_0_0_var(--color-border-highlight),var(--shadow-elevation-3)]",
+            "max-h-[360px] rounded-[var(--radius-none)] border border-border-default",
           )}
         >
           {blocos.map((bloco) => {

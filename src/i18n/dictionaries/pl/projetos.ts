@@ -7,6 +7,7 @@ export const projetos: typeof Source = {
   title: "Projekty",
   listLabel: "Projekty",
   backToList: "Projekty",
+  fichaTitle: "Karta projektu",
   statusLive: "Działa produkcyjnie",
   viewProject: "Zobacz kartę projektu",
   viewProjectShort: "Zobacz kartę",

@@ -5,6 +5,7 @@ export const projetos = {
   title: "Projetos",
   listLabel: "Projetos",
   backToList: "Projetos",
+  fichaTitle: "Ficha do projeto",
   statusLive: "Em produção",
   viewProject: "Ver ficha do projeto",
   viewProjectShort: "Ver ficha",

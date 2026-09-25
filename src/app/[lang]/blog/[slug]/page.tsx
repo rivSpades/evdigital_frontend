@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Nav } from "@/components/layout/nav";
+import { BarraPagina } from "@/components/layout/barra-pagina";
 import { Footer } from "@/components/layout/footer";
-import { BackLink } from "@/components/area-cliente/back-link";
 import { ArticleBody } from "@/components/blog/article-body";
 import { RelatedPosts } from "@/components/blog/related-posts";
 import { getAllBlogPosts, getBlogPostBySlug } from "@/lib/content";
@@ -69,16 +69,12 @@ export default async function BlogPostPage({ params }: PageProps<"/[lang]/blog/[
       <Nav currentPath="/blog" />
 
       <main className="flex-1 px-lg md:px-xl lg:px-2xl">
+        <BarraPagina titulo={frontmatter.title} voltarHref="/blog" voltarLabel={t.backToBlog} />
         <div className="mx-auto w-full max-w-[var(--grid-max-width)]">
           <article>
             <header className="flex flex-col gap-md pt-lg pb-xl lg:gap-lg lg:pt-xl lg:pb-2xl">
-              <BackLink href="/blog" label={t.backToBlog} />
-
               <div className={`flex flex-col gap-sm ${grelha}`}>
                 <div className={`flex flex-col gap-lg ${colunaPrincipal}`}>
-                  <h1 className="font-heading text-[length:var(--font-size-display-sm-narrow)] leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-display)] text-text-primary lg:text-display-sm">
-                    {frontmatter.title}
-                  </h1>
                   <div className="flex flex-col gap-2xs">
                     <p className="font-body text-caption text-text-tertiary">{t.summaryOverline}</p>
                     <p className="font-body text-body text-text-primary lg:text-body-lg">

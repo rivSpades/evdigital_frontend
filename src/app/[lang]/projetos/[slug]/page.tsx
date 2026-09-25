@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Nav } from "@/components/layout/nav";
+import { BarraPagina } from "@/components/layout/barra-pagina";
 import { Footer } from "@/components/layout/footer";
-import { BackLink } from "@/components/area-cliente/back-link";
 import { EstadoTexto } from "@/components/ui/estado-texto";
 import { Facto, Factos } from "@/components/ui/facto";
-import { FechoPagina } from "@/components/ui/fecho-pagina";
 import { LigacaoExterna } from "@/components/ui/ligacao-externa";
 import { getAllProjects, getProjectBySlug } from "@/lib/content";
 import { hostLabel } from "@/lib/url";
@@ -24,7 +23,7 @@ import { pageMetadata } from "@/i18n/metadata";
 // - Secção · corpo: em lg, Margem · ficha (colunas 1 a 3: "Stack usada" em
 //   ds/display/facto e "Ver o projeto") e a coluna principal "O que é" (4 a 12, parágrafos
 //   body-lg de 760). Abaixo: "O que é" primeiro, a ficha depois, gap $space-2xl.
-// - Secção · fecho: ds/layout/fecho-pagina sem título, na coluna principal.
+// - Sem secção de fecho «Fale connosco» (retirada por pedido do dono, 2026-09-25).
 //
 // Os testemunhos existem no schema mas estão vazios, por isso não há secção de
 // testemunhos nesta página (decisão do PRD D7: nada de "em breve").
@@ -72,10 +71,14 @@ export default async function ProjetoPage({ params }: PageProps<"/[lang]/projeto
       <Nav currentPath="/projetos" />
 
       <main className="flex-1 px-lg md:px-xl lg:px-2xl">
+        <BarraPagina
+          titulo={t.fichaTitle}
+          tituloComoH1={false}
+          voltarHref="/projetos"
+          voltarLabel={t.backToList}
+        />
         <div className="mx-auto w-full max-w-[var(--grid-max-width)]">
           <div className="flex flex-col gap-md pt-lg pb-2xl lg:gap-lg lg:pt-xl lg:pb-4xl">
-            <BackLink href="/projetos" label={t.backToList} />
-
             <div className="flex flex-col gap-sm lg:gap-md">
               {url ? <EstadoTexto tom="primario">{t.statusLive}</EstadoTexto> : null}
               <h1 className="font-heading text-[length:var(--font-size-display-narrow)] leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-display)] text-text-primary lg:text-display">
@@ -87,7 +90,7 @@ export default async function ProjetoPage({ params }: PageProps<"/[lang]/projeto
             </div>
           </div>
 
-          <div className="flex flex-col gap-2xl pb-xl lg:grid lg:grid-cols-12 lg:gap-x-lg lg:gap-y-0 lg:pb-3xl">
+          <div className="flex flex-col gap-2xl pb-2xl lg:grid lg:grid-cols-12 lg:gap-x-lg lg:gap-y-0 lg:pb-4xl">
             <section
               aria-labelledby="o-que-e"
               className="flex flex-col gap-md lg:col-span-9 lg:col-start-4 lg:row-start-1"
@@ -136,18 +139,6 @@ export default async function ProjetoPage({ params }: PageProps<"/[lang]/projeto
               ) : null}
             </aside>
           </div>
-
-          <section
-            aria-label={t.ctaLabel}
-            className="pb-2xl lg:grid lg:grid-cols-12 lg:gap-x-lg lg:pb-3xl"
-          >
-            <FechoPagina
-              texto={t.ctaText}
-              acao={t.ctaLabel}
-              href="/contacto"
-              className="lg:col-span-9 lg:col-start-4"
-            />
-          </section>
         </div>
       </main>
 

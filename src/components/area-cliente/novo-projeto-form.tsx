@@ -137,7 +137,6 @@ export function NovoProjetoForm({
   return (
     <form noValidate onSubmit={onSubmit} className="w-full">
       <Folha
-        contentGap="xl"
         actions={
           <Button
             type="submit"
@@ -149,8 +148,8 @@ export function NovoProjetoForm({
           </Button>
         }
       >
-        <div className="flex flex-col gap-lg">
-          <Field htmlFor="projeto-titulo" label={t.titleLabel} error={erros.title} variant="folha">
+        <div className="flex flex-col">
+          <Field htmlFor="projeto-titulo" label={t.titleLabel} error={erros.title}>
             <Input
               id="projeto-titulo"
               placeholder={t.titlePlaceholder}
@@ -168,7 +167,6 @@ export function NovoProjetoForm({
             label={t.descriptionLabel}
             hint={t.descriptionHint}
             error={erros.description}
-            variant="folha"
           >
             <Textarea
               id="projeto-descricao"
@@ -184,7 +182,7 @@ export function NovoProjetoForm({
             />
           </Field>
 
-          <Field htmlFor="projeto-urgencia" label={t.urgencyLabel} hint={t.urgencyHint} variant="folha">
+          <Field htmlFor="projeto-urgencia" label={t.urgencyLabel} hint={t.urgencyHint}>
             <Select
               id="projeto-urgencia"
               name="priority"
@@ -192,12 +190,11 @@ export function NovoProjetoForm({
               onChange={setUrgencia}
               options={urgencias}
               placeholder={t.urgencyPlaceholder}
-              appearance="folha"
             />
           </Field>
         </div>
 
-        <div className="flex flex-col gap-lg">
+        <div className="flex flex-col gap-lg py-lg">
           <Notice tone="info" discreto title={t.attachments} />
           {erros.geral ? (
             <Notice id="projeto-erro" focavel tone="error" role="alert" title={erros.geral} />

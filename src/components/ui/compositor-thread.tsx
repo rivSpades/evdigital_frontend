@@ -12,13 +12,12 @@ import { cn } from "@/lib/cn";
 // de texto não está ao estilo thread"). Não é uma folha de formulário: fica na coluna da
 // conversa, logo a seguir à última mensagem, com a largura e o alinhamento das mensagens.
 //
-// Uma só caixa: fundo $bg-surface-sunken, contorno hairline $border-strong a toda a volta,
-// $input-radius (como os campos). Dentro, o texto sem borda própria (padding $space-md, a
-// crescer de 3 até ~8 linhas e depois scroll interno) e, por baixo, a barra de acções:
-// "Cancelar" (ligação discreta) à esquerda, a acção principal (md, 44) à direita.
-// Foco: quando o texto tem foco, a caixa toda passa a $border-focus com um fio interior de
-// 1px (anel interior, como os campos; nunca outline exterior). Sem borda lateral, sem avatar,
-// sem verde fora do botão principal.
+// Sem caixa (direcção «B · Registo em linhas»): o texto é um campo em linha de base, sem
+// fundo nem contorno em cima e nos lados, só a linha de base de 1px $border-strong (ver
+// `ui/input.tsx`), a crescer de 3 até ~8 linhas e depois scroll interno. Por baixo, a barra de
+// acções: "Cancelar" (ligação discreta) à esquerda, a acção principal (md, 44) à direita.
+// Foco: a linha passa a 2px $border-focus (borda + fio inset); erro: $feedback-error-fg. Sem
+// borda lateral, sem avatar, sem verde fora do botão principal.
 //
 // Teclado: Ctrl/Cmd+Enter envia; Enter é nova linha; Esc chama `onCancel`.
 // Erros por baixo da caixa (ErroCampo para o campo, Notice para o envio que falhou), ligados
@@ -100,15 +99,7 @@ export function CompositorThread({
         }
       }}
     >
-      <div
-        className={cn(
-          "flex w-full flex-col rounded-[var(--input-radius)] border bg-bg-surface-sunken transition-colors",
-          error
-            ? "border-feedback-error-border shadow-[inset_0_0_0_1px_var(--color-feedback-error-border)]"
-            : "border-border-strong hover:border-border-interactive",
-          "has-[textarea:focus]:border-border-focus has-[textarea:focus]:shadow-[inset_0_0_0_1px_var(--color-border-focus)]",
-        )}
-      >
+      <div className="flex w-full flex-col gap-xs">
         <textarea
           ref={ref}
           id={id}
@@ -124,14 +115,17 @@ export function CompositorThread({
           onFocus={ajustar}
           onKeyDown={onKeyDown}
           className={cn(
-            "block w-full resize-none overflow-hidden bg-transparent p-md",
+            "block w-full resize-none overflow-hidden rounded-none border-0 border-b bg-transparent px-0 py-[10px] transition-colors",
             "font-body text-body leading-[var(--line-height-body)] text-text-primary placeholder:text-text-tertiary",
+            error
+              ? "border-feedback-error-fg shadow-[inset_0_-1px_0_var(--color-feedback-error-fg)]"
+              : "border-border-strong hover:border-border-interactive focus:border-border-focus focus:shadow-[inset_0_-1px_0_var(--color-border-focus)]",
             // O :focus-visible global está fora de camadas: sem `!` ganhava. O foco é o anel
             // interior da caixa.
             "outline-none! focus-visible:outline-none!",
           )}
         />
-        <div className="flex items-center justify-between gap-sm pr-sm pb-sm pl-md">
+        <div className="flex items-center justify-between gap-sm">
           <LigacaoBotao variant="discreta" disabled={busy} onClick={onCancel}>
             {cancelLabel}
           </LigacaoBotao>

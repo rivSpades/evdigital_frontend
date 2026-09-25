@@ -193,7 +193,6 @@ export function PasswordForm({
               htmlFor="password-antiga"
               label={t.oldPassword}
               error={erros.oldPassword}
-              variant="folha"
             >
               <PasswordInput
                 id="password-antiga"
@@ -215,7 +214,6 @@ export function PasswordForm({
             label={t.newPassword}
             hint={t.newPasswordHint}
             error={erros.newPassword}
-            variant="folha"
           >
             <PasswordInput
               id="password-nova"
@@ -241,7 +239,6 @@ export function PasswordForm({
             htmlFor="password-confirmar"
             label={t.confirmPassword}
             error={erros.confirmPassword}
-            variant="folha"
           >
             <PasswordInput
               id="password-confirmar"

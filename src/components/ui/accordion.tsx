@@ -30,13 +30,14 @@ export type AccordionItem = {
 
 export function Accordion({
   items,
-  defaultOpenIndex = 0,
+  defaultOpenIndex = null,
   variant = "default",
   revealFrom,
   className,
 }: {
   items: AccordionItem[];
-  defaultOpenIndex?: number;
+  /** Sem valor, todas as perguntas começam fechadas (pedido do dono, 2026-09-25). */
+  defaultOpenIndex?: number | null;
   variant?: "default" | "vez" | "vez-ficha";
   revealFrom?: number;
   className?: string;
