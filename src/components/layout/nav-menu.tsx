@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "@/i18n/locale-link";
-import { ChevronRight, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { BrandLink } from "@/components/layout/brand-link";
 import { ButtonLink } from "@/components/ui/button";
 import { locales } from "@/i18n/config";
@@ -36,12 +36,10 @@ const CTA_HREF = "/contacto";
 
 const FOCAVEIS = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-// Alvo 44 × 44 com contorno hairline $border-default e raio $radius-md ("Alvo 44 · Abrir
-// menu" / "Alvo 44 · Fechar menu").
+// Alvo 44 × 44 sem caixa (como o «Voltar»): só o glifo, com fundo de hover.
 const iconButtonClasses = cn(
-  "flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-md)]",
-  "border border-border-default text-text-primary",
-  "transition-colors hover:bg-bg-surface-hover",
+  "-mr-2.5 flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-md)]",
+  "text-text-primary transition-colors hover:bg-bg-surface-hover",
 );
 
 // Barra: mesma altura e margem nas duas cascas e no menu aberto, para o toque em "Abrir
@@ -215,47 +213,34 @@ export function NavMenu({ currentPath, strings }: { currentPath?: string; string
             </button>
           </div>
 
-          <nav
-            aria-label={strings.main}
-            className={cn(
-              "flex shrink-0 flex-col gap-2xs overflow-y-auto py-lg",
-              "rounded-b-[var(--radius-xl-ds)] border-b border-border-subtle bg-bg-surface-raised",
-              barInset,
-            )}
-          >
-            {strings.mobileLinks.map((link) => {
-              const current = isActive(caminho, link.href);
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  aria-current={current ? "page" : undefined}
-                  onClick={() => fechar({ devolverFoco: false })}
-                  className={cn(
-                    "flex h-14 shrink-0 items-center justify-between gap-sm rounded-[var(--radius-md)] px-md",
-                    "font-body text-body-lg leading-[var(--line-height-label)] tracking-[var(--letter-spacing-label)]",
-                    "text-text-primary transition-colors",
-                    // Activo: fundo e peso (sem barra lateral nem marcador, design-guardrails §4).
-                    current
-                      ? "bg-bg-surface-selected font-semibold"
-                      : "font-medium hover:bg-bg-surface-hover",
-                  )}
-                >
-                  {link.label}
-                  <ChevronRight
-                    size={20}
-                    strokeWidth={2}
-                    aria-hidden
-                    className={current ? "text-text-primary" : "text-text-tertiary"}
-                  />
-                </Link>
-              );
-            })}
+          <nav aria-label={strings.main} className={cn("min-h-0 flex-1 overflow-y-auto", barInset)}>
+            <ul className="border-t border-border-subtle">
+              {strings.mobileLinks.map((link) => {
+                const current = isActive(caminho, link.href);
+                return (
+                  <li key={link.href} className="border-b border-border-subtle">
+                    <Link
+                      href={link.href}
+                      aria-current={current ? "page" : undefined}
+                      onClick={() => fechar({ devolverFoco: false })}
+                      className={cn(
+                        "flex min-h-16 items-center py-md",
+                        "font-heading text-title-sm leading-[var(--line-height-title)] font-semibold",
+                        "tracking-[var(--letter-spacing-title)] transition-colors",
+                        // Activo: só peso de cor (sem fundo, barra lateral nem marcador,
+                        // design-guardrails §4); os restantes recuam para $text-secondary.
+                        current ? "text-text-primary" : "text-text-secondary hover:text-text-primary",
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
 
-            <div className="flex h-4 shrink-0 items-center">
-              <span className="h-px w-full bg-border-subtle" />
-            </div>
-
+          <div className={cn("shrink-0 pt-md pb-lg", barInset)}>
             <ButtonLink
               href={CTA_HREF}
               size="action"
@@ -265,15 +250,7 @@ export function NavMenu({ currentPath, strings }: { currentPath?: string; string
             >
               {strings.cta}
             </ButtonLink>
-          </nav>
-
-          <button
-            type="button"
-            aria-hidden
-            tabIndex={-1}
-            onClick={() => fechar()}
-            className="min-h-0 flex-1 bg-bg-overlay-scrim"
-          />
+          </div>
         </div>
       ) : null}
     </header>
