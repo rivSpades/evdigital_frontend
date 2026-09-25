@@ -128,6 +128,7 @@ export async function POST(request: Request) {
         service: (SERVICES as readonly string[]).includes(service) ? service : "",
         message: asString(body.message).trim(),
         source: "site-contacto",
+        lang,
         website: asString(body.website),
         elapsed_seconds:
           typeof body.elapsedSeconds === "number" ? body.elapsedSeconds : undefined,

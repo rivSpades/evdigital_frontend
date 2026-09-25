@@ -56,7 +56,7 @@ export async function GET(request: Request) {
 
     const dados = await backendFetch<{ token: string }>("/api/auth/google/", {
       method: "POST",
-      body: { id_token },
+      body: { id_token, lang },
       clientIp: clientIpFrom(request),
     });
 
