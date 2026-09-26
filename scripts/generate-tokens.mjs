@@ -165,6 +165,12 @@ const motionUnits = {
 for (const [k, v] of Object.entries(resolved).filter(([k]) => k.startsWith("motion-"))) {
   css += `  --${k}: ${v.value}${motionUnits[k] ?? ""};\n`;
 }
+// Impressão (CV em PDF, frames "Consultores · CV" do .pen): tamanhos de letra em pontos
+// tipográficos (A4 = 595x842 pt). O PDF (`src/lib/consultants/cv-tokens.ts`) lê os mesmos
+// valores de tokens.json; aqui ficam também como CSS para uma futura folha de impressão.
+for (const [k, v] of Object.entries(resolved).filter(([k]) => k.startsWith("print-"))) {
+  css += `  --${k}: ${v.value}pt;\n`;
+}
 css += `  --token-version: "${resolved["token-version"].value}";\n`;
 css += `}\n`;
 

@@ -30,6 +30,8 @@ const PREFIXO = "/area-cliente";
  * Primeiros segmentos das páginas do site público (`[lang]/**` fora da Área de Cliente).
  * No subdomínio da Área de Cliente o proxy redirecciona-os para o site (`src/proxy.ts`
  * usa esta mesma lista). "projetos" não entra: no subdomínio é a lista de projetos da conta.
+ * "consultants" (páginas escondidas dos consultores) vive no site público; sem esta entrada o
+ * subdomínio reescrevia-o para `area-cliente/consultants` e dava o 404 da Área de Cliente.
  */
 export const SITE_PUBLICO_SEGMENTS = new Set([
   "servicos",
@@ -38,6 +40,7 @@ export const SITE_PUBLICO_SEGMENTS = new Set([
   "sobre",
   "privacidade",
   "termos",
+  "consultants",
 ]);
 
 function ePaginaPublica(href: string) {

@@ -46,7 +46,13 @@ type Payload = {
   website?: unknown;
   elapsedSeconds?: unknown;
   meeting?: { start?: unknown; timeZone?: unknown } | unknown;
+  /** Lead da página de um consultor (/consultants/<slug>/contacto). */
+  consultantSlug?: unknown;
 };
+
+// Slug de consultor (`<slug:slug>` do Django). Um valor mal formado conta como ausente: a
+// lead passa a ser uma lead normal e a mensagem volta a ser obrigatória.
+const SLUG_CONSULTOR = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function asString(value: unknown): string {
   return typeof value === "string" ? value : "";
@@ -80,6 +86,9 @@ export async function POST(request: Request) {
 
   const need = asString(body.need);
   const service = asString(body.service);
+  const consultantSlugRaw = asString(body.consultantSlug).trim();
+  const consultantSlug =
+    consultantSlugRaw.length <= 50 && SLUG_CONSULTOR.test(consultantSlugRaw) ? consultantSlugRaw : "";
 
   // Passo 2 do wizard (opcional): horário escolhido no calendário. Um valor mal
   // formado é tratado como "sem reunião" — o backend valida outra vez de qualquer
@@ -97,7 +106,9 @@ export async function POST(request: Request) {
   const erroEmail = erroDoEmail(asString(body.email), v);
   if (erroEmail) campos.email = [erroEmail];
   if (!(NEEDS as readonly string[]).includes(need)) campos.need = [v.needRequired];
-  if (!asString(body.message).trim()) campos.message = [v.messageRequired];
+  // A mensagem só é opcional numa lead de consultor (marcação sem texto); o backend aplica a
+  // mesma regra (LeadCreateSerializer). No /contacto continua obrigatória.
+  if (!consultantSlug && !asString(body.message).trim()) campos.message = [v.messageRequired];
   if (Object.keys(campos).length > 0) {
     return NextResponse.json({ errors: campos }, { status: 400 });
   }
@@ -133,6 +144,7 @@ export async function POST(request: Request) {
         elapsed_seconds:
           typeof body.elapsedSeconds === "number" ? body.elapsedSeconds : undefined,
         meeting,
+        ...(consultantSlug ? { consultant_slug: consultantSlug } : {}),
       }),
       // O visitante não pode ficar à espera indefinidamente se o backend estiver em baixo.
       signal: AbortSignal.timeout(10_000),

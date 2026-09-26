@@ -159,6 +159,65 @@ body {
   }
 }
 
+/* ------------------------------------------------------------------------------------
+ * Percurso do consultor (nota de movimento t395ry do .pen, components/consultores/
+ * percurso.tsx). Carril de progresso $accent-primary de 2px por cima do carril neutro das
+ * etapas, transform: scaleY(p) a partir do topo; p = 0 quando o topo da lista passa a linha
+ * de leitura (40% do viewport) e 1 quando a última marca a passa (a altura do trilho acaba
+ * na última marca, --percurso-fim). Só existe com JavaScript e movimento ligado.
+ * - Com scroll-driven animations: view timeline do próprio trilho com o viewport encolhido
+ *   a uma linha nos 40% (view-timeline-inset 40% 60%), range cover 0% a 100%.
+ * - Sem suporte: cresce por degraus, etapa a etapa (--percurso-degrau, posto pelo
+ *   IntersectionObserver da página), com a duração da entrada.
+ * ------------------------------------------------------------------------------------ */
+.percurso-trilho {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: var(--percurso-fim, 0px);
+  pointer-events: none;
+}
+.percurso-progresso {
+  height: 100%;
+  background-color: var(--color-accent-primary);
+  transform-origin: top;
+  transform: scaleY(var(--percurso-degrau, 0));
+  transition: transform var(--motion-duration-reveal) var(--motion-easing-out);
+}
+@supports (animation-timeline: view()) {
+  .percurso-trilho {
+    view-timeline: --percurso block;
+    view-timeline-inset: 40% 60%;
+  }
+  .percurso-progresso {
+    transition: none;
+    animation: percurso-cresce linear both;
+    animation-timeline: --percurso;
+    animation-range: cover 0% cover 100%;
+  }
+}
+@keyframes percurso-cresce {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+/* Painel de ano: troca só por opacidade ($motion-duration-fast), sem deslizar. */
+.percurso-troca {
+  animation: reveal-fade var(--motion-duration-fast) var(--motion-easing-out) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .percurso-trilho {
+    display: none;
+  }
+  .percurso-troca {
+    animation: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

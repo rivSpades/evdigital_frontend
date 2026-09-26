@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { enviarLead, segundosDesde } from "@/components/contacto/enviar-lead";
+import { EscolhaHorario } from "@/components/contacto/escolha-horario";
+import { dividirFrases, formatosData, useSlots } from "@/components/contacto/use-slots";
 import { BarraPagina } from "@/components/layout/barra-pagina";
-import { AProcurar } from "@/components/ui/a-procurar";
 import { BlocoDaVez } from "@/components/ui/bloco-da-vez";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { CabecalhoPasso } from "@/components/ui/cabecalho-passo";
-import { EscolhaDia } from "@/components/ui/escolha-dia";
-import { EscolhaHora } from "@/components/ui/escolha-hora";
-import { EsqueletoBloco } from "@/components/ui/esqueleto";
 import { Folha } from "@/components/ui/folha";
 import { aoMudar, aoSair, primeiroInvalido, useFocoPendente } from "@/components/ui/formulario";
 import { Field, Input, Textarea } from "@/components/ui/input";
@@ -49,6 +48,9 @@ import { erroDoEmail } from "@/lib/email";
 // Ao mudar de passo, a página volta ao topo e o foco vai para o título do passo (para
 // teclado e leitores de ecrã saberem onde estão).
 //
+// Horários (useSlots), a escolha de dia/hora (EscolhaHorario) e o envio (enviarLead) vivem em
+// ficheiros próprios, partilhados com o assistente do consultor (consultor-wizard.tsx).
+//
 // Micro-interacções do passo 1 (design-guardrails.md §6): o erro de cada campo aparece ao
 // sair dele (blur) ou ao tentar continuar, e some assim que o valor passa a válido; ao
 // tentar continuar com erros (ou ao voltar ao passo 1 com erros do servidor) o foco vai para
@@ -76,15 +78,12 @@ const NEED_BY_SERVICE: Record<string, Need> = {
   "microsoft-365-azure": "avancado",
 };
 
-const DIAS_JANELA = 14;
 const TOTAL_PASSOS = 3;
 
 type Passo = "descrever" | "reuniao" | "resumo";
 type Campo = "nome" | "email" | "assunto" | "mensagem";
 type Erros = Partial<Record<Campo, string>>;
 type Dict = Dictionary["contacto"];
-type Slot = { start: string };
-type SlotsPorDia = Record<string, Slot[]>;
 
 // Ordem visual dos campos do passo 1 (campo → id do controlo).
 const ORDEM: [string, string][] = [
@@ -116,28 +115,8 @@ function validar(
   return erros;
 }
 
-function isoParaDia(iso: string): string {
-  return iso.slice(0, 10);
-}
-
-/** Divide uma frase do dicionário em título (1.ª frase) e descrição (o resto). */
-function dividirFrases(texto: string): { titulo: string; descricao?: string } {
-  const [titulo, ...resto] = texto.split(/(?<=[.!?])\s+/);
-  return { titulo, descricao: resto.length > 0 ? resto.join(" ") : undefined };
-}
-
-// Abreviaturas do Intl sem o ponto final ("ter." → "ter"), como no .pen.
-const semPonto = (texto: string) => texto.replace(/\.$/, "");
-// Dia da semana curto com três letras no máximo: o Intl de pt-PT devolve "sexta",
-// "segunda" em `weekday: "short"`; o .pen escreve "sex", "seg".
-const semanaCurta = (texto: string) => semPonto(texto).slice(0, 3);
-const maiuscula = (texto: string) => texto.charAt(0).toUpperCase() + texto.slice(1);
-
 type Estado = "parado" | "a-enviar" | "enviado" | "parcial" | "falhou" | "demasiados-pedidos";
 
-// Número/Título/Rótulo com as métricas do .pen: label $font-weight-label $letter-spacing-label.
-const rotuloGrupo =
-  "font-body text-label font-medium tracking-[var(--letter-spacing-label)] text-text-primary";
 const acaoClasses = "tracking-[var(--letter-spacing-label)]";
 
 export function ContactoWizard({
@@ -186,7 +165,6 @@ export function ContactoWizard({
   const [passo, setPasso] = useState<Passo>("descrever");
   const tituloPassoRef = useRef<HTMLHeadingElement>(null);
   const tituloFimRef = useRef<HTMLHeadingElement>(null);
-  const diasRef = useRef<HTMLDivElement>(null);
   const passoAnterior = useRef<Passo>(passo);
 
   useEffect(() => {
@@ -211,13 +189,10 @@ export function ContactoWizard({
 
   // Passo 2
   const [querReuniao, setQuerReuniao] = useState<"sim" | "nao" | null>(null);
-  // `slots === null` enquanto está a carregar; `{}` depois de carregado (com ou sem
-  // resultados, ou em erro — `erroSlots` distingue os dois últimos casos).
-  const [slots, setSlots] = useState<SlotsPorDia | null>(null);
-  const [erroSlots, setErroSlots] = useState(false);
   const [diaEscolhido, setDiaEscolhido] = useState<string | null>(null);
   const [horaEscolhida, setHoraEscolhida] = useState<string | null>(null);
-  const timezoneRef = useRef("");
+  // Busca os horários assim que o visitante escolhe "Sim" no passo 2.
+  const { slots, erroSlots, fusoHorario } = useSlots(passo === "reuniao" && querReuniao === "sim");
 
   const [estado, setEstado] = useState<Estado>("parado");
 
@@ -228,7 +203,6 @@ export function ContactoWizard({
   const montadoEm = useRef<number | null>(null);
   useEffect(() => {
     montadoEm.current = Date.now();
-    timezoneRef.current = Intl.DateTimeFormat().resolvedOptions().timeZone;
   }, []);
 
   const ESTADOS_FINAIS: Estado[] = ["enviado", "parcial"];
@@ -256,58 +230,12 @@ export function ContactoWizard({
     setPasso("reuniao");
   }
 
-  // Busca os horários assim que o visitante escolhe "Sim" no passo 2. Janela fixa de
-  // DIAS_JANELA dias a partir de amanhã — o Cal.com já filtra pelo horário de
-  // disponibilidade do event type, não há dias úteis a excluir aqui.
-  useEffect(() => {
-    if (passo !== "reuniao" || querReuniao !== "sim" || slots !== null) return;
-
-    let cancelado = false;
-
-    const inicio = new Date();
-    inicio.setDate(inicio.getDate() + 1);
-    const fim = new Date();
-    fim.setDate(fim.getDate() + 1 + DIAS_JANELA);
-    const paraISO = (data: Date) => data.toISOString().slice(0, 10);
-
-    const params = new URLSearchParams({
-      start: paraISO(inicio),
-      end: paraISO(fim),
-      timeZone: timezoneRef.current,
-    });
-
-    fetch(`/api/contacto/slots?${params.toString()}`, { signal: AbortSignal.timeout(10_000) })
-      .then((resposta) => {
-        if (!resposta.ok) throw new Error("pedido falhou");
-        return resposta.json();
-      })
-      .then((dados: { data?: SlotsPorDia }) => {
-        if (cancelado) return;
-        setSlots(dados.data ?? {});
-      })
-      .catch(() => {
-        if (cancelado) return;
-        setErroSlots(true);
-        setSlots({});
-      });
-
-    return () => {
-      cancelado = true;
-    };
-  }, [passo, querReuniao, slots]);
-
   function escolherQuerReuniao(escolha: "sim" | "nao") {
     setQuerReuniao(escolha);
     if (escolha === "nao") {
       setDiaEscolhido(null);
       setHoraEscolhida(null);
     }
-  }
-
-  function escolherOutroDia() {
-    setDiaEscolhido(null);
-    setHoraEscolhida(null);
-    diasRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
   }
 
   // Sem horários disponíveis, o passo 2 não pode ficar bloqueado: a mensagem já diz
@@ -324,106 +252,64 @@ export function ContactoWizard({
 
     const reuniaoEscolhida =
       querReuniao === "sim" && horaEscolhida
-        ? { start: horaEscolhida, timeZone: timezoneRef.current }
+        ? { start: horaEscolhida, timeZone: fusoHorario() }
         : undefined;
 
     const service = assunto === "nao_sei" ? "" : assunto;
     const need = assunto === "nao_sei" ? "nao_sei" : (NEED_BY_SERVICE[assunto] ?? "nao_sei");
 
-    try {
-      const resposta = await fetch("/api/contacto", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          lang,
-          name: nome,
-          email,
-          phone: telefone,
-          need,
-          service,
-          message: mensagem,
-          website,
-          elapsedSeconds:
-            montadoEm.current === null
-              ? undefined
-              : Math.round((Date.now() - montadoEm.current) / 1000),
-          meeting: reuniaoEscolhida,
-        }),
-      });
+    const resultado = await enviarLead({
+      lang,
+      name: nome,
+      email,
+      phone: telefone,
+      need,
+      service,
+      message: mensagem,
+      website,
+      elapsedSeconds: segundosDesde(montadoEm.current),
+      meeting: reuniaoEscolhida,
+    });
 
-      if (resposta.status === 429) {
-        setEstado("demasiados-pedidos");
-        focarDepois(ID_AVISO_ENVIO);
-        return;
-      }
+    if (resultado.tipo === "demasiados-pedidos") {
+      setEstado("demasiados-pedidos");
+      focarDepois(ID_AVISO_ENVIO);
+      return;
+    }
 
-      if (resposta.status === 400) {
-        // O backend valida outra vez; se discordar, voltamos ao passo 1 com os erros.
-        const dados = await resposta.json();
-        const doBackend = dados.errors ?? {};
-        // As mensagens do backend vêm em português: só em pt; em en/pl a validação local
-        // (mesmas regras, chaves do dicionário) diz o mesmo no idioma da página.
-        const locais = validar(valores, t.form.validation);
-        const frase = (mensagem: string | undefined, local: string | undefined) =>
-          mensagem ? (lang === "pt" ? mensagem : (local ?? t.result.failedTitle)) : undefined;
-        const doServidor: Erros = {
-          nome: frase(doBackend.name?.[0], locais.nome),
-          email: frase(doBackend.email?.[0], locais.email ?? t.form.validation.emailFormat),
-          assunto: frase(doBackend.need?.[0], locais.assunto ?? t.form.validation.needRequired),
-          mensagem: frase(doBackend.message?.[0], locais.mensagem),
-        };
-        setErros(doServidor);
-        // O efeito do passo foca o título; este foco (declarado depois) ganha-lhe.
-        focarDepois(primeiroInvalido(doServidor, ORDEM));
-        setPasso("descrever");
-        setEstado("parado");
-        return;
-      }
+    if (resultado.tipo === "invalido") {
+      // O backend valida outra vez; se discordar, voltamos ao passo 1 com os erros.
+      const doBackend = resultado.erros;
+      // As mensagens do backend vêm em português: só em pt; em en/pl a validação local
+      // (mesmas regras, chaves do dicionário) diz o mesmo no idioma da página.
+      const locais = validar(valores, t.form.validation);
+      const frase = (mensagem: string | undefined, local: string | undefined) =>
+        mensagem ? (lang === "pt" ? mensagem : (local ?? t.result.failedTitle)) : undefined;
+      const doServidor: Erros = {
+        nome: frase(doBackend.name?.[0], locais.nome),
+        email: frase(doBackend.email?.[0], locais.email ?? t.form.validation.emailFormat),
+        assunto: frase(doBackend.need?.[0], locais.assunto ?? t.form.validation.needRequired),
+        mensagem: frase(doBackend.message?.[0], locais.mensagem),
+      };
+      setErros(doServidor);
+      // O efeito do passo foca o título; este foco (declarado depois) ganha-lhe.
+      focarDepois(primeiroInvalido(doServidor, ORDEM));
+      setPasso("descrever");
+      setEstado("parado");
+      return;
+    }
 
-      if (!resposta.ok) {
-        setEstado("falhou");
-        focarDepois(ID_AVISO_ENVIO);
-        return;
-      }
-
-      const dados: { meeting_confirmed?: boolean } = await resposta.json();
-      setEstado(reuniaoEscolhida && !dados.meeting_confirmed ? "parcial" : "enviado");
-    } catch {
+    if (resultado.tipo === "falhou") {
       setEstado("falhou");
       focarDepois(ID_AVISO_ENVIO);
+      return;
     }
+
+    setEstado(reuniaoEscolhida && !resultado.reuniaoConfirmada ? "parcial" : "enviado");
   }
 
   // Datas no formato do .pen ("ter 29 set · 10:00"): só formatação do Intl, sem copy.
-  function partesDia(dia: string) {
-    const data = new Date(`${dia}T12:00:00Z`);
-    const formatar = (opcoes: Intl.DateTimeFormatOptions) =>
-      new Intl.DateTimeFormat(locale, { timeZone: "UTC", ...opcoes }).format(data);
-    return {
-      diaSemana: semanaCurta(formatar({ weekday: "short" })),
-      dia: formatar({ day: "numeric" }),
-      mes: semPonto(formatar({ month: "short" })),
-      extenso: maiuscula(formatar({ weekday: "long", day: "numeric", month: "long" })),
-    };
-  }
-
-  const formatarHora = (iso: string) =>
-    new Intl.DateTimeFormat(locale, { hour: "2-digit", minute: "2-digit" }).format(new Date(iso));
-
-  function resumoData(iso: string, comAno = false) {
-    const data = new Date(iso);
-    const parte = (opcoes: Intl.DateTimeFormatOptions) =>
-      semPonto(new Intl.DateTimeFormat(locale, opcoes).format(data));
-    const dia = [
-      semanaCurta(parte({ weekday: "short" })),
-      parte({ day: "numeric" }),
-      parte({ month: "short" }),
-      comAno ? parte({ year: "numeric" }) : null,
-    ]
-      .filter(Boolean)
-      .join(" ");
-    return `${dia} · ${formatarHora(iso)}`;
-  }
+  const { resumoData } = formatosData(locale);
 
   const reuniaoMarcada = querReuniao === "sim" && horaEscolhida ? horaEscolhida : null;
   const resumoReuniao = reuniaoMarcada ? resumoData(reuniaoMarcada) : null;
@@ -527,10 +413,6 @@ export function ContactoWizard({
         : { title: t.summary.title, subtitle: undefined };
 
   const acao = (conteudo: ReactNode) => <div className="flex justify-end">{conteudo}</div>;
-
-  const semHorarios = dividirFrases(t.meeting.noSlots);
-  const erroHorarios = dividirFrases(t.meeting.loadError);
-  const diasDisponiveis = Object.keys(slots ?? {}).sort();
 
   let folha: ReactNode = null;
 
@@ -661,7 +543,6 @@ export function ContactoWizard({
   }
 
   if (passo === "reuniao") {
-    const dia = diaEscolhido ? partesDia(diaEscolhido) : null;
     folha = (
       <Folha
         actions={acao(
@@ -701,102 +582,16 @@ export function ContactoWizard({
 
         {querReuniao === "sim" ? (
           <div className="flex flex-col gap-xl pt-xl">
-            {slots === null ? (
-              <div aria-busy className="flex flex-col gap-sm">
-                <p className={rotuloGrupo}>{t.meeting.chooseDay}</p>
-                <div className="flex gap-xs overflow-hidden">
-                  {Array.from({ length: 5 }, (_, indice) => (
-                    <EsqueletoBloco
-                      key={indice}
-                      className="h-[72px] w-[68px] shrink-0 rounded-[var(--input-radius)]"
-                    />
-                  ))}
-                </div>
-                <AProcurar>{t.meeting.loading}</AProcurar>
-              </div>
-            ) : erroSlots && diasDisponiveis.length === 0 ? (
-              <Notice
-                tone="warn"
-                role="status"
-                title={erroHorarios.titulo}
-                description={erroHorarios.descricao}
-              />
-            ) : diasDisponiveis.length === 0 ? (
-              <Notice
-                tone="info"
-                role="status"
-                title={semHorarios.titulo}
-                description={semHorarios.descricao}
-              />
-            ) : (
-              <>
-                {/* gap $space-sm = gap-xs + o pt-2xs da linha (folga do anel de foco). */}
-                <div className="flex flex-col gap-xs">
-                  <p id="reuniao-dia" className={rotuloGrupo}>
-                    {t.meeting.chooseDay}
-                  </p>
-                  {/* Desliza na horizontal quando os dias não cabem (mobile). */}
-                  <div
-                    ref={diasRef}
-                    role="group"
-                    aria-labelledby="reuniao-dia"
-                    className="-mx-2xs flex gap-xs overflow-x-auto px-2xs pt-2xs pb-xs"
-                  >
-                    {diasDisponiveis.map((chave) => {
-                      const partes = partesDia(chave);
-                      return (
-                        <EscolhaDia
-                          key={chave}
-                          diaSemana={partes.diaSemana}
-                          dia={partes.dia}
-                          mes={partes.mes}
-                          rotulo={partes.extenso}
-                          escolhido={diaEscolhido === chave}
-                          onEscolher={() => {
-                            if (diaEscolhido !== chave) setHoraEscolhida(null);
-                            setDiaEscolhido(chave);
-                          }}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {diaEscolhido && dia ? (
-                  <div className="flex flex-col gap-xs">
-                    <p id="reuniao-hora" className={rotuloGrupo}>
-                      {t.meeting.chooseTime}
-                    </p>
-                    <p className="font-mono text-caption text-text-tertiary">{dia.extenso}</p>
-                    <div
-                      role="group"
-                      aria-labelledby="reuniao-hora"
-                      className="grid grid-cols-3 gap-xs pt-2xs md:grid-cols-6"
-                    >
-                      {(slots?.[diaEscolhido] ?? [])
-                        .filter((slot) => isoParaDia(slot.start) === diaEscolhido)
-                        .map((slot) => (
-                          <EscolhaHora
-                            key={slot.start}
-                            hora={formatarHora(slot.start)}
-                            escolhida={horaEscolhida === slot.start}
-                            onEscolher={() => setHoraEscolhida(slot.start)}
-                          />
-                        ))}
-                    </div>
-                    <div className="flex pt-2xs">
-                      <button
-                        type="button"
-                        onClick={escolherOutroDia}
-                        className="inline-flex min-h-11 items-center rounded-[var(--button-radius)] px-sm font-body text-label font-medium tracking-[var(--letter-spacing-label)] text-text-primary transition-colors hover:bg-bg-surface-hover"
-                      >
-                        {t.meeting.changeDay}
-                      </button>
-                    </div>
-                  </div>
-                ) : null}
-              </>
-            )}
+            <EscolhaHorario
+              t={t.meeting}
+              locale={locale}
+              slots={slots}
+              erroSlots={erroSlots}
+              dia={diaEscolhido}
+              hora={horaEscolhida}
+              onDia={setDiaEscolhido}
+              onHora={setHoraEscolhida}
+            />
           </div>
         ) : null}
       </Folha>

@@ -287,5 +287,12 @@
   --motion-ruler-step: 120ms;
   --motion-easing-out: cubic-bezier(0.22, 1, 0.36, 1);
   --motion-view-threshold: 0.2;
+  --print-name: 26pt;
+  --print-lead: 12pt;
+  --print-title: 11pt;
+  --print-value: 10pt;
+  --print-body: 9.5pt;
+  --print-small: 9pt;
+  --print-caption: 8.5pt;
   --token-version: "1.1.0";
 }

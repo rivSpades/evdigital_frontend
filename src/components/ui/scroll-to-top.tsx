@@ -12,6 +12,9 @@ const SHOW_AFTER_PX = 400;
 //   a 375, 768 e 1280): por isso, quando o rodapé (<footer>) entra no ecrã, o botão SOBE a
 //   altura visível do rodapé e fica por cima dele, encostado ao seu topo. Esconder o botão
 //   no fim da página foi um erro (2026-09-24): é aí que mais falta faz.
+// - Páginas com uma barra de acção colada ao fundo (position: sticky; ex. «Entre em contacto» em
+//   /consultants/<slug>, só em mobile) marcam-na com `data-barra-fixa`: o botão sobe até ficar
+//   acima dela, também quando a barra assenta em cima do rodapé no fim da página.
 // - O rodapé muda a cada página (e há páginas sem ele, ex. Área de Cliente), por isso o
 //   observador volta a ligar-se a cada mudança de rota.
 // - Scroll suave, excepto com prefers-reduced-motion: aí é instantâneo.
@@ -23,13 +26,25 @@ export function ScrollToTop({ label }: { label: string }) {
   // numa página sem rodapé (ou antes da primeira medição) conta como 0, sem ter de repor o
   // estado dentro do efeito.
   const [rodape, setRodape] = useState({ caminho: "", altura: 0 });
+  // Altura (px) do ecrã ocupada por uma barra sticky de acção (do topo dela ao fundo do ecrã).
+  const [barra, setBarra] = useState(0);
 
   useEffect(() => {
-    const onScroll = () => setPassouLimite(window.scrollY > SHOW_AFTER_PX);
+    const onScroll = () => {
+      setPassouLimite(window.scrollY > SHOW_AFTER_PX);
+      const elemento = document.querySelector<HTMLElement>("[data-barra-fixa]");
+      if (!elemento || getComputedStyle(elemento).position !== "sticky") return setBarra(0);
+      const { top, bottom } = elemento.getBoundingClientRect();
+      setBarra(bottom > 0 && top < window.innerHeight ? Math.round(window.innerHeight - top) : 0);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [pathname]);
 
   useEffect(() => {
     const elemento = document.querySelector("footer");
@@ -49,6 +64,7 @@ export function ScrollToTop({ label }: { label: string }) {
   }, [pathname]);
 
   const alturaRodape = rodape.caminho === pathname ? rodape.altura : 0;
+  const reservado = Math.max(alturaRodape, barra);
   const visible = passouLimite;
 
   function voltarAoTopo() {
@@ -63,7 +79,7 @@ export function ScrollToTop({ label }: { label: string }) {
       tabIndex={visible ? 0 : -1}
       aria-hidden={!visible}
       onClick={voltarAoTopo}
-      style={{ bottom: `calc(var(--spacing-lg) + ${alturaRodape}px)` }}
+      style={{ bottom: `calc(var(--spacing-lg) + ${reservado}px)` }}
       className={`fixed cursor-pointer right-lg z-40 flex size-12 items-center justify-center rounded-pill bg-accent-primary text-text-on-accent shadow-elevation-2 transition-[opacity,transform,background-color,visibility] duration-200 motion-reduce:transition-none hover:bg-accent-primary-hover active:bg-accent-primary-pressed ${
         visible ? "translate-y-0 opacity-100" : "pointer-events-none invisible translate-y-2 opacity-0"
       }`}

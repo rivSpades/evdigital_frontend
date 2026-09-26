@@ -103,6 +103,15 @@ Next.js (App Router) + TypeScript + Tailwind CSS v4 (config CSS-first via `@them
   **Alinhado ao `.pen` (2026-09-24)**: grupo "Ecrã · Contacto" de "v2 · A vez" (frames
   1280 e 375 de cada passo e estado). Primitivos novos só do contacto em `components/ui`:
   `passo-assistente`, `escolha-dia`, `escolha-hora`, `linha-resumo`, `a-procurar`.
+- **Consultores (2026-09-26) — feito**: páginas escondidas (sem link em Nav/Footer,
+  `noindex`) `[lang]/consultants` (lista), `consultants/[slug]` (detalhe com Percurso animado
+  ao scroll, `components/consultores/percurso.tsx`) e `consultants/[slug]/contacto`
+  (`ConsultorWizard`, `?opcao=hora|mensagem`). Dados do Django por `src/lib/consultants/backend.ts`;
+  foto pelo proxy `api/consultants/[slug]/photo`; CV em PDF (`@react-pdf/renderer`, fontes
+  TTF em `src/lib/consultants/fonts`, tokens `print-*`) em `api/consultants/[slug]/cv?lang=`.
+  `/api/contacto` aceita `consultantSlug` (mensagem opcional só aí). Os horários e o envio do
+  `ContactoWizard` passaram a `components/contacto/{use-slots.ts,escolha-horario.tsx,enviar-lead.ts}`.
+  «consultants» está em `SITE_PUBLICO_SEGMENTS` (no subdomínio redirecciona para o site).
 - **Fase 4.4b: feito (2026-09-24)**: Projetos, Blog e Sobre migrados no redesenho «A vez»
   (ver abaixo). O gate de validação com utilizador real (PRD Fase 3.4) continua por fazer.
 
