@@ -14,7 +14,7 @@ import { Ligacao } from "@/components/ui/ligacao";
 // Marca: "EvDigital" em $font-heading label $font-weight-display $text-primary, ligação para
 // a Início com alvo de 44.
 //
-// Só as ligações do .pen (Privacidade, Termos, Área de Cliente) e o Idioma; a navegação
+// Só as ligações do .pen (Privacidade, Termos, Área de Cliente) mais Consultores (decisão do dono, 2026-09-26: fora da barra de topo) e o Idioma; a navegação
 // principal vive na barra de topo (decisão do dono, 2026-09-24). A frase de descrição, os
 // títulos de coluna, o "© ano" e as ligações de navegação do rodapé anterior saíram.
 //
@@ -25,6 +25,7 @@ import { Ligacao } from "@/components/ui/ligacao";
 export function FooterView({ t }: { t: Dictionary["common"] }) {
   const { clientAreaHref } = navStrings(t);
   const legalLinks = [
+    { label: t.nav.consultants, href: "/consultants" },
     { label: t.footer.privacy, href: "/privacidade" },
     { label: t.footer.terms, href: "/termos" },
   ];

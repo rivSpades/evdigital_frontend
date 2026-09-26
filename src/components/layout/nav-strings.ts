@@ -12,7 +12,6 @@ export function navStrings(t: {
     services: string;
     projects: string;
     blog: string;
-    consultants: string;
     about: string;
     clientArea: string;
     openMenu: string;
@@ -25,7 +24,6 @@ export function navStrings(t: {
     { label: t.nav.projects, href: "/projetos" },
     { label: t.nav.about, href: "/sobre" },
     { label: t.nav.blog, href: "/blog" },
-    { label: t.nav.consultants, href: "/consultants" },
   ];
   const clientAreaHref = "/area-cliente/entrar";
   return {
