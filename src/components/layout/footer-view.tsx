@@ -2,6 +2,7 @@ import Link from "@/i18n/locale-link";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { LanguageSwitcher } from "@/i18n/language-switcher";
 import { navStrings } from "@/components/layout/nav-strings";
+import { CookieSettingsLink } from "@/components/analytics/cookie-settings-link";
 import { Ligacao } from "@/components/ui/ligacao";
 
 // Espelha ds/layout/footer--vez (E2nmWM, lg) e ds/layout/footer--vez-mobile (EbRBz, abaixo)
@@ -50,6 +51,9 @@ export function FooterView({ t }: { t: Dictionary["common"] }) {
                   </Ligacao>
                 </li>
               ))}
+              <li>
+                <CookieSettingsLink label={t.cookies.label} />
+              </li>
             </ul>
           </nav>
         </div>

@@ -78,7 +78,8 @@ export const institucional = {
     },
     cookies: {
       title: "Cookies",
-      p1: "Usamos apenas cookies necessários ao funcionamento do site: um guarda o idioma que escolheu e, na Área de Cliente, outro mantém a sua sessão iniciada (dura até 30 dias ou até terminar sessão). Não usamos cookies de análise nem de publicidade.",
+      p1: "Usamos cookies necessários ao funcionamento do site: um guarda o idioma que escolheu e, na Área de Cliente, outro mantém a sua sessão iniciada (dura até 30 dias ou até terminar sessão). Não usamos cookies de publicidade.",
+      p2: "Só com o seu consentimento, dado no aviso de cookies, usamos também o Google Analytics 4 no site público para perceber como é utilizado (páginas visitadas, origem das visitas, tipo de dispositivo). Se recusar, nada do Google é carregado. Pode mudar de ideias a qualquer momento em «Cookies», no rodapé. O Google pode tratar estes dados fora da União Europeia. Na Área de Cliente não usamos análise.",
     },
     purpose: {
       title: "Para que servem",

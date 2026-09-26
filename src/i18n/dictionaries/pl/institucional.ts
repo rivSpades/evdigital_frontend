@@ -80,7 +80,8 @@ export const institucional: typeof Source = {
     },
     cookies: {
       title: "Pliki cookie",
-      p1: "Używamy wyłącznie plików cookie niezbędnych do działania strony: jeden zapamiętuje wybrany przez Państwa język, a w Strefie Klienta drugi utrzymuje Państwa sesję (do 30 dni lub do momentu wylogowania). Nie używamy analitycznych ani reklamowych plików cookie.",
+      p1: "Używamy plików cookie niezbędnych do działania strony: jeden zapamiętuje wybrany przez Państwa język, a w Strefie Klienta drugi utrzymuje Państwa sesję (do 30 dni lub do momentu wylogowania). Nie używamy reklamowych plików cookie.",
+      p2: "Tylko za Państwa zgodą, wyrażoną w komunikacie o plikach cookie, używamy na stronie publicznej także Google Analytics 4, aby zrozumieć, jak strona jest używana (odwiedzane strony, źródło wizyt, rodzaj urządzenia). Jeśli Państwo odmówią, nic od Google nie jest ładowane. Zdanie można zmienić w dowolnym momencie w „Cookies” w stopce. Google może przetwarzać te dane poza Unią Europejską. W Strefie Klienta nie używamy analityki.",
     },
     purpose: {
       title: "Do czego służą",

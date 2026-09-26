@@ -25,4 +25,12 @@ export const common: typeof Source = {
     privacy: "Prywatność",
     terms: "Regulamin",
   },
+  cookies: {
+    title: "Analityczne pliki cookie",
+    text: "Za Państwa zgodą używamy Google Analytics, aby zrozumieć, jak korzystają Państwo ze strony. Bez zgody nic od Google nie jest ładowane.",
+    privacy: "Dowiedz się więcej",
+    accept: "Akceptuję",
+    reject: "Odrzucam",
+    label: "Cookies",
+  },
 };

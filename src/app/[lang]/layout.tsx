@@ -6,6 +6,7 @@ import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { hasLocale, htmlLang, locales } from "@/i18n/config";
 import { hostDoAmbiente } from "@/i18n/area-cliente-href";
 import { AreaClienteHostProvider } from "@/i18n/area-cliente-host";
+import { ConsentAnalytics } from "@/components/analytics/consent-analytics";
 import { SITE_ORIGIN } from "@/lib/site-origin";
 import "../globals.css";
 
@@ -32,7 +33,9 @@ export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }
 
-export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: LayoutProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;
   if (!hasLocale(lang)) return {};
   const { common } = await getDictionary(lang);
@@ -43,7 +46,10 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
   };
 }
 
-export default async function RootLayout({ children, params }: LayoutProps<"/[lang]">) {
+export default async function RootLayout({
+  children,
+  params,
+}: LayoutProps<"/[lang]">) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
   const { common } = await getDictionary(lang);
@@ -62,6 +68,16 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
           {children}
         </AreaClienteHostProvider>
         <ScrollToTop label={common.scrollToTop} />
+        {/* GA4 só com consentimento e fora da Área de Cliente (ver consent-analytics.tsx). */}
+        <ConsentAnalytics
+          measurementId={process.env.GA_MEASUREMENT_ID}
+          clientesHost={
+            process.env.CLIENTES_URL
+              ? new URL(process.env.CLIENTES_URL).host
+              : undefined
+          }
+          t={common.cookies}
+        />
       </body>
     </html>
   );

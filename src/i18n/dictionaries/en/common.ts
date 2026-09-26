@@ -25,4 +25,12 @@ export const common: typeof Source = {
     privacy: "Privacy",
     terms: "Terms",
   },
+  cookies: {
+    title: "Analytics cookies",
+    text: "With your permission we use Google Analytics to understand how the site is used. Without it, nothing from Google is loaded.",
+    privacy: "Learn more",
+    accept: "Accept",
+    reject: "Decline",
+    label: "Cookies",
+  },
 };

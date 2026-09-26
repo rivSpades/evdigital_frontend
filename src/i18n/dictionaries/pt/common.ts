@@ -23,4 +23,12 @@ export const common = {
     privacy: "Privacidade",
     terms: "Termos",
   },
+  cookies: {
+    title: "Cookies de análise",
+    text: "Com a sua autorização usamos o Google Analytics para perceber como o site é utilizado. Sem ela, não carregamos nada do Google.",
+    privacy: "Saber mais",
+    accept: "Aceitar",
+    reject: "Recusar",
+    label: "Cookies",
+  },
 };

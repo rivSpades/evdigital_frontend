@@ -66,6 +66,7 @@ export default async function Privacidade({ params }: PageProps<"/[lang]/privaci
 
         <SecaoLeitura titulo={t.cookies.title}>
           <p>{t.cookies.p1}</p>
+          <p>{t.cookies.p2}</p>
         </SecaoLeitura>
 
         <SecaoLeitura titulo={t.purpose.title}>

@@ -80,7 +80,8 @@ export const institucional: typeof Source = {
     },
     cookies: {
       title: "Cookies",
-      p1: "We only use cookies that are necessary for the website to work: one stores the language you chose and, in the Client Area, another keeps you signed in (it lasts up to 30 days or until you sign out). We do not use analytics or advertising cookies.",
+      p1: "We use cookies that are necessary for the website to work: one stores the language you chose and, in the Client Area, another keeps you signed in (it lasts up to 30 days or until you sign out). We do not use advertising cookies.",
+      p2: "Only with your consent, given in the cookie notice, we also use Google Analytics 4 on the public site to understand how it is used (pages visited, where visits come from, device type). If you decline, nothing from Google is loaded. You can change your mind at any time via “Cookies” in the footer. Google may process this data outside the European Union. We do not use analytics in the Client Area.",
     },
     purpose: {
       title: "What it is used for",
