@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { BackLink } from "@/components/area-cliente/back-link";
 import { enviarLead, segundosDesde } from "@/components/contacto/enviar-lead";
 import { EscolhaHorario } from "@/components/contacto/escolha-horario";
 import { dividirFrases, formatosData, useSlots } from "@/components/contacto/use-slots";
+import { BarraPagina } from "@/components/layout/barra-pagina";
 import { BlocoDaVez } from "@/components/ui/bloco-da-vez";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { CabecalhoPasso } from "@/components/ui/cabecalho-passo";
@@ -21,33 +21,16 @@ import LocaleLink from "@/i18n/locale-link";
 import { cn } from "@/lib/cn";
 import { erroDoEmail } from "@/lib/email";
 
-// Assistente de contacto com um consultor, migrado de «Consultores · assistente» do
-// design-system.pen: desktop FvMDO (escolha), ILGp5 (marcar hora), pDxlQ (mensagem), ukzh1
-// (resumo), l8EKiP (erro no envio), gIOuG (enviado), eRDT5 (enviado sem confirmar a reunião);
-// mobile m55ukM, p9cbq, nmnrA, mDqPc, QK6S8, R1vxMe, tNUPf. Mesma casca do ContactoWizard
-// (ds/navigation/passo-assistente em lg, progresso compacto abaixo, ds/layout/folha só com a
-// acção que avança), com o título do passo visível (ds/display/cabecalho-passo, pb $space-xl).
-//
-// Introdução: ds/navigation/voltar (volta ao passo anterior; no primeiro, à página do
-// consultor), título «Vamos conversar» em display ($font-size-display-sm-narrow em mobile) e o
-// subtítulo «<nome> · <headline>» (body-lg; body em mobile). Padding [$space-xl, 0,
-// $space-2xl, 0], gap $space-lg ([$space-lg, 0, $space-xl, 0] e $space-md em mobile). No fim
-// (enviado) não há Voltar.
-//
-// Passos: 1 «Escolha uma opção» (Marcar hora | Enviar mensagem, ds/form/radio); 2 a opção
-// escolhida: Marcar hora = dia e hora (EscolhaHorario, partilhada com o /contacto) + Nome e
-// Email; Enviar mensagem = Nome, Email, Telefone (opcional) e Mensagem; 3 «Resumo».
-// `opcaoInicial` (?opcao= das acções da página do consultor) já responde ao passo 1: o
-// assistente abre no passo 2, e o Voltar leva ao passo 1 para trocar.
+// Assistente de contacto com um consultor. Mesmo fluxo e mesma casca do ContactoWizard
+// (/contacto): 1 «Fale-nos do que precisa» (Nome, Email, Telefone opcional e Mensagem);
+// 2 «Deseja marcar uma reunião?» (opcional: Sim/Não + EscolhaHorario, partilhada com o
+// /contacto); 3 «Resumo». Sem o passo «Escolha uma opção»: a mensagem vem sempre primeiro.
 //
 // Envio: POST /api/contacto com `consultantSlug` (lead com `source=consultor-<slug>` no
-// Django) e, na marcação, a reunião no Cal.com no mesmo pedido. A mensagem só é obrigatória no
-// caminho «Enviar mensagem» (no servidor é opcional para leads de consultor). Mensagens e
+// Django) e, se houver hora escolhida, a reunião no Cal.com no mesmo pedido. Mensagens e
 // validação iguais às do /contacto (dicionário `contacto`).
 
-export type OpcaoConsultor = "hora" | "mensagem";
-
-type Passo = "escolha" | "dados" | "resumo";
+type Passo = "descrever" | "reuniao" | "resumo";
 type Campo = "nome" | "email" | "mensagem";
 type Erros = Partial<Record<Campo, string>>;
 type Estado = "parado" | "a-enviar" | "enviado" | "parcial" | "falhou" | "demasiados-pedidos";
@@ -64,23 +47,20 @@ const acaoClasses = "tracking-[var(--letter-spacing-label)]";
 
 function validar(
   valores: { nome: string; email: string; mensagem: string },
-  opcao: OpcaoConsultor,
   t: Dict["form"]["validation"],
 ): Erros {
   const erros: Erros = {};
   if (!valores.nome.trim()) erros.nome = t.nameRequired;
   const erroEmail = erroDoEmail(valores.email, t);
   if (erroEmail) erros.email = erroEmail;
-  if (opcao === "mensagem" && !valores.mensagem.trim()) erros.mensagem = t.messageRequired;
+  if (!valores.mensagem.trim()) erros.mensagem = t.messageRequired;
   return erros;
 }
 
 export function ConsultorWizard({
   lang,
   t,
-  tc,
   consultor,
-  opcaoInicial,
   privacyLinkLabel,
   optionalLabel,
   retryLabel,
@@ -88,9 +68,7 @@ export function ConsultorWizard({
 }: {
   lang: Locale;
   t: Dict;
-  tc: Dictionary["consultores"];
   consultor: { slug: string; nome: string; headline: string };
-  opcaoInicial?: OpcaoConsultor;
   /** institucional.termos.form.privacyLinkLabel */
   privacyLinkLabel: string;
   /** areaCliente.definicoes.perfil.optional */
@@ -103,8 +81,7 @@ export function ConsultorWizard({
   const locale = intlLocale[lang];
   const { resumoData } = formatosData(locale);
 
-  const [passo, setPasso] = useState<Passo>(opcaoInicial ? "dados" : "escolha");
-  const [opcao, setOpcao] = useState<OpcaoConsultor>(opcaoInicial ?? "hora");
+  const [passo, setPasso] = useState<Passo>("descrever");
   const tituloPassoRef = useRef<HTMLHeadingElement>(null);
   const tituloFimRef = useRef<HTMLHeadingElement>(null);
   const passoAnterior = useRef<Passo>(passo);
@@ -124,9 +101,13 @@ export function ConsultorWizard({
   const [mensagem, setMensagem] = useState("");
   const [erros, setErros] = useState<Erros>({});
 
+  const [querReuniao, setQuerReuniao] = useState<"sim" | "nao" | null>(null);
   const [diaEscolhido, setDiaEscolhido] = useState<string | null>(null);
   const [horaEscolhida, setHoraEscolhida] = useState<string | null>(null);
-  const { slots, erroSlots, fusoHorario } = useSlots(passo === "dados" && opcao === "hora");
+  const { slots, erroSlots, fusoHorario } = useSlots(
+    passo === "reuniao" && querReuniao === "sim",
+    "consultoria",
+  );
 
   const [estado, setEstado] = useState<Estado>("parado");
 
@@ -146,33 +127,36 @@ export function ConsultorWizard({
 
   const valores = { nome, email, mensagem };
   const erroDe = (campo: Campo, valor: string) =>
-    validar({ ...valores, [campo]: valor }, opcao, t.form.validation)[campo];
+    validar({ ...valores, [campo]: valor }, t.form.validation)[campo];
 
-  const rotuloOpcao = opcao === "hora" ? tc.detalhe.marcarHora : tc.detalhe.enviarMensagem;
-
-  // Sem horários (ou erro a carregá-los) a marcação não pode bloquear: o aviso diz "pode
-  // continuar sem marcar", e a lead segue sem reunião.
-  const semHorarios = slots !== null && Object.keys(slots).length === 0;
-  const reuniaoEmFalta = opcao === "hora" && (slots === null || (!semHorarios && !horaEscolhida));
-
-  function escolherOpcao(proxima: OpcaoConsultor) {
-    setOpcao(proxima);
-    // Os erros da mensagem não se aplicam à marcação (e o inverso).
-    setErros((anteriores) => ({ ...anteriores, mensagem: undefined }));
-  }
-
-  function avancarParaResumo() {
-    const proximosErros = validar(valores, opcao, t.form.validation);
+  function avancarParaReuniao() {
+    const proximosErros = validar(valores, t.form.validation);
     setErros(proximosErros);
     if (Object.keys(proximosErros).length > 0) {
       focarDepois(primeiroInvalido(proximosErros, ORDEM));
       return;
     }
-    if (reuniaoEmFalta) return;
-    setPasso("resumo");
+    setPasso("reuniao");
   }
 
-  const reuniaoMarcada = opcao === "hora" && horaEscolhida ? horaEscolhida : null;
+  function escolherQuerReuniao(escolha: "sim" | "nao") {
+    setQuerReuniao(escolha);
+    if (escolha === "nao") {
+      setDiaEscolhido(null);
+      setHoraEscolhida(null);
+    }
+  }
+
+  // Sem horários (ou erro a carregá-los) a marcação não pode bloquear: o aviso diz "pode
+  // continuar sem marcar", e a lead segue sem reunião.
+  const semHorarios =
+    querReuniao === "sim" && slots !== null && Object.keys(slots).length === 0;
+  const podeAvancarDeReuniao =
+    querReuniao === "nao" ||
+    semHorarios ||
+    (querReuniao === "sim" && horaEscolhida !== null);
+
+  const reuniaoMarcada = querReuniao === "sim" && horaEscolhida ? horaEscolhida : null;
   const resumoReuniao = reuniaoMarcada ? resumoData(reuniaoMarcada) : null;
 
   async function finalizar() {
@@ -183,10 +167,10 @@ export function ConsultorWizard({
       lang,
       name: nome,
       email,
-      phone: opcao === "mensagem" ? telefone : "",
+      phone: telefone,
       need: "nao_sei",
       service: "",
-      message: opcao === "mensagem" ? mensagem : "",
+      message: mensagem,
       website,
       elapsedSeconds: segundosDesde(montadoEm.current),
       meeting: reuniao,
@@ -201,7 +185,7 @@ export function ConsultorWizard({
 
     if (resultado.tipo === "invalido") {
       const doBackend = resultado.erros;
-      const locais = validar(valores, opcao, t.form.validation);
+      const locais = validar(valores, t.form.validation);
       const frase = (texto: string | undefined, local: string | undefined) =>
         texto ? (lang === "pt" ? texto : (local ?? t.result.failedTitle)) : undefined;
       const doServidor: Erros = {
@@ -217,7 +201,7 @@ export function ConsultorWizard({
       }
       setErros(doServidor);
       focarDepois(primeiroInvalido(doServidor, ORDEM));
-      setPasso("dados");
+      setPasso("descrever");
       setEstado("parado");
       return;
     }
@@ -233,43 +217,30 @@ export function ConsultorWizard({
 
   const voltar = terminado
     ? null
-    : passo === "dados"
-      ? () => setPasso("escolha")
+    : passo === "reuniao"
+      ? () => setPasso("descrever")
       : passo === "resumo"
-        ? () => setPasso("dados")
+        ? () => setPasso("reuniao")
         : null;
 
   const introducao = (
-    <div className="flex flex-col gap-md pt-lg pb-xl lg:gap-lg lg:pt-xl lg:pb-2xl">
-      {terminado ? (
-        // Sem Voltar no fim, mas o título fica no mesmo sítio (frames gIOuG / eRDT5).
-        <div aria-hidden className="h-11" />
-      ) : (
-        <BackLink
-          href={voltar ? undefined : `/consultants/${consultor.slug}`}
-          onClick={voltar ?? undefined}
-          disabled={estado === "a-enviar"}
-          label={t.actions.back}
-        />
-      )}
-      <div className="flex flex-col gap-sm lg:gap-md">
-        <h1 className="font-heading text-[length:var(--font-size-display-sm-narrow)] leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-display)] text-text-primary md:text-display-sm lg:text-display">
-          {t.page.title}
-        </h1>
-        <p className="font-body text-body text-text-secondary md:text-body-lg">
-          {consultor.nome} · {consultor.headline}
-        </p>
-      </div>
-    </div>
+    <BarraPagina
+      className="mb-md lg:mb-lg"
+      titulo={`${t.page.title} · ${consultor.nome}`}
+      voltarLabel={t.actions.back}
+      voltarHref={voltar ? undefined : `/consultants/${consultor.slug}`}
+      onVoltar={voltar ?? undefined}
+      voltarDisabled={estado === "a-enviar"}
+    />
   );
 
   if (terminado) {
     const parcial = estado === "parcial";
     const frasesParcial = dividirFrases(t.result.partialText);
     return (
-      <div className="flex flex-col pb-3xl lg:pb-4xl">
+      <div className="flex flex-col">
         {introducao}
-        <div className="flex flex-col">
+        <div className="flex flex-col pt-md">
           <h2
             ref={tituloFimRef}
             tabIndex={-1}
@@ -314,167 +285,118 @@ export function ConsultorWizard({
     );
   }
 
-  const passoNumero = passo === "escolha" ? 1 : passo === "dados" ? 2 : 3;
+  const passoNumero = passo === "descrever" ? 1 : passo === "reuniao" ? 2 : 3;
   const estadoDe = (numero: number): EstadoPasso =>
     numero === passoNumero ? "agora" : numero < passoNumero ? "feito" : "por-fazer";
 
   const passos = [
-    { titulo: tc.wizard.escolha, resposta: rotuloOpcao },
-    {
-      titulo: rotuloOpcao,
-      resposta: opcao === "hora" ? (resumoReuniao ?? t.summary.noMeeting) : nome.trim(),
-    },
+    { titulo: t.steps.describe, resposta: nome.trim() },
+    { titulo: t.steps.meeting, resposta: resumoReuniao ?? t.summary.noMeeting },
     { titulo: t.steps.summary, resposta: undefined },
   ];
 
   const cabecalho =
-    passo === "escolha" ? tc.wizard.escolha : passo === "dados" ? rotuloOpcao : t.summary.title;
+    passo === "descrever"
+      ? { title: t.steps.describe, subtitle: undefined }
+      : passo === "reuniao"
+        ? { title: t.meeting.question, subtitle: t.meeting.hint }
+        : { title: t.summary.title, subtitle: undefined };
 
   const acao = (conteudo: ReactNode) => <div className="flex justify-end">{conteudo}</div>;
 
-  const campoNome = (
-    <Field htmlFor="nome" label={t.form.nameLabel} error={erros.nome}>
-      <Input
-        id="nome"
-        name="nome"
-        type="text"
-        autoComplete="name"
-        placeholder={t.form.namePlaceholder}
-        value={nome}
-        onChange={(event) => {
-          setNome(event.target.value);
-          aoMudar(setErros, "nome", erroDe("nome", event.target.value));
-        }}
-        onBlur={(event) => aoSair(setErros, "nome", erroDe("nome", event.target.value))}
-      />
-    </Field>
-  );
-
-  const campoEmail = (
-    <Field htmlFor="email" label={t.form.emailLabel} error={erros.email}>
-      <Input
-        id="email"
-        name="email"
-        type="email"
-        autoComplete="email"
-        placeholder={t.form.emailPlaceholder}
-        value={email}
-        onChange={(event) => {
-          setEmail(event.target.value);
-          aoMudar(setErros, "email", erroDe("email", event.target.value));
-        }}
-        onBlur={(event) => aoSair(setErros, "email", erroDe("email", event.target.value))}
-      />
-    </Field>
-  );
-
   let folha: ReactNode = null;
 
-  if (passo === "escolha") {
-    folha = (
-      <Folha
-        actions={acao(
-          <Button size="action" onClick={() => setPasso("dados")} className={acaoClasses}>
-            {t.actions.continue}
-          </Button>,
-        )}
-      >
-        <fieldset className="flex min-w-0 flex-col gap-xs pb-md">
-          <legend className="sr-only">{tc.wizard.escolha}</legend>
-          <OpcaoRadio
-            compacta
-            id="opcao-hora"
-            name="opcao"
-            value="hora"
-            checked={opcao === "hora"}
-            onChange={() => escolherOpcao("hora")}
-            label={tc.detalhe.marcarHora}
-          />
-          <OpcaoRadio
-            compacta
-            id="opcao-mensagem"
-            name="opcao"
-            value="mensagem"
-            checked={opcao === "mensagem"}
-            onChange={() => escolherOpcao("mensagem")}
-            label={tc.detalhe.enviarMensagem}
-          />
-        </fieldset>
-      </Folha>
-    );
-  }
-
-  if (passo === "dados") {
+  if (passo === "descrever") {
     folha = (
       <form
         noValidate
         onSubmit={(event) => {
           event.preventDefault();
-          avancarParaResumo();
+          avancarParaReuniao();
         }}
       >
         <Folha
           actions={acao(
-            <Button type="submit" size="action" disabled={reuniaoEmFalta} className={acaoClasses}>
+            <Button type="submit" size="action" className={acaoClasses}>
               {t.actions.continue}
             </Button>,
           )}
         >
-          {opcao === "hora" ? (
-            <>
-              <div className="flex flex-col gap-xl pb-lg">
-                <EscolhaHorario
-                  t={t.meeting}
-                  locale={locale}
-                  slots={slots}
-                  erroSlots={erroSlots}
-                  dia={diaEscolhido}
-                  hora={horaEscolhida}
-                  onDia={setDiaEscolhido}
-                  onHora={setHoraEscolhida}
-                />
+          <div className="flex flex-col gap-lg pb-xl">
+            <Field htmlFor="nome" label={t.form.nameLabel} error={erros.nome}>
+              <Input
+                id="nome"
+                name="nome"
+                type="text"
+                autoComplete="name"
+                placeholder={t.form.namePlaceholder}
+                value={nome}
+                onChange={(event) => {
+                  setNome(event.target.value);
+                  aoMudar(setErros, "nome", erroDe("nome", event.target.value));
+                }}
+                onBlur={(event) => aoSair(setErros, "nome", erroDe("nome", event.target.value))}
+              />
+            </Field>
+
+            <div className="flex flex-col gap-lg md:flex-row">
+              <div className="min-w-0 flex-1">
+                <Field htmlFor="email" label={t.form.emailLabel} error={erros.email}>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder={t.form.emailPlaceholder}
+                    value={email}
+                    onChange={(event) => {
+                      setEmail(event.target.value);
+                      aoMudar(setErros, "email", erroDe("email", event.target.value));
+                    }}
+                    onBlur={(event) =>
+                      aoSair(setErros, "email", erroDe("email", event.target.value))
+                    }
+                  />
+                </Field>
               </div>
-              {campoNome}
-              {campoEmail}
-            </>
-          ) : (
-            <>
-              {campoNome}
-              {campoEmail}
-              <Field
-                htmlFor="telefone"
-                label={t.form.phoneLabel}
-                optional
-                optionalLabel={optionalLabel}
-              >
-                <Input
-                  id="telefone"
-                  name="telefone"
-                  type="tel"
-                  autoComplete="tel"
-                  inputMode="tel"
-                  placeholder={t.form.phonePlaceholder}
-                  value={telefone}
-                  onChange={(event) => setTelefone(event.target.value)}
-                />
-              </Field>
-              <Field htmlFor="mensagem" label={t.form.messageLabel} error={erros.mensagem}>
-                <Textarea
-                  id="mensagem"
-                  name="mensagem"
-                  value={mensagem}
-                  className="h-40 py-sm"
-                  onChange={(event) => {
-                    setMensagem(event.target.value);
-                    aoMudar(setErros, "mensagem", erroDe("mensagem", event.target.value));
-                  }}
-                  onBlur={(event) =>
-                    aoSair(setErros, "mensagem", erroDe("mensagem", event.target.value))
-                  }
-                />
-              </Field>
-            </>
-          )}
+              <div className="min-w-0 flex-1">
+                <Field
+                  htmlFor="telefone"
+                  label={t.form.phoneLabel}
+                  optional
+                  optionalLabel={optionalLabel}
+                >
+                  <Input
+                    id="telefone"
+                    name="telefone"
+                    type="tel"
+                    autoComplete="tel"
+                    inputMode="tel"
+                    placeholder={t.form.phonePlaceholder}
+                    value={telefone}
+                    onChange={(event) => setTelefone(event.target.value)}
+                  />
+                </Field>
+              </div>
+            </div>
+
+            <Field htmlFor="mensagem" label={t.form.messageLabel} error={erros.mensagem}>
+              <Textarea
+                id="mensagem"
+                name="mensagem"
+                placeholder={t.form.messagePlaceholder}
+                value={mensagem}
+                className="h-40 py-sm"
+                onChange={(event) => {
+                  setMensagem(event.target.value);
+                  aoMudar(setErros, "mensagem", erroDe("mensagem", event.target.value));
+                }}
+                onBlur={(event) =>
+                  aoSair(setErros, "mensagem", erroDe("mensagem", event.target.value))
+                }
+              />
+            </Field>
+          </div>
 
           {/* Honeypot. Escondido de pessoas (incluindo leitores de ecrã) e do teclado. */}
           <div aria-hidden className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
@@ -491,6 +413,60 @@ export function ConsultorWizard({
           </div>
         </Folha>
       </form>
+    );
+  }
+
+  if (passo === "reuniao") {
+    folha = (
+      <Folha
+        actions={acao(
+          <Button
+            size="action"
+            disabled={!podeAvancarDeReuniao}
+            onClick={() => setPasso("resumo")}
+            className={acaoClasses}
+          >
+            {t.actions.continue}
+          </Button>,
+        )}
+      >
+        <fieldset className="flex min-w-0 flex-col gap-xs">
+          <legend className="sr-only">{t.meeting.question}</legend>
+          <OpcaoRadio
+            compacta
+            id="reuniao-sim"
+            name="reuniao"
+            value="sim"
+            checked={querReuniao === "sim"}
+            onChange={() => escolherQuerReuniao("sim")}
+            label={t.meeting.yes}
+          />
+          <OpcaoRadio
+            compacta
+            id="reuniao-nao"
+            name="reuniao"
+            value="nao"
+            checked={querReuniao === "nao"}
+            onChange={() => escolherQuerReuniao("nao")}
+            label={t.meeting.no}
+          />
+        </fieldset>
+
+        {querReuniao === "sim" ? (
+          <div className="flex flex-col gap-xl pt-xl">
+            <EscolhaHorario
+              t={t.meeting}
+              locale={locale}
+              slots={slots}
+              erroSlots={erroSlots}
+              dia={diaEscolhido}
+              hora={horaEscolhida}
+              onDia={setDiaEscolhido}
+              onHora={setHoraEscolhida}
+            />
+          </div>
+        ) : null}
+      </Folha>
     );
   }
 
@@ -530,24 +506,18 @@ export function ConsultorWizard({
           <dl className={cn("flex flex-col border-t border-border-default", aEnviar && "opacity-60")}>
             <LinhaResumo rotulo={t.summary.nameLabel} valor={nome} />
             <LinhaResumo rotulo={t.summary.emailLabel} valor={email} mono />
-            {opcao === "mensagem" ? (
-              <>
-                <LinhaResumo
-                  rotulo={t.summary.phoneLabel}
-                  valor={telefone || t.summary.notProvided}
-                  vazio={!telefone}
-                />
-                <LinhaResumo rotulo={t.summary.messageLabel} valor={mensagem} />
-              </>
-            ) : (
-              <LinhaResumo
-                rotulo={t.summary.meetingLabel}
-                // Com o ano, como no frame ukzh1 («ter 29 set 2026 · 10:00»).
-                valor={reuniaoMarcada ? resumoData(reuniaoMarcada, true) : t.summary.noMeeting}
-                mono={Boolean(reuniaoMarcada)}
-                vazio={!reuniaoMarcada}
-              />
-            )}
+            <LinhaResumo
+              rotulo={t.summary.phoneLabel}
+              valor={telefone || t.summary.notProvided}
+              vazio={!telefone}
+            />
+            <LinhaResumo rotulo={t.summary.messageLabel} valor={mensagem} />
+            <LinhaResumo
+              rotulo={t.summary.meetingLabel}
+              valor={reuniaoMarcada ? resumoData(reuniaoMarcada, true) : t.summary.noMeeting}
+              mono={Boolean(reuniaoMarcada)}
+              vazio={!reuniaoMarcada}
+            />
           </dl>
         )}
 
@@ -567,7 +537,7 @@ export function ConsultorWizard({
   }
 
   return (
-    <div className="flex flex-col pb-3xl lg:pb-4xl">
+    <div className="flex flex-col">
       {introducao}
 
       <div className="flex flex-col lg:flex-row lg:items-start lg:gap-lg">
@@ -591,14 +561,16 @@ export function ConsultorWizard({
             total={TOTAL_PASSOS}
             titulo={passos[passoNumero - 1].titulo}
           />
-          <CabecalhoPasso
-            as="h2"
-            tamanho="passo"
-            title={cabecalho}
-            titleRef={tituloPassoRef}
-            className="pb-xl"
-          />
-          <div className="w-full">{folha}</div>
+          <div className="sr-only">
+            <CabecalhoPasso
+              as="h2"
+              tamanho="passo"
+              title={cabecalho.title}
+              subtitle={cabecalho.subtitle}
+              titleRef={tituloPassoRef}
+            />
+          </div>
+          <div className="w-full max-w-[704px] pt-lg lg:pt-0">{folha}</div>
         </div>
       </div>
     </div>

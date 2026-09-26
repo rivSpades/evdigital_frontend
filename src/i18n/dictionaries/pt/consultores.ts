@@ -10,8 +10,6 @@ export const consultores = {
     salario: "Salário esperado",
     contrato: "Contrato, por mês",
     freelancer: "Freelancer, por hora",
-    marcarHora: "Marcar hora",
-    enviarMensagem: "Enviar mensagem",
     contactar: "Entre em contacto",
     descarregarCv: "Descarregar CV",
     percurso: "Percurso",
@@ -25,8 +23,5 @@ export const consultores = {
     competencias: "Competências",
     dominio: "evdigital.eu",
     ficheiro: "cv",
-  },
-  wizard: {
-    escolha: "Escolha uma opção",
   },
 };
