@@ -18,12 +18,14 @@ export async function GET(request: Request) {
   const start = searchParams.get("start") ?? "";
   const end = searchParams.get("end") ?? "";
   const timeZone = searchParams.get("timeZone") ?? "";
+  // "digital" (serviços) ou "consultoria" (páginas de consultor); o backend valida.
+  const tipo = searchParams.get("tipo") ?? "digital";
   if (!start || !end || !timeZone) {
     return NextResponse.json({ error: "pedido_invalido" }, { status: 400 });
   }
 
   try {
-    const params = new URLSearchParams({ start, end, timezone: timeZone });
+    const params = new URLSearchParams({ start, end, timezone: timeZone, tipo });
     const resposta = await fetch(`${apiUrl.replace(/\/$/, "")}/api/calcom/slots/?${params}`, {
       headers: { "X-API-Key": apiKey },
       // O visitante não pode ficar à espera indefinidamente se o Cal.com estiver lento.

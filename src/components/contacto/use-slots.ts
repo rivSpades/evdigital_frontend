@@ -9,6 +9,8 @@ import { useEffect, useRef, useState } from "react";
 
 export type Slot = { start: string };
 export type SlotsPorDia = Record<string, Slot[]>;
+/** Event type do Cal.com: serviços digitais (por omissão) ou consultoria (páginas de consultor). */
+export type TipoReuniao = "digital" | "consultoria";
 
 // Janela fixa a partir de amanhã; o Cal.com já filtra pelo horário de disponibilidade do
 // event type, não há dias úteis a excluir aqui.
@@ -20,7 +22,7 @@ const DIAS_JANELA = 14;
  * `erroSlots` distingue os dois últimos casos). `fusoHorario()` é o fuso do browser, lido ao
  * montar, para o pedido dos horários e para a marcação.
  */
-export function useSlots(activo: boolean) {
+export function useSlots(activo: boolean, tipo: TipoReuniao = "digital") {
   const [slots, setSlots] = useState<SlotsPorDia | null>(null);
   const [erroSlots, setErroSlots] = useState(false);
   const fusoRef = useRef("");
@@ -44,6 +46,7 @@ export function useSlots(activo: boolean) {
       start: paraISO(inicio),
       end: paraISO(fim),
       timeZone: fusoRef.current,
+      tipo,
     });
 
     fetch(`/api/contacto/slots?${params.toString()}`, { signal: AbortSignal.timeout(10_000) })
@@ -64,7 +67,7 @@ export function useSlots(activo: boolean) {
     return () => {
       cancelado = true;
     };
-  }, [activo, slots]);
+  }, [activo, slots, tipo]);
 
   return { slots, erroSlots, fusoHorario: () => fusoRef.current };
 }
