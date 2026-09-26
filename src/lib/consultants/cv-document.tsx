@@ -196,11 +196,14 @@ export function CvDocumento({
 }) {
   registarFontes();
   const d = t.detalhe;
+  const contactoUrl = `https://www.evdigital.eu/${lang}/consultants/${consultor.slug}/contacto`;
   const contactos = [
-    consultor.email ? { valor: consultor.email, email: true } : null,
-    consultor.phone ? { valor: consultor.phone, email: false } : null,
-    consultor.location ? { valor: consultor.location, email: false } : null,
-  ].filter((c): c is { valor: string; email: boolean } => c !== null);
+    consultor.email ? { valor: consultor.email, href: `mailto:${consultor.email}` } : null,
+    consultor.phone ? { valor: consultor.phone } : null,
+    consultor.location ? { valor: consultor.location } : null,
+    // Contacto pelo formulário do site (o CV público não mostra email por defeito).
+    { valor: "evdigital.eu/contacto", href: contactoUrl },
+  ].filter((c): c is { valor: string; href?: string } => c !== null);
 
   const salarios = [
     { termo: d.contrato, valor: formatarEuros(consultor.contract_monthly_eur, lang) },
@@ -292,10 +295,10 @@ export function CvDocumento({
           {contactos.length > 0 ? (
             <View style={{ width: 132, gap: 3, alignItems: "flex-end" }}>
               {contactos.map((contacto) =>
-                contacto.email ? (
+                contacto.href ? (
                   <Link
                     key={contacto.valor}
-                    src={`mailto:${contacto.valor}`}
+                    src={contacto.href}
                     style={{
                       ...texto.mono,
                       fontSize: tamanho.legenda,
