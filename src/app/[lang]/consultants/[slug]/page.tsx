@@ -16,6 +16,7 @@ import { LinhaSalario } from "@/components/ui/linha-salario";
 import { Retrato } from "@/components/ui/retrato";
 import { RevealScope } from "@/components/ui/reveal";
 import { hasLocale, type Locale } from "@/i18n/config";
+import { pageMetadata } from "@/i18n/metadata";
 import { getDictionary } from "@/i18n/dictionaries";
 import { lerConsultor } from "@/lib/consultants/backend";
 import {
@@ -68,7 +69,9 @@ export async function generateMetadata({
   return {
     title: dados.name,
     description: dados.headline,
+    ...pageMetadata(lang, `/consultants/${dados.slug}`),
     openGraph: {
+      ...pageMetadata(lang, `/consultants/${dados.slug}`).openGraph,
       type: "profile",
       siteName: "EvDigital",
       title: dados.name,
@@ -76,7 +79,7 @@ export async function generateMetadata({
       url: `${base}/${lang}/consultants/${dados.slug}`,
       images: dados.has_photo
         ? [{ url: `${base}/api/consultants/${dados.slug}/photo`, alt: dados.name }]
-        : undefined,
+        : pageMetadata(lang, `/consultants/${dados.slug}`).openGraph?.images,
     },
     twitter: { card: "summary", title: dados.name, description: dados.headline },
   };

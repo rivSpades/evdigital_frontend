@@ -4,6 +4,7 @@ import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
 import { ConsultorLinha } from "@/components/ui/consultor-linha";
 import { hasLocale } from "@/i18n/config";
+import { pageMetadata } from "@/i18n/metadata";
 import { getDictionary } from "@/i18n/dictionaries";
 import { listarConsultores } from "@/lib/consultants/backend";
 import { iniciais } from "@/lib/consultants/format";
@@ -26,7 +27,7 @@ export async function generateMetadata({
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
   const { consultores: t } = await getDictionary(lang);
-  return { title: t.lista.title };
+  return { title: t.lista.title, ...pageMetadata(lang, "/consultants") };
 }
 
 export default async function ConsultoresPage({ params }: PageProps<"/[lang]/consultants">) {

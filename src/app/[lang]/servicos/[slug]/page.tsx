@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { ServiceJsonLd } from "@/components/seo/json-ld";
 import { Nav } from "@/components/layout/nav";
 import { BarraPagina } from "@/components/layout/barra-pagina";
 import { Footer } from "@/components/layout/footer";
@@ -120,6 +121,13 @@ export default async function ServicoPage({ params }: Props) {
 
   return (
     <>
+      <ServiceJsonLd
+        lang={lang}
+        slug={slug}
+        name={title}
+        description={frontmatter.seo.description}
+        faq={faq}
+      />
       <Nav currentPath="/servicos" />
 
       <main className="flex-1 px-lg md:px-xl lg:px-2xl">
