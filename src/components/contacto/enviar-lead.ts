@@ -2,6 +2,8 @@
 // ContactoWizard e pelo ConsultorWizard. Traduz a resposta num resultado; cada assistente
 // decide o que mostrar (estados, foco, erros por campo).
 
+import { trackEvent } from "@/components/analytics/track";
+
 export type Reuniao = { start: string; timeZone: string };
 
 export type PedidoLead = {
@@ -45,7 +47,14 @@ export async function enviarLead(pedido: PedidoLead): Promise<ResultadoEnvio> {
     if (!resposta.ok) return { tipo: "falhou" };
 
     const dados: { meeting_confirmed?: boolean } = await resposta.json();
-    return { tipo: "enviado", reuniaoConfirmada: Boolean(dados.meeting_confirmed) };
+    const reuniaoConfirmada = Boolean(dados.meeting_confirmed);
+    // Conversão do GA4 (evento-chave `generate_lead`): só parâmetros sem dados pessoais.
+    trackEvent("generate_lead", {
+      lead_source: pedido.consultantSlug ? "consultor" : "contacto",
+      service: pedido.service || undefined,
+      meeting_confirmed: reuniaoConfirmada,
+    });
+    return { tipo: "enviado", reuniaoConfirmada };
   } catch {
     return { tipo: "falhou" };
   }
@@ -53,5 +62,7 @@ export async function enviarLead(pedido: PedidoLead): Promise<ResultadoEnvio> {
 
 /** Segundos desde que o formulário foi montado (anti-spam por tempo mínimo, sem fricção). */
 export function segundosDesde(montadoEm: number | null): number | undefined {
-  return montadoEm === null ? undefined : Math.round((Date.now() - montadoEm) / 1000);
+  return montadoEm === null
+    ? undefined
+    : Math.round((Date.now() - montadoEm) / 1000);
 }
