@@ -6,6 +6,7 @@ import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { hasLocale, htmlLang, locales } from "@/i18n/config";
 import { hostDoAmbiente } from "@/i18n/area-cliente-href";
 import { AreaClienteHostProvider } from "@/i18n/area-cliente-host";
+import { SITE_ORIGIN } from "@/lib/site-origin";
 import "../globals.css";
 
 const sora = Sora({
@@ -36,6 +37,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
   if (!hasLocale(lang)) return {};
   const { common } = await getDictionary(lang);
   return {
+    metadataBase: new URL(SITE_ORIGIN),
     title: { default: "EvDigital", template: "%s | EvDigital" },
     description: common.siteDescription,
   };
