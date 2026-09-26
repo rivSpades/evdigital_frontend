@@ -74,6 +74,12 @@ export async function FamiliaAvancada({ lang }: { lang: Locale }) {
             coluna="margem"
           />
         ))}
+        <ServicoLinha
+          href="/consultants"
+          titulo={t.consultoriaTitulo}
+          resumo={t.consultoriaResumo}
+          coluna="margem"
+        />
       </ul>
     </section>
   );

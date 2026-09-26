@@ -11,6 +11,7 @@ export const common: typeof Source = {
     services: "Services",
     projects: "Projects",
     blog: "Blog",
+    consultants: "Consultants",
     about: "About",
     clientArea: "Client Area",
     openMenu: "Open menu",

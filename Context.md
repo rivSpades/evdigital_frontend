@@ -103,8 +103,8 @@ Next.js (App Router) + TypeScript + Tailwind CSS v4 (config CSS-first via `@them
   **Alinhado ao `.pen` (2026-09-24)**: grupo "Ecrã · Contacto" de "v2 · A vez" (frames
   1280 e 375 de cada passo e estado). Primitivos novos só do contacto em `components/ui`:
   `passo-assistente`, `escolha-dia`, `escolha-hora`, `linha-resumo`, `a-procurar`.
-- **Consultores (2026-09-26) — feito**: páginas escondidas (sem link em Nav/Footer,
-  `noindex`) `[lang]/consultants` (lista), `consultants/[slug]` (detalhe com Percurso animado
+- **Consultores (2026-09-26) — feito**: páginas públicas e indexáveis (sem link em Nav/Footer; ligadas de `/servicos#avancadas`;
+  no sitemap; só `consultants/[slug]/contacto` mantém `noindex`) `[lang]/consultants` (lista), `consultants/[slug]` (detalhe com Percurso animado
   ao scroll, `components/consultores/percurso.tsx`) e `consultants/[slug]/contacto`
   (`ConsultorWizard`, `?opcao=hora|mensagem`). Dados do Django por `src/lib/consultants/backend.ts`;
   foto pelo proxy `api/consultants/[slug]/photo`; CV em PDF (`@react-pdf/renderer`, fontes

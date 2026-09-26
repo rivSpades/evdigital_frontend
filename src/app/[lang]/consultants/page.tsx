@@ -9,8 +9,8 @@ import { listarConsultores } from "@/lib/consultants/backend";
 import { iniciais } from "@/lib/consultants/format";
 
 // Lista de consultores migrada de «Consultores · lista» do design-system.pen (WkpH6 desktop
-// 1280, C6e9nd tablet 768, tzkFv mobile 375). Página escondida: sem ligação no Nav nem no
-// Footer, noindex (e X-Robots-Tag não é preciso: o `robots` da metadata chega).
+// 1280, C6e9nd tablet 768, tzkFv mobile 375). Página pública e indexável (ligada a partir
+// das soluções avançadas em /servicos); sem ligação no Nav nem no Footer.
 // - Secção · topo: título «Consultores» em display ($font-size-display-sm em tablet,
 //   -narrow em mobile), padding [$space-4xl, 0, $space-3xl, 0] em lg, [$space-3xl, 0,
 //   $space-2xl, 0] em tablet e [$space-2xl, 0, $space-xl, 0] em mobile. Sem «Voltar» (o frame
@@ -26,7 +26,7 @@ export async function generateMetadata({
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
   const { consultores: t } = await getDictionary(lang);
-  return { title: t.lista.title, robots: { index: false, follow: false } };
+  return { title: t.lista.title };
 }
 
 export default async function ConsultoresPage({ params }: PageProps<"/[lang]/consultants">) {

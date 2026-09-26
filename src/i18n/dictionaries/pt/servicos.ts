@@ -24,6 +24,8 @@ export const servicos = {
   },
   avancado: {
     titulo: "Para quem já quer ir mais longe",
+    consultoriaTitulo: "Consultores e outsourcing",
+    consultoriaResumo: "Profissionais de tecnologia que integram a sua equipa, por contrato ou à hora.",
   },
   ficha: {
     breadcrumbAria: "Localização",

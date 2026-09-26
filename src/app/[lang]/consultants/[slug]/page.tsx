@@ -30,8 +30,8 @@ import {
 
 // Detalhe do consultor migrado de «Consultores · detalhe» do design-system.pen: K5am3W
 // (desktop 1280, dois salários, etapa 3 em destaque), P1Q4VK (só uma linha de salário),
-// x88y6j (tablet 768) e l81Qkh (mobile 375). Página escondida: sem ligação no Nav nem no
-// Footer, noindex, sem cue de scroll.
+// x88y6j (tablet 768) e l81Qkh (mobile 375). Página pública e indexável, sem ligação no Nav
+// nem no Footer, sem cue de scroll.
 // - Secção · hero: ds/navigation/voltar (só a seta, para a lista) e depois o Hero. Padding
 //   [$space-xl, 0, $space-4xl, 0] ([$space-lg, 0, $space-3xl, 0] em mobile), gap $space-lg
 //   em lg e $space-xl abaixo.
@@ -61,14 +61,13 @@ export async function generateMetadata({
   const { lang, slug } = await params;
   if (!hasLocale(lang)) notFound();
   const dados = await consultor(slug, lang);
-  if (!dados) return { robots: { index: false, follow: false } };
+  if (!dados) return {};
   // Pré-visualização de ligação (LinkedIn, WhatsApp, etc.): precisa de og:title, og:description
-  // e og:image com URL absoluto. A página continua `noindex` (não há marketing de consultores).
+  // e og:image com URL absoluto.
   const base = (process.env.SITE_URL ?? "https://www.evdigital.eu").replace(/\/$/, "");
   return {
     title: dados.name,
     description: dados.headline,
-    robots: { index: false, follow: false },
     openGraph: {
       type: "profile",
       siteName: "EvDigital",

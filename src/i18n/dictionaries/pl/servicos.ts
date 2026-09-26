@@ -12,6 +12,8 @@ export const servicos: typeof Source = {
   },
   avancado: {
     titulo: "Dla tych, którzy chcą pójść dalej",
+    consultoriaTitulo: "Konsultanci i outsourcing",
+    consultoriaResumo: "Specjaliści IT, którzy dołączają do Twojego zespołu — na kontrakt lub godzinowo.",
   },
   ficha: {
     breadcrumbAria: "Ścieżka nawigacji",

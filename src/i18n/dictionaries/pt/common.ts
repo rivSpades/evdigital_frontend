@@ -9,6 +9,7 @@ export const common = {
     services: "Serviços",
     projects: "Projetos",
     blog: "Blog",
+    consultants: "Consultores",
     about: "Sobre",
     clientArea: "Área de Cliente",
     openMenu: "Abrir menu",
