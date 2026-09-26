@@ -28,7 +28,17 @@ export type EtapaPercurso = {
   story: string;
 };
 
+/**
+ * Linha de Idiomas (`label` = língua, `value` = nível) ou de Habilitações (`label` = curso,
+ * `value` = instituição e anos). `value` pode vir vazio de propósito (ex. «Carta de condução»).
+ */
+export type ItemPerfil = {
+  label: string;
+  value: string;
+};
+
 export type Consultor = ConsultorResumo & {
+  /** Parágrafos separados por uma linha vazia. */
   bio: string;
   location: string;
   email: string;
@@ -36,7 +46,10 @@ export type Consultor = ConsultorResumo & {
   skills: string[];
   contract_monthly_eur: string | null;
   freelance_hourly_eur: string | null;
+  /** Do mais antigo ao mais recente. */
   steps: EtapaPercurso[];
+  languages: ItemPerfil[];
+  qualifications: ItemPerfil[];
 };
 
 /** Slugs do Django (`<slug:slug>`): evita pedir ao backend caminhos que nunca existem. */

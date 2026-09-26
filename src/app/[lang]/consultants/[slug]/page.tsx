@@ -4,6 +4,11 @@ import { cache } from "react";
 import { BackLink } from "@/components/area-cliente/back-link";
 import { ButtonLink } from "@/components/ui/button";
 import { Percurso } from "@/components/consultores/percurso";
+import {
+  Apresentacao,
+  Competencias,
+  IdiomasHabilitacoes,
+} from "@/components/consultores/secoes-detalhe";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
 import { LinhaAccao } from "@/components/ui/linha-accao";
@@ -13,7 +18,15 @@ import { RevealScope } from "@/components/ui/reveal";
 import { hasLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { lerConsultor } from "@/lib/consultants/backend";
-import { anoInicio, formatarEuros, iniciais, periodoEtapa } from "@/lib/consultants/format";
+import {
+  anoInicio,
+  competencias,
+  formatarEuros,
+  iniciais,
+  itensPerfil,
+  paragrafos,
+  periodoEtapa,
+} from "@/lib/consultants/format";
 
 // Detalhe do consultor migrado de «Consultores · detalhe» do design-system.pen: K5am3W
 // (desktop 1280, dois salários, etapa 3 em destaque), P1Q4VK (só uma linha de salário),
@@ -28,6 +41,8 @@ import { anoInicio, formatarEuros, iniciais, periodoEtapa } from "@/lib/consulta
 //     display-sm); Salário e Acções por baixo, a toda a largura da página.
 //   · mobile: tudo empilhado, retrato 120x150, nome em display-narrow, headline body;
 //     botões a toda a largura (gap $space-sm) e «Descarregar CV» por baixo.
+// - Secção · apresentação (NSclt/BRPBt/w0ws7), competências (fS6QZ/e7iCjq/szjje) e idiomas e
+//   habilitações (mOu9k/pVlac/SCHqf): components/consultores/secoes-detalhe.tsx.
 // - Secção · percurso: components/consultores/percurso.tsx (movimento da nota t395ry).
 // - Hero: sem botões. «Descarregar CV» é a última linha do registo «Salário esperado»
 //   (components/ui/linha-accao.tsx). o único botão «Entre em contacto» vive apenas no fecho, que em
@@ -35,7 +50,8 @@ import { anoInicio, formatarEuros, iniciais, periodoEtapa } from "@/lib/consulta
 // - Secção · fecho: ds/layout/fecho-pagina só com as duas acções (título e texto desligados
 //   no .pen), régua superior, padding-bottom $space-4xl ($space-3xl em mobile).
 // Salário: cada linha só aparece com valor (ds/display/linha-salario); sem nenhum, o bloco
-// inteiro desaparece. A página não mostra a Apresentação nem as Competências (só o CV).
+// inteiro desaparece. Ordem: Hero, Apresentação, Competências, Percurso, Idiomas e
+// Habilitações, fecho; cada secção sem dados não se desenha.
 
 const consultor = cache((slug: string, lang: Locale) => lerConsultor(slug, lang));
 
@@ -125,7 +141,18 @@ export default async function ConsultorPage({ params }: PageProps<"/[lang]/consu
             </div>
           </section>
 
+          <Apresentacao titulo={t.cv.apresentacao} paragrafos={paragrafos(dados.bio)} />
+
+          <Competencias titulo={t.cv.competencias} grupos={competencias(dados.skills)} />
+
           <Percurso titulo={d.percurso} etapas={etapas} />
+
+          <IdiomasHabilitacoes
+            tituloIdiomas={d.idiomas}
+            tituloHabilitacoes={d.habilitacoes}
+            idiomas={itensPerfil(dados.languages)}
+            habilitacoes={itensPerfil(dados.qualifications)}
+          />
 
           {/* Só aqui há o botão «Entre em contacto» (abre o wizard). Em mobile a barra fica colada ao
               fundo do ecrã (sticky) enquanto o fecho não chega; a partir de md é o fecho normal. */}

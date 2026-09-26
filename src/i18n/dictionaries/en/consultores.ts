@@ -17,6 +17,8 @@ export const consultores: typeof Source = {
     percurso: "Career",
     periodo: "{inicio} to {fim}",
     desde: "Since {inicio}",
+    idiomas: "Languages",
+    habilitacoes: "Qualifications",
   },
   cv: {
     apresentacao: "Profile",

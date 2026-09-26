@@ -2,7 +2,7 @@
 // Módulo puro: sem copy própria, as frases vêm do dicionário `consultores`.
 
 import { intlLocale, type Locale } from "@/i18n/config";
-import type { EtapaPercurso } from "./backend";
+import type { EtapaPercurso, ItemPerfil } from "./backend";
 
 const ano = (iso: string) => iso.slice(0, 4);
 
@@ -47,8 +47,23 @@ export function iniciais(nome: string): string {
   return letras.map((parte) => parte.charAt(0).toUpperCase()).join("");
 }
 
+/** Parágrafos da Apresentação (`bio`): separados por uma ou mais linhas vazias. */
+export function paragrafos(texto: string): string[] {
+  return texto
+    .split(/\n\s*\n/)
+    .map((paragrafo) => paragrafo.trim())
+    .filter(Boolean);
+}
+
+/** Idiomas e Habilitações: descarta linhas sem rótulo; o valor vazio fica (é de propósito). */
+export function itensPerfil(itens: ItemPerfil[] | undefined): ItemPerfil[] {
+  return (itens ?? [])
+    .map((item) => ({ label: item.label.trim(), value: item.value.trim() }))
+    .filter((item) => item.label);
+}
+
 /**
- * Competências do CV (ds/cv/facto): cada entrada do Admin é "Área: a, b, c" (termo + valor)
+ * Competências (página: ds/display/linha-termo; CV: ds/cv/facto): cada entrada do Admin é "Área: a, b, c" (termo + valor)
  * ou só "a, b, c" (só valor). O Admin guarda uma lista de textos (`Consultant.skills`).
  */
 export function competencias(skills: string[]): { area?: string; itens: string }[] {

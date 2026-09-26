@@ -8,32 +8,44 @@ import { cn } from "@/lib/cn";
 // - Texto: $font-body body $text-secondary; `destaque` passa-o a $text-primary (os dois
 //   meios que quase toda a gente espera, na Loja online).
 // Abaixo de lg (override mobile do .pen): empilhados, gap $space-2xs.
+// `colunaFixa` (Competências do detalhe do consultor, fS6QZ/e7iCjq/szjje): o Termo numa coluna
+// fixa, a do retrato: 200 em tablet (md) e 278 em lg; em mobile continua empilhada.
 
 export function LinhaTermo({
   termo,
   texto,
   destaque = false,
+  colunaFixa = false,
   className,
 }: {
   termo: string;
   texto: string;
   destaque?: boolean;
+  colunaFixa?: boolean;
   className?: string;
 }) {
   return (
     <li
       className={cn(
         "flex flex-col gap-2xs border-b border-border-default py-md",
-        "lg:grid lg:grid-cols-12 lg:gap-x-lg lg:gap-y-0",
+        colunaFixa
+          ? "md:grid md:grid-cols-[200px_minmax(0,1fr)] md:gap-x-lg md:gap-y-0 lg:grid-cols-[278px_minmax(0,1fr)]"
+          : "lg:grid lg:grid-cols-12 lg:gap-x-lg lg:gap-y-0",
         className,
       )}
     >
-      <p className="font-body text-label font-semibold tracking-[var(--letter-spacing-label)] text-text-primary lg:col-span-3">
+      <p
+        className={cn(
+          "min-w-0 font-body text-label font-semibold tracking-[var(--letter-spacing-label)] text-text-primary",
+          !colunaFixa && "lg:col-span-3",
+        )}
+      >
         {termo}
       </p>
       <p
         className={cn(
-          "font-body text-body lg:col-span-9",
+          "min-w-0 font-body text-body",
+          !colunaFixa && "lg:col-span-9",
           destaque ? "text-text-primary" : "text-text-secondary",
         )}
       >

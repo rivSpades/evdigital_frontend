@@ -17,6 +17,8 @@ export const consultores = {
     percurso: "Percurso",
     periodo: "{inicio} a {fim}",
     desde: "Desde {inicio}",
+    idiomas: "Idiomas",
+    habilitacoes: "Habilitações",
   },
   cv: {
     apresentacao: "Apresentação",

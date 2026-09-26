@@ -4,7 +4,14 @@ import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { Consultor, EtapaPercurso } from "./backend";
 import { cv } from "./cv-tokens";
-import { competencias, formatarEuros, iniciais, periodoEtapa } from "./format";
+import {
+  competencias,
+  formatarEuros,
+  iniciais,
+  itensPerfil,
+  paragrafos,
+  periodoEtapa,
+} from "./format";
 
 // CV do consultor em PDF (@react-pdf/renderer, só no servidor: route handler
 // src/app/api/consultants/[slug]/cv/route.ts). Fiel aos frames «Consultores · CV · página 1»
@@ -197,8 +204,8 @@ export function CvDocumento({
   registarFontes();
   const d = t.detalhe;
   const contactoUrl = `https://www.evdigital.eu/${lang}/consultants/${consultor.slug}/contacto`;
+  // Sem email nem outras ligações (decisão do dono): só a ligação ao formulário do site.
   const contactos = [
-    consultor.email ? { valor: consultor.email, href: `mailto:${consultor.email}` } : null,
     consultor.phone ? { valor: consultor.phone } : null,
     consultor.location ? { valor: consultor.location } : null,
     // Contacto pelo formulário do site (o CV público não mostra email por defeito).
@@ -210,10 +217,9 @@ export function CvDocumento({
     { termo: d.freelancer, valor: formatarEuros(consultor.freelance_hourly_eur, lang) },
   ].filter((s): s is { termo: string; valor: string } => s.valor !== null);
   const listaCompetencias = competencias(consultor.skills);
-  const apresentacao = consultor.bio
-    .split(/\n{2,}/)
-    .map((p) => p.trim())
-    .filter(Boolean);
+  const apresentacao = paragrafos(consultor.bio);
+  const idiomas = itensPerfil(consultor.languages);
+  const habilitacoes = itensPerfil(consultor.qualifications);
 
   return (
     <Document
@@ -343,6 +349,33 @@ export function CvDocumento({
                 {listaCompetencias.map((c, i) => (
                   <Facto key={`${c.area ?? ""}-${i}`} termo={c.area} valor={c.itens} />
                 ))}
+              </View>
+            ) : null}
+            {/* Idiomas (Facto: língua em cima, nível em baixo) e Habilitações (instituição e
+                anos em cima, curso em baixo; sem valor, como «Carta de condução», só o rótulo).
+                Cada bloco inteiro numa página: com o conteúdo real caem na página 2 (AoWpt). */}
+            {idiomas.length > 0 ? (
+              <View style={{ gap: 4 }} wrap={false}>
+                <TituloSecao>{d.idiomas}</TituloSecao>
+                {idiomas.map((item, i) =>
+                  item.value ? (
+                    <Facto key={`${item.label}-${i}`} termo={item.label} valor={item.value} />
+                  ) : (
+                    <Facto key={`${item.label}-${i}`} valor={item.label} />
+                  ),
+                )}
+              </View>
+            ) : null}
+            {habilitacoes.length > 0 ? (
+              <View style={{ gap: 4 }} wrap={false}>
+                <TituloSecao>{d.habilitacoes}</TituloSecao>
+                {habilitacoes.map((item, i) =>
+                  item.value ? (
+                    <Facto key={`${item.label}-${i}`} termo={item.value} valor={item.label} />
+                  ) : (
+                    <Facto key={`${item.label}-${i}`} valor={item.label} />
+                  ),
+                )}
               </View>
             ) : null}
           </View>

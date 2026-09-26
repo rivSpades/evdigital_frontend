@@ -112,6 +112,9 @@ Next.js (App Router) + TypeScript + Tailwind CSS v4 (config CSS-first via `@them
   `/api/contacto` aceita `consultantSlug` (mensagem opcional só aí). Os horários e o envio do
   `ContactoWizard` passaram a `components/contacto/{use-slots.ts,escolha-horario.tsx,enviar-lead.ts}`.
   «consultants» está em `SITE_PUBLICO_SEGMENTS` (no subdomínio redirecciona para o site).
+  Detalhe com Apresentação, Competências, Idiomas e Habilitações (`components/consultores/secoes-detalhe.tsx`,
+  primitivo novo `ui/linha-detalhe.tsx` = ds/display/linha-detalhe iadD3; `ui/linha-termo.tsx` ganhou
+  `colunaFixa`); o CV mostra Idiomas e Habilitações na coluna lateral e não mostra email.
 - **Fase 4.4b: feito (2026-09-24)**: Projetos, Blog e Sobre migrados no redesenho «A vez»
   (ver abaixo). O gate de validação com utilizador real (PRD Fase 3.4) continua por fazer.
 
