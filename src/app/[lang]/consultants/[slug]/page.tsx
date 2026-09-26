@@ -62,7 +62,25 @@ export async function generateMetadata({
   if (!hasLocale(lang)) notFound();
   const dados = await consultor(slug, lang);
   if (!dados) return { robots: { index: false, follow: false } };
-  return { title: dados.name, description: dados.headline, robots: { index: false, follow: false } };
+  // Pré-visualização de ligação (LinkedIn, WhatsApp, etc.): precisa de og:title, og:description
+  // e og:image com URL absoluto. A página continua `noindex` (não há marketing de consultores).
+  const base = (process.env.SITE_URL ?? "https://www.evdigital.eu").replace(/\/$/, "");
+  return {
+    title: dados.name,
+    description: dados.headline,
+    robots: { index: false, follow: false },
+    openGraph: {
+      type: "profile",
+      siteName: "EvDigital",
+      title: dados.name,
+      description: dados.headline,
+      url: `${base}/${lang}/consultants/${dados.slug}`,
+      images: dados.has_photo
+        ? [{ url: `${base}/api/consultants/${dados.slug}/photo`, alt: dados.name }]
+        : undefined,
+    },
+    twitter: { card: "summary", title: dados.name, description: dados.headline },
+  };
 }
 
 export default async function ConsultorPage({ params }: PageProps<"/[lang]/consultants/[slug]">) {
