@@ -48,6 +48,11 @@ type Payload = {
   meeting?: { start?: unknown; timeZone?: unknown } | unknown;
   /** Lead da página de um consultor (/consultants/<slug>/contacto). */
   consultantSlug?: unknown;
+  /** Canal de aquisição (ver src/lib/atribuicao.ts) — só texto informativo, sem validação. */
+  utmSource?: unknown;
+  utmMedium?: unknown;
+  utmCampaign?: unknown;
+  referrerHost?: unknown;
 };
 
 // Slug de consultor (`<slug:slug>` do Django). Um valor mal formado conta como ausente: a
@@ -145,6 +150,10 @@ export async function POST(request: Request) {
           typeof body.elapsedSeconds === "number" ? body.elapsedSeconds : undefined,
         meeting,
         ...(consultantSlug ? { consultant_slug: consultantSlug } : {}),
+        utm_source: asString(body.utmSource),
+        utm_medium: asString(body.utmMedium),
+        utm_campaign: asString(body.utmCampaign),
+        referrer_host: asString(body.referrerHost),
       }),
       // O visitante não pode ficar à espera indefinidamente se o backend estiver em baixo.
       signal: AbortSignal.timeout(10_000),

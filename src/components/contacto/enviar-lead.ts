@@ -3,6 +3,7 @@
 // decide o que mostrar (estados, foco, erros por campo).
 
 import { trackEvent } from "@/components/analytics/track";
+import { obterAtribuicao } from "@/lib/atribuicao";
 
 export type Reuniao = { start: string; timeZone: string };
 
@@ -30,10 +31,17 @@ export type ResultadoEnvio =
 
 export async function enviarLead(pedido: PedidoLead): Promise<ResultadoEnvio> {
   try {
+    const atribuicao = obterAtribuicao();
     const resposta = await fetch("/api/contacto", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(pedido),
+      body: JSON.stringify({
+        ...pedido,
+        utmSource: atribuicao.utmSource,
+        utmMedium: atribuicao.utmMedium,
+        utmCampaign: atribuicao.utmCampaign,
+        referrerHost: atribuicao.referrerHost,
+      }),
     });
 
     if (resposta.status === 429) return { tipo: "demasiados-pedidos" };

@@ -7,6 +7,7 @@ import { hasLocale, htmlLang, locales } from "@/i18n/config";
 import { hostDoAmbiente } from "@/i18n/area-cliente-href";
 import { AreaClienteHostProvider } from "@/i18n/area-cliente-host";
 import { ConsentAnalytics } from "@/components/analytics/consent-analytics";
+import { CapturarAtribuicao } from "@/components/analytics/capturar-atribuicao";
 import { SITE_ORIGIN } from "@/lib/site-origin";
 import "../globals.css";
 
@@ -68,6 +69,8 @@ export default async function RootLayout({
           {children}
         </AreaClienteHostProvider>
         <ScrollToTop label={common.scrollToTop} />
+        {/* Canal de aquisição da lead — ver capturar-atribuicao.tsx e lib/atribuicao.ts. */}
+        <CapturarAtribuicao />
         {/* GA4 só com consentimento e fora da Área de Cliente (ver consent-analytics.tsx). */}
         <ConsentAnalytics
           measurementId={process.env.GA_MEASUREMENT_ID}
