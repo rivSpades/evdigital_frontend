@@ -25,8 +25,9 @@ export function pageMetadata(locale: Locale, path: string): Metadata {
       },
     },
     // O `openGraph` da página substitui o do layout por inteiro, por isso a imagem de
-    // partilha (`[lang]/opengraph-image.tsx`) tem de vir daqui.
-    openGraph: { locale: ogLocale[locale], images: [imagemPartilha(locale)] },
+    // partilha (`[lang]/opengraph-image.tsx`) e o `siteName` (og:site_name — sem isto o
+    // Google mostra o domínio nu "evdigital.eu" em vez de "EvDigital") têm de vir daqui.
+    openGraph: { siteName: "EvDigital", locale: ogLocale[locale], images: [imagemPartilha(locale)] },
     twitter: {
       card: "summary_large_image",
       images: [imagemPartilha(locale).url],
