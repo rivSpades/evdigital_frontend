@@ -55,6 +55,25 @@ export function ServiceJsonLd({
   );
 }
 
+// FAQPage (schema.org) a partir das perguntas frequentes já visíveis na página (home,
+// serviços). Reaproveita o texto do dicionário/frontmatter tal como está — nunca inventar
+// perguntas ou respostas aqui.
+export function FaqPageJsonLd({ items }: { items: { question: string; answer: string }[] }) {
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: items.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: { "@type": "Answer", text: item.answer },
+        })),
+      }}
+    />
+  );
+}
+
 // Dados estruturados (schema.org) da organização. Só factos já públicos no site; sem
 // morada nem contactos que não estejam publicados.
 export function OrganizationJsonLd({ description }: { description: string }) {

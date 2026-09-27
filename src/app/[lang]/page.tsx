@@ -10,7 +10,7 @@ import { Problema } from "@/components/home/problema";
 import { ComoTrabalhamos } from "@/components/home/como-trabalhamos";
 import { Faq } from "@/components/home/faq";
 import { CtaFinal } from "@/components/home/cta-final";
-import { OrganizationJsonLd } from "@/components/seo/json-ld";
+import { FaqPageJsonLd, OrganizationJsonLd } from "@/components/seo/json-ld";
 import { RevealScope } from "@/components/ui/reveal";
 
 // Início migrada do grupo "Ecrã · Início" de "v2 · A vez" (flhgP) do
@@ -37,10 +37,11 @@ export async function generateMetadata({
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  const { common } = await getDictionary(hasLocale(lang) ? lang : defaultLocale);
+  const { common, home } = await getDictionary(hasLocale(lang) ? lang : defaultLocale);
   return (
     <>
       <OrganizationJsonLd description={common.siteDescription} />
+      <FaqPageJsonLd items={home.faq.items} />
       <Nav currentPath="/" />
 
       <RevealScope className="flex-1 px-lg md:px-xl lg:px-2xl">
