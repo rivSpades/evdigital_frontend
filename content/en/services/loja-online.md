@@ -7,7 +7,7 @@ outcome: "Sell without depending on passing trade."
 summary: "Sell without depending on passing trade. With payment by card, Apple Pay, Google Pay, PayPal and more."
 seo:
   title: "Online shop with card and PayPal"
-  description: "Online shops built with WooCommerce, Shopify or custom-made, with card, Apple Pay, PayPal and more payment methods. No technical jargon."
+  description: "Online shops on WooCommerce, Shopify or custom-built, with card, Apple Pay, PayPal and more payments."
   keywords: ["build an online shop", "online shop", "e-commerce card payments"]
 showPayments: true
 genericProcess: false

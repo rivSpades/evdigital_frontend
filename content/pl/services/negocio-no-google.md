@@ -7,7 +7,7 @@ outcome: ""
 summary: "Aby osoby szukające w pobliżu znalazły Państwa firmę w Google i Mapach Google."
 seo:
   title: "Państwa firma w Google i Mapach Google"
-  description: "Umieszczamy Państwa firmę w Google i Mapach Google: godziny, zdjęcia, kontakt i link do strony. Aby znaleźli Państwa ci, którzy szukają."
+  description: "Umieszczamy Państwa firmę w Google i Mapach Google: godziny, zdjęcia, kontakt i link do strony."
   keywords: ["firma w Google", "Mapy Google", "wizytówka Google firmy"]
 genericProcess: false
 includes:

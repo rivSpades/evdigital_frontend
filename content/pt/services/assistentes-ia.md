@@ -7,7 +7,7 @@ outcome: "Chatbots, assistentes e agentes para clientes e para a equipa."
 summary: "Chatbots, assistentes e agentes para clientes e para a equipa."
 seo:
   title: "Assistentes e agentes de IA para empresas"
-  description: "Assistentes de IA e chatbots que respondem com a informação real da empresa: produtos, condições e documentos internos. Com limites bem definidos."
+  description: "Assistentes de IA e chatbots com a informação real da empresa: produtos, condições e documentos."
   keywords: ["chatbot com IA para empresas", "assistente de IA", "agentes de IA", "apoio ao cliente com IA"]
 genericProcess: false
 includes:

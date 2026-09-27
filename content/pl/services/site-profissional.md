@@ -7,7 +7,7 @@ outcome: "Państwa witryna w internecie, otwarta 24 godziny na dobę."
 summary: "Państwa witryna w internecie, otwarta 24 godziny na dobę."
 seo:
   title: "Profesjonalna strona dla Państwa firmy"
-  description: "Tworzenie profesjonalnych stron: adres, hosting, e-maile i podstrony. Bez technicznego żargonu, z opieką także po wdrożeniu."
+  description: "Tworzenie profesjonalnych stron: adres, hosting, e-maile i podstrony. Bez żargonu, z opieką po wdrożeniu."
   keywords: ["stworzenie strony dla firmy", "profesjonalna strona internetowa", "strona wizytówka"]
 genericProcess: false
 includes:

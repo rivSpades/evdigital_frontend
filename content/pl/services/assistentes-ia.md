@@ -7,7 +7,7 @@ outcome: "Chatboty, asystenci i agenci dla klientów i dla zespołu."
 summary: "Chatboty, asystenci i agenci dla klientów i dla zespołu."
 seo:
   title: "Asystenci i agenci AI dla firm"
-  description: "Asystenci AI i chatboty odpowiadające na podstawie rzeczywistych informacji firmy: produktów, warunków i dokumentów wewnętrznych. Z jasnymi granicami."
+  description: "Asystenci AI i chatboty odpowiadający na podstawie rzeczywistych danych firmy: produkty, warunki, dokumenty."
   keywords: ["chatbot AI dla firm", "asystent AI", "agenci AI", "obsługa klienta z AI"]
 genericProcess: false
 includes:

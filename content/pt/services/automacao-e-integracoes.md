@@ -7,7 +7,7 @@ outcome: "Ligar programas e automatizar tarefas repetidas."
 summary: "Ligar programas e automatizar tarefas repetidas."
 seo:
   title: "Automação de processos e ligação entre programas"
-  description: "Automação de tarefas repetitivas e ligação entre programas: faturação, CRM, loja online, email e folhas de cálculo. Menos trabalho manual, menos erros."
+  description: "Automação de tarefas repetitivas e ligação entre programas: faturação, CRM, loja online, email. Menos erros."
   keywords: ["automação de processos", "integração de sistemas", "automação empresarial"]
 genericProcess: false
 includes:

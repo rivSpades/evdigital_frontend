@@ -1,8 +1,8 @@
 // Namespace "home" — português (língua de origem; define o tipo de en/pl).
 export const home = {
-  metaTitle: "EvDigital | Digitalização de negócios, sites e software à medida",
+  metaTitle: "EvDigital | Digitalização de negócios e software à medida",
   metaDescription:
-    "Da primeira página na internet até à inteligência artificial aplicada ao negócio. Para quem está a começar e para quem quer ir mais longe.",
+    "Da primeira página na internet até à inteligência artificial aplicada ao negócio, para PME em Portugal.",
   hero: {
     overline: "Empresa de IT",
     title: "Digitalizamos o seu negócio, com IA usada da forma certa.",

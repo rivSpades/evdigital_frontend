@@ -5,11 +5,13 @@ import { BarraPagina } from "@/components/layout/barra-pagina";
 import { Footer } from "@/components/layout/footer";
 import { ArticleBody } from "@/components/blog/article-body";
 import { RelatedPosts } from "@/components/blog/related-posts";
+import { ArticleJsonLd, BreadcrumbListJsonLd } from "@/components/seo/json-ld";
 import { getAllBlogPosts, getBlogPostBySlug } from "@/lib/content";
 import { fillCount, formatPostDate, levelLabel, readingMinutes } from "@/lib/blog";
 import { locales, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/i18n/metadata";
+import { SITE_ORIGIN } from "@/lib/site-origin";
 
 // Artigo migrado do grupo "Ecrã · Blog" de "v2 · A vez" (flhgP) do
 // design/design-system.pen: "Blog · artigo" (HPbU7 desktop 1280, ebHXa mobile 375; exemplo
@@ -54,7 +56,8 @@ const colunaPrincipal = "lg:col-span-9 lg:col-start-4 lg:row-start-1 lg:max-w-[7
 export default async function BlogPostPage({ params }: PageProps<"/[lang]/blog/[slug]">) {
   const { slug, lang } = await params;
   const locale = lang as Locale;
-  const { blog: t } = await getDictionary(locale);
+  const dict = await getDictionary(locale);
+  const { blog: t } = dict;
   const post = getBlogPostBySlug(locale, slug);
   if (!post) notFound();
 
@@ -66,6 +69,20 @@ export default async function BlogPostPage({ params }: PageProps<"/[lang]/blog/[
 
   return (
     <>
+      <ArticleJsonLd
+        lang={locale}
+        slug={slug}
+        title={frontmatter.title}
+        description={frontmatter.description}
+        publishedAt={frontmatter.publishedAt.toISOString()}
+      />
+      <BreadcrumbListJsonLd
+        items={[
+          { name: dict.erros.naoEncontrada.home, url: `${SITE_ORIGIN}/${locale}` },
+          { name: dict.common.nav.blog, url: `${SITE_ORIGIN}/${locale}/blog` },
+          { name: frontmatter.title, url: `${SITE_ORIGIN}/${locale}/blog/${slug}` },
+        ]}
+      />
       <Nav currentPath="/blog" />
 
       <main className="flex-1 px-lg md:px-xl lg:px-2xl">

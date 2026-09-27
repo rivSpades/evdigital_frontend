@@ -7,7 +7,7 @@ outcome: ""
 summary: "For restaurants, accommodation and appointment-based services."
 seo:
   title: "Online bookings and reservations"
-  description: "Online booking and reservation systems for restaurants, holiday lets and appointment-based services. Fewer phone calls, an always accurate diary."
+  description: "Online booking and reservation systems for restaurants, holiday lets and appointment-based services."
   keywords: ["online bookings", "reservation system", "restaurant reservations"]
 genericProcess: false
 includes:

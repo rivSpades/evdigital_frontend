@@ -3,11 +3,14 @@ import { notFound } from "next/navigation";
 import { Nav } from "@/components/layout/nav";
 import { BarraPagina } from "@/components/layout/barra-pagina";
 import { Footer } from "@/components/layout/footer";
+import { BreadcrumbListJsonLd } from "@/components/seo/json-ld";
 import { EstadoTexto } from "@/components/ui/estado-texto";
 import { Facto, Factos } from "@/components/ui/facto";
+import { Ligacao } from "@/components/ui/ligacao";
 import { LigacaoExterna } from "@/components/ui/ligacao-externa";
-import { getAllProjects, getProjectBySlug } from "@/lib/content";
+import { getAllProjects, getAllServices, getProjectBySlug } from "@/lib/content";
 import { hostLabel } from "@/lib/url";
+import { SITE_ORIGIN } from "@/lib/site-origin";
 import { locales, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/i18n/metadata";
@@ -53,12 +56,18 @@ const rotuloMargem = "font-body text-caption text-text-tertiary";
 
 export default async function ProjetoPage({ params }: PageProps<"/[lang]/projetos/[slug]">) {
   const { slug, lang } = await params;
-  const { projetos: t } = await getDictionary(lang as Locale);
-  const projeto = getProjectBySlug(lang as Locale, slug);
+  const locale = lang as Locale;
+  const dict = await getDictionary(locale);
+  const { projetos: t } = dict;
+  const projeto = getProjectBySlug(locale, slug);
   if (!projeto) notFound();
 
   const { frontmatter, content } = projeto;
   const { title, description, stack, stackGroups, url } = frontmatter;
+  // Cross-linking projeto→serviço (inverso de `projects` em serviceSchema, PRD §3).
+  const servicosRelacionados = getAllServices(locale).filter((s) =>
+    s.frontmatter.projects.includes(slug),
+  );
 
   const paragrafos = content
     .trim()
@@ -68,6 +77,13 @@ export default async function ProjetoPage({ params }: PageProps<"/[lang]/projeto
 
   return (
     <>
+      <BreadcrumbListJsonLd
+        items={[
+          { name: dict.erros.naoEncontrada.home, url: `${SITE_ORIGIN}/${locale}` },
+          { name: dict.common.nav.projects, url: `${SITE_ORIGIN}/${locale}/projetos` },
+          { name: title, url: `${SITE_ORIGIN}/${locale}/projetos/${slug}` },
+        ]}
+      />
       <Nav currentPath="/projetos" />
 
       <main className="flex-1 px-lg md:px-xl lg:px-2xl">
@@ -127,6 +143,21 @@ export default async function ProjetoPage({ params }: PageProps<"/[lang]/projeto
                     : stack.map((item) => <Facto key={item} valor={item} valorTexto />)}
                 </Factos>
               </div>
+
+              {servicosRelacionados.length > 0 ? (
+                <div className="flex flex-col gap-2xs">
+                  <h2 className={rotuloMargem}>{dict.servicos.ficha.tambemInteressar}</h2>
+                  <ul className="flex flex-col gap-2xs">
+                    {servicosRelacionados.map((s) => (
+                      <li key={s.slug}>
+                        <Ligacao href={`/servicos/${s.slug}`} variant="acao">
+                          {s.frontmatter.title}
+                        </Ligacao>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
 
               {url ? (
                 <div className="flex flex-col gap-2xs">

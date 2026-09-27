@@ -7,7 +7,7 @@ outcome: "Vender sem depender de quem passa à porta."
 summary: "Vender sem depender de quem passa à porta. Com pagamento por MB WAY, Multibanco, cartão e mais."
 seo:
   title: "Loja online com MB WAY e Multibanco"
-  description: "Criação de lojas online em WooCommerce, Shopify ou à medida, com MB WAY, Multibanco, cartão e mais meios de pagamento. Sem termos técnicos."
+  description: "Lojas online em WooCommerce, Shopify ou à medida, com MB WAY, Multibanco, cartão e mais meios de pagamento."
   keywords: ["criar loja online", "loja online", "e-commerce MB WAY Multibanco"]
 showPayments: true
 genericProcess: false

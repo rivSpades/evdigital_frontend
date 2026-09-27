@@ -7,7 +7,7 @@ outcome: "CRM, ERP and other management tools."
 summary: "CRM, ERP and other management tools."
 seo:
   title: "Custom management software for businesses"
-  description: "Custom software to manage customers, orders and projects in one place. For businesses that have outgrown their spreadsheets."
+  description: "Custom software to manage customers, orders and projects in one place, beyond spreadsheets."
   keywords: ["custom ERP", "custom CRM", "business management software"]
 genericProcess: false
 includes:
@@ -32,4 +32,5 @@ faq:
   - q: "And connecting it to what we already use?"
     a: "Almost always part of the job. We first check whether your current programs allow the data to be retrieved, because that decides what we can promise."
 related: ["automacao-e-integracoes"]
+projects: ["evplanner"]
 ---

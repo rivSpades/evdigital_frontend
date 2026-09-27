@@ -7,7 +7,7 @@ outcome: "Começou o seu produto com IA? Corrigimos e acabamos."
 summary: "Começou o seu produto com IA (ChatGPT, Lovable, Cursor)? Corrigimos e acabamos."
 seo:
   title: "Acabamos o produto que começou com IA"
-  description: "Começou o seu produto com IA (ChatGPT, Cursor, Lovable, Replit)? Somos programadores: corrigimos o que está mal e acabamos o produto, depressa e bem."
+  description: "Começou um produto com IA (Cursor, Lovable, Replit)? Somos programadores: corrigimos e acabamos o trabalho."
   keywords: ["acabar produto feito com IA", "corrigir código feito com IA", "programador para projeto feito com IA", "vibe coding profissional"]
 genericProcess: false
 includes:

@@ -7,7 +7,7 @@ outcome: "A sua montra na internet, aberta 24 horas por dia."
 summary: "A sua montra na internet, aberta 24 horas por dia."
 seo:
   title: "Site profissional para o seu negócio"
-  description: "Criação de sites profissionais: endereço, alojamento, emails e páginas. Sem termos técnicos, com acompanhamento depois de entregue."
+  description: "Sites profissionais: domínio, alojamento, e-mails e páginas. Sem termos técnicos, com acompanhamento."
   keywords: ["criar site para o meu negócio", "site profissional", "site institucional"]
 genericProcess: false
 includes:

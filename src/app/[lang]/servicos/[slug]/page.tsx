@@ -1,7 +1,8 @@
 import { Fragment } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ServiceJsonLd } from "@/components/seo/json-ld";
+import { BreadcrumbListJsonLd, ServiceJsonLd } from "@/components/seo/json-ld";
+import { SITE_ORIGIN } from "@/lib/site-origin";
 import { Nav } from "@/components/layout/nav";
 import { BarraPagina } from "@/components/layout/barra-pagina";
 import { Footer } from "@/components/layout/footer";
@@ -14,7 +15,7 @@ import { ComoFunciona } from "@/components/servicos/como-funciona";
 import { GanhaExige } from "@/components/servicos/ganha-exige";
 import { Pagamentos } from "@/components/servicos/pagamentos";
 import { Tabela } from "@/components/servicos/tabela";
-import { getAllServices, getServiceBySlug } from "@/lib/content";
+import { getAllServices, getProjectBySlug, getServiceBySlug } from "@/lib/content";
 import { getDictionary } from "@/i18n/dictionaries";
 import { hasLocale } from "@/i18n/config";
 import { pageMetadata } from "@/i18n/metadata";
@@ -73,7 +74,8 @@ export default async function ServicoPage({ params }: Props) {
   if (!hasLocale(lang)) notFound();
   const servico = getServiceBySlug(lang, slug);
   if (!servico) notFound();
-  const t = (await getDictionary(lang)).servicos;
+  const dict = await getDictionary(lang);
+  const t = dict.servicos;
 
   const { frontmatter, content } = servico;
   const {
@@ -89,6 +91,7 @@ export default async function ServicoPage({ params }: Props) {
     genericProcess,
     faq,
     related,
+    projects,
   } = frontmatter;
   const avancado = family === "B";
 
@@ -113,6 +116,9 @@ export default async function ServicoPage({ params }: Props) {
   const relacionados = related
     .map((relatedSlug) => getServiceBySlug(lang, relatedSlug))
     .filter((s): s is NonNullable<typeof s> => s !== null);
+  const projetosRelacionados = projects
+    .map((projectSlug) => getProjectBySlug(lang, projectSlug))
+    .filter((p): p is NonNullable<typeof p> => p !== null);
 
   const meio = Math.ceil(includes.length / 2);
   const colunasIncluir = [includes.slice(0, meio), includes.slice(meio)].filter(
@@ -127,6 +133,13 @@ export default async function ServicoPage({ params }: Props) {
         name={title}
         description={frontmatter.seo.description}
         faq={faq}
+      />
+      <BreadcrumbListJsonLd
+        items={[
+          { name: dict.erros.naoEncontrada.home, url: `${SITE_ORIGIN}/${lang}` },
+          { name: dict.common.nav.services, url: `${SITE_ORIGIN}/${lang}/servicos` },
+          { name: title, url: `${SITE_ORIGIN}/${lang}/servicos/${slug}` },
+        ]}
       />
       <Nav currentPath="/servicos" />
 
@@ -321,8 +334,9 @@ export default async function ServicoPage({ params }: Props) {
             </div>
           </section>
 
-          {/* Secção · também pode interessar: liga a ficha a outras (PRD §3, sem órfãs) */}
-          {relacionados.length > 0 ? (
+          {/* Secção · também pode interessar: liga a ficha a outras e a projetos reais
+              feitos com este serviço (cross-linking serviço↔projeto, PRD §3, sem órfãs) */}
+          {relacionados.length > 0 || projetosRelacionados.length > 0 ? (
             <section
               aria-labelledby="relacionados-titulo"
               className="pb-lg lg:grid lg:grid-cols-12 lg:gap-x-lg lg:py-xl"
@@ -339,6 +353,13 @@ export default async function ServicoPage({ params }: Props) {
                     <li key={r.slug}>
                       <Ligacao href={`/servicos/${r.slug}`} variant="acao">
                         {r.frontmatter.title}
+                      </Ligacao>
+                    </li>
+                  ))}
+                  {projetosRelacionados.map((p) => (
+                    <li key={p.slug}>
+                      <Ligacao href={`/projetos/${p.slug}`} variant="acao">
+                        {p.frontmatter.title}
                       </Ligacao>
                     </li>
                   ))}

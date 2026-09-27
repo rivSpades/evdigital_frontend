@@ -7,7 +7,7 @@ outcome: "Sprzedawaj, nie czekając na przechodniów."
 summary: "Sprzedawaj, nie czekając na przechodniów. Z płatnością kartą, Apple Pay, Google Pay, PayPal i nie tylko."
 seo:
   title: "Sklep internetowy z kartą i PayPal"
-  description: "Tworzenie sklepów online w WooCommerce, Shopify lub na miarę, z płatnościami kartą, Apple Pay, PayPal i innymi. Bez technicznego żargonu."
+  description: "Sklepy online w WooCommerce, Shopify lub na miarę, z płatnością kartą, Apple Pay, PayPal i innymi."
   keywords: ["stworzenie sklepu internetowego", "sklep internetowy", "e-commerce płatności kartą"]
 showPayments: true
 genericProcess: false

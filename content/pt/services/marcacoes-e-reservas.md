@@ -7,7 +7,7 @@ outcome: ""
 summary: "Para restaurantes, alojamento e serviços com hora marcada."
 seo:
   title: "Marcações e reservas online"
-  description: "Sistemas de marcações e reservas online para restaurantes, alojamento local e serviços com hora marcada. Menos telefonemas, agenda sempre certa."
+  description: "Sistemas de marcações e reservas online para restaurantes, alojamento local e serviços com hora marcada."
   keywords: ["marcações online", "sistema de reservas", "reservas de restaurante"]
 genericProcess: false
 includes:

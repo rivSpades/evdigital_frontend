@@ -7,7 +7,7 @@ outcome: "Microsoft 365, Azure i workflowy z Copilotem."
 summary: "Microsoft 365, Azure i workflowy z Copilotem."
 seo:
   title: "Zarządzanie Microsoft 365, Azure i Copilot"
-  description: "Zarządzanie Microsoft 365 i Azure, workflowy w Power Automate i agenci z Copilotem. Konta, bezpieczeństwo, koszty i wsparcie po naszej stronie."
+  description: "Zarządzanie Microsoft 365 i Azure: workflowy Power Automate, agenci Copilot, konta i bezpieczeństwo."
   keywords: ["zarządzanie Microsoft 365", "Azure", "Copilot", "Power Automate", "Entra ID", "Intune"]
 genericProcess: false
 includes:

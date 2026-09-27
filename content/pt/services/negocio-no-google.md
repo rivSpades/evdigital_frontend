@@ -7,7 +7,7 @@ outcome: ""
 summary: "Para quem procura perto de si encontrar o seu negócio no Google e no Google Maps."
 seo:
   title: "O seu negócio no Google e no Google Maps"
-  description: "Colocamos o seu negócio no Google e no Google Maps, com horário, fotografias, contactos e ligação ao site. Para ser encontrado por quem procura."
+  description: "Colocamos o seu negócio no Google e no Google Maps: horário, fotografias, contactos e ligação ao site."
   keywords: ["negócio no Google", "Google Maps", "ficha Google empresa"]
 genericProcess: false
 includes:

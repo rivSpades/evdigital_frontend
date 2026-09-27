@@ -74,6 +74,58 @@ export function FaqPageJsonLd({ items }: { items: { question: string; answer: st
   );
 }
 
+// BreadcrumbList (schema.org) — trilha de navegação de uma página de detalhe (serviço,
+// projeto, artigo de blog). `items` vai da home até à própria página, por ordem.
+export function BreadcrumbListJsonLd({ items }: { items: { name: string; url: string }[] }) {
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: items.map((item, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: item.name,
+          item: item.url,
+        })),
+      }}
+    />
+  );
+}
+
+// Article (schema.org) de um post do blog. Só o que já está no frontmatter revisto
+// (PRD §4.3/§7.2) — sem inventar autor nem dados que a página não mostra.
+export function ArticleJsonLd({
+  lang,
+  slug,
+  title,
+  description,
+  publishedAt,
+}: {
+  lang: string;
+  slug: string;
+  title: string;
+  description: string;
+  publishedAt: string;
+}) {
+  const url = `${SITE_ORIGIN}/${lang}/blog/${slug}`;
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "@id": `${url}#article`,
+        headline: title,
+        description,
+        datePublished: publishedAt,
+        url,
+        author: { "@id": `${SITE_ORIGIN}/#organization` },
+        publisher: { "@id": `${SITE_ORIGIN}/#organization` },
+      }}
+    />
+  );
+}
+
 // Dados estruturados (schema.org) da organização. Só factos já públicos no site; sem
 // morada nem contactos que não estejam publicados.
 export function OrganizationJsonLd({ description }: { description: string }) {

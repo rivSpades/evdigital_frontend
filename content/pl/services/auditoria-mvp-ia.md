@@ -7,7 +7,7 @@ outcome: "Zaczęli Państwo produkt z AI? Poprawimy i dokończymy."
 summary: "Zaczęli Państwo produkt z AI (ChatGPT, Lovable, Cursor)? Poprawimy i dokończymy."
 seo:
   title: "Kończymy produkt zaczęty z pomocą AI"
-  description: "Zaczęli Państwo produkt z AI (ChatGPT, Cursor, Lovable, Replit)? Jesteśmy programistami: poprawiamy błędy i szybko, solidnie kończymy produkt."
+  description: "Zaczęli Państwo produkt z AI (Cursor, Lovable, Replit)? Jesteśmy programistami: poprawiamy i kończymy pracę."
   keywords: ["dokończenie produktu zrobionego z AI", "poprawa kodu wygenerowanego przez AI", "programista do projektu z AI", "profesjonalny vibe coding"]
 genericProcess: false
 includes:

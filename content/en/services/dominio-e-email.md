@@ -7,8 +7,8 @@ outcome: "An address that's truly yours on the internet, with professional email
 summary: "We register the domain, set up professional email and handle the technical side, so you never lose your address or miss an email."
 seo:
   title: "Domain and professional email for your business"
-  description: "Domain registration and management, hosting and professional email with Google Workspace or Microsoft 365. We handle it, you run the business."
-  keywords: ["professional domain", "register domain", "professional email", "Google Workspace", "Microsoft 365", "domain management"]
+  description: "Domain registration and management, hosting and professional email with Google Workspace or Microsoft 365."
+  keywords: ["professional domain", "register domain", "professional email", "Google Workspace", "Microsoft 365 email hosting", "domain management"]
 includes:
   - "Domain registration in your name, with the provider that fits your case (for example GoDaddy or Cloudflare)."
   - "Technical domain setup (DNS), so the website, the email and other services all work without failures."

@@ -7,8 +7,8 @@ outcome: "Um endereço só seu na internet, com e-mail profissional a funcionar 
 summary: "Registamos o domínio, configuramos o e-mail profissional e tratamos da parte técnica."
 seo:
   title: "Domínio e e-mail profissional para o seu negócio"
-  description: "Registo e gestão do domínio, alojamento e e-mail profissional com o Google Workspace ou o Microsoft 365. Tratamos de tudo, você trata do negócio."
-  keywords: ["domínio profissional", "registar domínio", "e-mail profissional", "Google Workspace", "Microsoft 365", "gestão de domínio"]
+  description: "Registo e gestão do domínio, alojamento e e-mail profissional (Google Workspace ou Microsoft 365)."
+  keywords: ["domínio profissional", "registar domínio", "e-mail profissional", "Google Workspace", "e-mail profissional Microsoft 365", "gestão de domínio"]
 includes:
   - "Registo do domínio em seu nome, no fornecedor mais adequado ao seu caso (por exemplo GoDaddy ou Cloudflare)."
   - "Configuração técnica do domínio (DNS), para o site, o e-mail e outros serviços funcionarem sem falhas."

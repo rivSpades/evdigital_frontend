@@ -7,8 +7,8 @@ outcome: "Adres, który naprawdę należy do Państwa, z profesjonalną pocztą,
 summary: "Rejestrujemy domenę, konfigurujemy profesjonalną pocztę i zajmujemy się stroną techniczną, aby nigdy nie stracili Państwo adresu ani wiadomości."
 seo:
   title: "Domena i profesjonalna poczta dla Państwa firmy"
-  description: "Rejestracja i zarządzanie domeną, hosting oraz profesjonalna poczta z Google Workspace lub Microsoft 365. My zajmujemy się resztą, Państwo firmą."
-  keywords: ["profesjonalna domena", "rejestracja domeny", "profesjonalna poczta", "Google Workspace", "Microsoft 365", "zarządzanie domeną"]
+  description: "Rejestracja i zarządzanie domeną, hosting oraz profesjonalna poczta z Google Workspace lub Microsoft 365."
+  keywords: ["profesjonalna domena", "rejestracja domeny", "profesjonalna poczta", "Google Workspace", "poczta Microsoft 365", "zarządzanie domeną"]
 includes:
   - "Rejestracja domeny na Państwa nazwisko, u dostawcy dopasowanego do Państwa przypadku (na przykład GoDaddy lub Cloudflare)."
   - "Techniczna konfiguracja domeny (DNS), aby strona, poczta i inne usługi działały bez awarii."

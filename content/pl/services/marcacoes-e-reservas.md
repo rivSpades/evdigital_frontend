@@ -7,7 +7,7 @@ outcome: ""
 summary: "Dla restauracji, noclegów i usług z umówioną godziną."
 seo:
   title: "Rezerwacje online i umawianie terminów"
-  description: "Systemy rezerwacji online dla restauracji, noclegów i usług z umówioną godziną. Mniej telefonów, zawsze aktualny kalendarz."
+  description: "Systemy rezerwacji online dla restauracji, noclegów i usług z umówioną godziną. Mniej telefonów."
   keywords: ["rezerwacje online", "system rezerwacji", "rezerwacje w restauracji"]
 genericProcess: false
 includes:

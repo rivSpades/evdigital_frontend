@@ -7,7 +7,7 @@ outcome: ""
 summary: "So people searching nearby can find your business on Google and Google Maps."
 seo:
   title: "Your business on Google and Google Maps"
-  description: "We put your business on Google and Google Maps, with opening hours, photos, contact details and a link to your website. Be found by those searching."
+  description: "We put your business on Google and Google Maps: hours, photos, contact details and a website link."
   keywords: ["business on Google", "Google Maps", "Google Business Profile"]
 genericProcess: false
 includes:

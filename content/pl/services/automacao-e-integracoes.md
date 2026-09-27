@@ -7,7 +7,7 @@ outcome: "Łączenie programów i automatyzacja powtarzalnych zadań."
 summary: "Łączenie programów i automatyzacja powtarzalnych zadań."
 seo:
   title: "Automatyzacja procesów i łączenie programów"
-  description: "Automatyzacja powtarzalnych zadań i łączenie programów: fakturowanie, CRM, sklep online, e-mail i arkusze. Mniej pracy ręcznej, mniej błędów."
+  description: "Automatyzacja powtarzalnych zadań i łączenie programów: fakturowanie, CRM, sklep online, e-mail."
   keywords: ["automatyzacja procesów", "integracja systemów", "automatyzacja w firmie"]
 genericProcess: false
 includes:

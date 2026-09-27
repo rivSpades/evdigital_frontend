@@ -7,7 +7,7 @@ outcome: "Chatbots, assistants and agents for customers and for your team."
 summary: "Chatbots, assistants and agents for customers and for your team."
 seo:
   title: "AI assistants and agents for businesses"
-  description: "AI assistants and chatbots that answer with your company's real information: products, terms and internal documents. With clearly defined limits."
+  description: "AI assistants and chatbots that answer with your company's real information: products, terms, documents."
   keywords: ["AI chatbot for business", "AI assistant", "AI agents", "AI customer support"]
 genericProcess: false
 includes:

@@ -7,7 +7,7 @@ outcome: "Started your product with AI? We fix it and finish it."
 summary: "Started your product with AI (ChatGPT, Lovable, Cursor)? We fix it and finish it."
 seo:
   title: "We finish the product you started with AI"
-  description: "Started your product with AI (ChatGPT, Cursor, Lovable, Replit)? We are developers: we fix what is wrong and finish the product, quickly and properly."
+  description: "Started a product with AI (Cursor, Lovable, Replit)? We're developers: we fix it and finish the job."
   keywords: ["finish product built with AI", "fix AI-generated code", "developer for AI-built project", "professional vibe coding"]
 genericProcess: false
 includes:

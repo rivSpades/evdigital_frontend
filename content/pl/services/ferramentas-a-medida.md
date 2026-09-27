@@ -7,7 +7,7 @@ outcome: "CRM, ERP i inne narzędzia do zarządzania."
 summary: "CRM, ERP i inne narzędzia do zarządzania."
 seo:
   title: "Programy do zarządzania firmą na miarę"
-  description: "Programy na miarę do zarządzania klientami, zamówieniami i projektami w jednym miejscu. Dla firm, którym arkusze kalkulacyjne już nie wystarczają."
+  description: "Programy na miarę do zarządzania klientami, zamówieniami i projektami w jednym miejscu."
   keywords: ["ERP na miarę", "CRM na miarę", "oprogramowanie do zarządzania firmą"]
 genericProcess: false
 includes:
@@ -32,4 +32,5 @@ faq:
   - q: "A połączenie z tym, czego już używamy?"
     a: "Prawie zawsze wchodzi to w zakres pracy. Najpierw sprawdzamy, czy obecne programy pozwalają pobierać dane, bo to decyduje o tym, co możemy obiecać."
 related: ["automacao-e-integracoes"]
+projects: ["evplanner"]
 ---

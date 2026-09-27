@@ -2,9 +2,9 @@ import type { home as Source } from "../pt/home";
 
 // Namespace "home" — en. Tem de cumprir a forma do português.
 export const home: typeof Source = {
-  metaTitle: "EvDigital | Business digitalisation, websites and custom software",
+  metaTitle: "EvDigital | Business digitalisation and custom software",
   metaDescription:
-    "From your very first web page to artificial intelligence applied to your business. For those just starting out and for those who want to go further.",
+    "From your first web page to artificial intelligence applied to your business, for SMEs in Portugal.",
   hero: {
     overline: "IT company",
     title: "We digitalise your business, with AI used the right way.",

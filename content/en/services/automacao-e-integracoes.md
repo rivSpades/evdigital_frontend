@@ -7,7 +7,7 @@ outcome: "Connect your software and automate repetitive tasks."
 summary: "Connect your software and automate repetitive tasks."
 seo:
   title: "Process automation and software integration"
-  description: "Automating repetitive tasks and connecting your software: invoicing, CRM, online shop, email and spreadsheets. Less manual work, fewer errors."
+  description: "Automating repetitive tasks and connecting your software: invoicing, CRM, online shop, email."
   keywords: ["process automation", "systems integration", "business automation"]
 genericProcess: false
 includes:

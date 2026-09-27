@@ -7,7 +7,7 @@ outcome: "Your shop window on the internet, open 24 hours a day."
 summary: "Your shop window on the internet, open 24 hours a day."
 seo:
   title: "Professional website for your business"
-  description: "Professional websites: web address, hosting, emails and pages. No technical jargon, with ongoing support after delivery."
+  description: "Professional websites: web address, hosting, emails and pages. No jargon, with support after delivery."
   keywords: ["build a website for my business", "professional website", "corporate website"]
 genericProcess: false
 includes:

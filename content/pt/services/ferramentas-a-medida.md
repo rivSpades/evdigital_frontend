@@ -7,7 +7,7 @@ outcome: "CRM, ERP e outras ferramentas de gestão."
 summary: "CRM, ERP e outras ferramentas de gestão."
 seo:
   title: "Programas de gestão à medida para empresas"
-  description: "Programas feitos à medida para gerir clientes, encomendas e projetos num só sítio. Para empresas que já passaram o limite das folhas de cálculo."
+  description: "Programas à medida para gerir clientes, encomendas e projetos num só sítio, além das folhas de cálculo."
   keywords: ["ERP à medida", "CRM à medida", "software de gestão empresarial"]
 genericProcess: false
 includes:
@@ -32,4 +32,5 @@ faq:
   - q: "E ligar com o que já usamos?"
     a: "Quase sempre faz parte do trabalho. Vemos primeiro se os programas atuais deixam ir buscar os dados, porque isso decide o que conseguimos prometer."
 related: ["automacao-e-integracoes"]
+projects: ["evplanner"]
 ---
