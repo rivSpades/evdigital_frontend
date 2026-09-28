@@ -4,11 +4,11 @@ import type { home as Source } from "../pt/home";
 export const home: typeof Source = {
   metaTitle: "EvDigital | Cyfryzacja firm i oprogramowanie na zamówienie",
   metaDescription:
-    "Od pierwszej strony w internecie po sztuczną inteligencję w biznesie, dla MŚP w Portugalii.",
+    "Od pierwszej strony w internecie po sztuczną inteligencję w biznesie, dla MŚP na całym świecie.",
   hero: {
     overline: "Firma IT",
     title: "Cyfryzujemy Państwa firmę, wykorzystując AI we właściwy sposób.",
-    lead: "Rozwiązania wysokiej jakości, tworzone przez programistów, z szybkością realizacji, którą umożliwia AI.",
+    lead: "Rozwiązania wysokiej jakości, tworzone przez programistów, z szybkością realizacji, którą umożliwia AI, dla firm z całego świata.",
     secondaryCta: "Zobacz, co robimy",
   },
   doors: {
@@ -56,6 +56,11 @@ export const home: typeof Source = {
       {
         question: "Czy po zakończeniu pracy zostanę z tym sam/sama?",
         answer: "Nie. Pozostajemy do Państwa dyspozycji i uczymy, jak korzystać z tego, co jest Państwa.",
+      },
+      {
+        question: "Czy współpracujecie z firmami z całego świata?",
+        answer:
+          "Tak. Wszystko odbywa się zdalnie, dzięki rozmowom wideo i strefie klienta, w której mogą Państwo śledzić postępy prac.",
       },
     ],
   },

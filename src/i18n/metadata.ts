@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { htmlLang, locales, ogLocale, localizePath, type Locale } from "./config";
+import { htmlLang, ogLocale, localizePath, visibleLocales, type Locale } from "./config";
 
 function imagemPartilha(locale: Locale) {
   return {
@@ -20,7 +20,7 @@ export function pageMetadata(locale: Locale, path: string): Metadata {
     alternates: {
       canonical: localizePath(locale, path),
       languages: {
-        ...Object.fromEntries(locales.map((l) => [htmlLang[l], localizePath(l, path)])),
+        ...Object.fromEntries(visibleLocales.map((l) => [htmlLang[l], localizePath(l, path)])),
         "x-default": localizePath("pt", path),
       },
     },

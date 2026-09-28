@@ -2,11 +2,11 @@
 export const home = {
   metaTitle: "EvDigital | Digitalização de negócios e software à medida",
   metaDescription:
-    "Da primeira página na internet até à inteligência artificial aplicada ao negócio, para PME em Portugal.",
+    "Da primeira página na internet até à inteligência artificial aplicada ao negócio, para PME em qualquer parte do mundo.",
   hero: {
     overline: "Empresa de IT",
     title: "Digitalizamos o seu negócio, com IA usada da forma certa.",
-    lead: "Soluções de qualidade, feitas por programadores, com a rapidez de entrega que a IA permite.",
+    lead: "Soluções de qualidade, feitas por programadores, com a rapidez de entrega que a IA permite, para negócios em qualquer parte do mundo.",
     secondaryCta: "Ver o que fazemos",
   },
   doors: {
@@ -54,6 +54,11 @@ export const home = {
       {
         question: "Depois de estar feito, fico sozinho com aquilo?",
         answer: "Não. Continuamos disponíveis e ensinamos-lhe a usar o que é seu.",
+      },
+      {
+        question: "Trabalham com negócios em qualquer parte do mundo?",
+        answer:
+          "Sim. Todo o processo é feito à distância, com reuniões por vídeo e uma área de cliente para acompanhar o trabalho.",
       },
     ],
   },

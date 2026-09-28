@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { locales, localizePath, htmlLang, type Locale } from "@/i18n/config";
+import { localizePath, htmlLang, visibleLocales, type Locale } from "@/i18n/config";
 import { getAllBlogPosts, getAllProjects, getAllServices } from "@/lib/content";
 import { listarConsultores } from "@/lib/consultants/backend";
 import { SITE_ORIGIN } from "@/lib/site-origin";
@@ -20,14 +20,14 @@ const PAGINAS_FIXAS = [
 function entrada(path: string, lastModified?: Date): MetadataRoute.Sitemap {
   const languages = {
     ...Object.fromEntries(
-      locales.map((l) => [
+      visibleLocales.map((l) => [
         htmlLang[l],
         `${SITE_ORIGIN}${localizePath(l, path)}`,
       ]),
     ),
     "x-default": `${SITE_ORIGIN}${localizePath("pt", path)}`,
   };
-  return locales.map((l) => ({
+  return visibleLocales.map((l) => ({
     url: `${SITE_ORIGIN}${localizePath(l, path)}`,
     lastModified,
     alternates: { languages },

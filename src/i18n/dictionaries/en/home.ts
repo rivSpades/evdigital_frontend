@@ -4,11 +4,11 @@ import type { home as Source } from "../pt/home";
 export const home: typeof Source = {
   metaTitle: "EvDigital | Business digitalisation and custom software",
   metaDescription:
-    "From your first web page to artificial intelligence applied to your business, for SMEs in Portugal.",
+    "From your first web page to artificial intelligence applied to your business, for SMEs anywhere in the world.",
   hero: {
     overline: "IT company",
     title: "We digitalise your business, with AI used the right way.",
-    lead: "Quality solutions built by developers, delivered as fast as AI makes possible.",
+    lead: "Quality solutions built by developers, delivered as fast as AI makes possible, for businesses anywhere in the world.",
     secondaryCta: "See what we do",
   },
   doors: {
@@ -56,6 +56,11 @@ export const home: typeof Source = {
       {
         question: "Once it's done, am I left on my own with it?",
         answer: "No. We stay available and teach you how to use what's yours.",
+      },
+      {
+        question: "Do you work with businesses anywhere in the world?",
+        answer:
+          "Yes. Everything happens remotely, with video calls and a client area to follow the work.",
       },
     ],
   },

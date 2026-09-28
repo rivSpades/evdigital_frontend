@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { LOCALE_COOKIE, defaultLocale, hasLocale, localeLabels, locales, stripLocale } from "./config";
+import {
+  LOCALE_COOKIE,
+  defaultLocale,
+  hasLocale,
+  localeLabels,
+  stripLocale,
+  visibleLocales,
+} from "./config";
 import { cn } from "@/lib/cn";
 
 /**
@@ -24,7 +31,7 @@ export function LanguageSwitcher({ label, className }: { label: string; classNam
   return (
     <nav aria-label={label} className={className}>
       <ul className="flex items-center gap-2xs">
-        {locales.map((locale) => (
+        {visibleLocales.map((locale) => (
           <li key={locale}>
             <Link
               href={rest === "/" ? `/${locale}` : `/${locale}${rest}`}

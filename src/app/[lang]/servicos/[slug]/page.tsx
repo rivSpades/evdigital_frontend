@@ -7,7 +7,6 @@ import { Nav } from "@/components/layout/nav";
 import { BarraPagina } from "@/components/layout/barra-pagina";
 import { Footer } from "@/components/layout/footer";
 import { Accordion } from "@/components/ui/accordion";
-import { ButtonLink } from "@/components/ui/button";
 import { FechoPagina } from "@/components/ui/fecho-pagina";
 import { Ligacao } from "@/components/ui/ligacao";
 import { LinhaTexto, ListaTexto } from "@/components/ui/linha-texto";
@@ -31,9 +30,10 @@ type Props = { params: Promise<{ lang: string; slug: string }> };
 // Uma coluna com as margens de layout; em lg as secções com Margem usam a grelha de 12
 // (Margem = colunas 1 a 3, 278 no .pen; coluna principal = 4 a 12). Por secção:
 // - topo: ds/navigation/voltar ("Serviços") como primeira linha, título $font-size-display
-//   ($font-size-display-narrow em mobile), resultado body-lg (body) com 760 de largura, e as
-//   acções a $space-xs: botão primário (56) e ligações. Padding [$space-xl, 0, $space-4xl,
-//   0] ([$space-lg, 0, $space-3xl, 0] em mobile), gap $space-lg ($space-md).
+//   ($font-size-display-narrow em mobile), resultado body-lg (body) com 760 de largura.
+//   Padding [$space-xl, 0, $space-4xl, 0] ([$space-lg, 0, $space-3xl, 0] em mobile).
+//   Sem CTA aqui (decisão do dono, 2026-09-28): uma só «Fale connosco» por ficha, no fecho,
+//   sticky ao fundo do ecrã em mobile (ver fecho-pagina.tsx `stickyMobile`).
 // - pagamentos (só Loja online) e "como funciona" (só `genericProcess`): componentes
 //   próprios em components/servicos/.
 // - "O que poderá incluir": família A como a Loja online (título $font-size-title e duas
@@ -160,23 +160,13 @@ export default async function ServicoPage({ params }: Props) {
         />
         <div className="mx-auto w-full max-w-[var(--grid-max-width)]">
           {/* Secção · topo (o título e o «voltar» vivem na BarraPagina) */}
-          <div className="flex flex-col gap-md pt-lg pb-3xl lg:gap-lg lg:pt-xl lg:pb-4xl">
-            {outcome ? (
+          {outcome ? (
+            <div className="flex flex-col gap-md pt-lg pb-3xl lg:gap-lg lg:pt-xl lg:pb-4xl">
               <p className="font-body text-body text-text-secondary lg:max-w-[760px] lg:text-body-lg">
                 {outcome}
               </p>
-            ) : null}
-
-            <div className="flex flex-col items-start gap-xs pt-xs lg:flex-row lg:items-center lg:gap-lg">
-              <ButtonLink
-                href={`/contacto?servico=${servico.slug}`}
-                size="action"
-                className="w-full tracking-[var(--letter-spacing-label)] md:w-auto"
-              >
-                {t.ficha.marcarConversa}
-              </ButtonLink>
             </div>
-          </div>
+          ) : null}
 
           {/* O que é e para quem: só com texto no corpo do .md */}
           {blocos.length > 0 ? (
@@ -378,7 +368,8 @@ export default async function ServicoPage({ params }: Props) {
               tituloId="fecho-titulo"
               texto={t.ficha.ctaTexto}
               acao={t.ficha.marcarConversa}
-              href="/contacto"
+              href={`/contacto?servico=${servico.slug}`}
+              stickyMobile
               className="lg:col-span-9 lg:col-start-4"
             />
           </section>

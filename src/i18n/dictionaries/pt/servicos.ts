@@ -52,7 +52,7 @@ export const servicos = {
   pagamentos: {
     titulo: "Como os seus clientes podem pagar",
     intro:
-      "Ligamos os meios de pagamento que fazem sentido para o seu público. Em Portugal, quase toda a gente espera encontrar estes dois primeiros.",
+      "Ligamos os meios de pagamento que fazem sentido para o seu público. Quase toda a gente espera encontrar estes dois primeiros.",
     metodos: ({
       mbway: {
         name: "MB WAY",
@@ -76,7 +76,7 @@ export const servicos = {
       },
       paypal: {
         name: "PayPal",
-        why: "Habitual para quem já compra fora de Portugal.",
+        why: "Habitual para quem já compra online de outros países.",
       },
       payshop: {
         name: "Payshop",

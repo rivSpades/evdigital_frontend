@@ -6,6 +6,15 @@ export const locales = ["pt", "en", "pl"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "pt";
 
+/**
+ * Idiomas oferecidos a novos visitantes: seletor de idioma, sitemap, hreflang e
+ * auto-detect por `Accept-Language` (`matchLocale`). O polaco fica oculto por decisão do
+ * dono (2026-09-28) sem deixar de ser uma rota válida: as páginas `/pl/**` continuam a
+ * responder (`hasLocale` inclui-o) para não partir ligações já partilhadas ou indexadas,
+ * e quem já tinha `pl` guardado no cookie `NEXT_LOCALE` mantém a escolha.
+ */
+export const visibleLocales = locales.filter((locale) => locale !== "pl");
+
 /** Cookie que guarda a escolha manual feita no seletor de idioma (vence o browser). */
 export const LOCALE_COOKIE = "NEXT_LOCALE";
 
@@ -42,7 +51,9 @@ export function hasLocale(value: string | undefined | null): value is Locale {
 
 /**
  * Escolhe o idioma a partir do cabeçalho `Accept-Language`, respeitando os pesos (q).
- * "pl-PL,pl;q=0.9,en;q=0.8" -> "pl". Sem correspondência devolve o idioma por defeito.
+ * "pl-PL,pl;q=0.9,en;q=0.8" -> "en" (pl está oculto, ver `visibleLocales`; passa ao
+ * seguinte preferido em vez de o escolher). Sem correspondência devolve o idioma por
+ * defeito.
  */
 export function matchLocale(acceptLanguage: string | null | undefined): Locale {
   if (!acceptLanguage) return defaultLocale;
@@ -60,7 +71,7 @@ export function matchLocale(acceptLanguage: string | null | undefined): Locale {
 
   for (const { tag } of ranked) {
     const base = tag.split("-")[0];
-    if (hasLocale(base)) return base;
+    if ((visibleLocales as readonly string[]).includes(base)) return base as Locale;
   }
   return defaultLocale;
 }
