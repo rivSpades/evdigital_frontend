@@ -449,46 +449,39 @@ export function ContactoWizard({
               />
             </Field>
 
-            <div className="flex flex-col gap-lg md:flex-row">
-              <div className="min-w-0 flex-1">
-                <Field htmlFor="email" label={t.form.emailLabel} error={erros.email}>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder={t.form.emailPlaceholder}
-                    value={email}
-                    onChange={(event) => {
-                      setEmail(event.target.value);
-                      aoMudar(setErros, "email", erroDe("email", event.target.value));
-                    }}
-                    onBlur={(event) =>
-                      aoSair(setErros, "email", erroDe("email", event.target.value))
-                    }
-                  />
-                </Field>
-              </div>
-              <div className="min-w-0 flex-1">
-                <Field
-                  htmlFor="telefone"
-                  label={t.form.phoneLabel}
-                  optional
-                  optionalLabel={optionalLabel}
-                >
-                  <Input
-                    id="telefone"
-                    name="telefone"
-                    type="tel"
-                    autoComplete="tel"
-                    inputMode="tel"
-                    placeholder={t.form.phonePlaceholder}
-                    value={telefone}
-                    onChange={(event) => setTelefone(event.target.value)}
-                  />
-                </Field>
-              </div>
-            </div>
+            <Field htmlFor="email" label={t.form.emailLabel} error={erros.email}>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                placeholder={t.form.emailPlaceholder}
+                value={email}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  aoMudar(setErros, "email", erroDe("email", event.target.value));
+                }}
+                onBlur={(event) => aoSair(setErros, "email", erroDe("email", event.target.value))}
+              />
+            </Field>
+
+            <Field
+              htmlFor="telefone"
+              label={t.form.phoneLabel}
+              optional
+              optionalLabel={optionalLabel}
+            >
+              <Input
+                id="telefone"
+                name="telefone"
+                type="tel"
+                autoComplete="tel"
+                inputMode="tel"
+                placeholder={t.form.phonePlaceholder}
+                value={telefone}
+                onChange={(event) => setTelefone(event.target.value)}
+              />
+            </Field>
 
             <Field htmlFor="assunto" label={t.form.needLabel} error={erros.assunto}>
               <Select
