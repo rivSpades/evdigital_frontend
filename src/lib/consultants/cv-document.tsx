@@ -4,14 +4,7 @@ import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { Consultor, EtapaPercurso } from "./backend";
 import { cv } from "./cv-tokens";
-import {
-  competencias,
-  formatarEuros,
-  iniciais,
-  itensPerfil,
-  paragrafos,
-  periodoEtapa,
-} from "./format";
+import { competencias, iniciais, itensPerfil, paragrafos, periodoEtapa } from "./format";
 
 // CV do consultor em PDF (@react-pdf/renderer, só no servidor: route handler
 // src/app/api/consultants/[slug]/cv/route.ts). Fiel aos frames «Consultores · CV · página 1»
@@ -25,8 +18,8 @@ import {
 //   o título «Percurso» da coluna principal, como no frame AoWpt.
 // - TituloSecao (ds/cv/titulo-secao RdIrd): print-title Sora 600 + régua $border-default de
 //   1, gap 6.
-// - Facto (ds/cv/facto B27kF): Termo print-caption $text-tertiary, Valor print-value (mono
-//   no salário), padding [6, 0], régua $border-subtle em baixo, gap 2.
+// - Facto (ds/cv/facto B27kF): Termo print-caption $text-tertiary, Valor print-value,
+//   padding [6, 0], régua $border-subtle em baixo, gap 2.
 // - Etapa (ds/cv/etapa gxthO): carril de 10 em $accent-primary (linha antes 2x5, marca 8x2,
 //   linha depois até ao fim da etapa; a última sem ela) + Conteúdo (gap 2, padding-bottom
 //   14): Período mono print-caption, Função print-title, Organização print-body 500,
@@ -107,7 +100,7 @@ function TituloSecao({ children }: { children: string }) {
   );
 }
 
-function Facto({ termo, valor, mono }: { termo?: string; valor: string; mono?: boolean }) {
+function Facto({ termo, valor }: { termo?: string; valor: string }) {
   return (
     <View
       style={{
@@ -123,13 +116,7 @@ function Facto({ termo, valor, mono }: { termo?: string; valor: string; mono?: b
           {termo}
         </Text>
       ) : null}
-      <Text
-        style={
-          mono
-            ? { ...texto.mono, fontSize: tamanho.valor, color: cor.textoPrimario }
-            : { ...texto.corpo, fontSize: tamanho.valor, color: cor.textoPrimario }
-        }
-      >
+      <Text style={{ ...texto.corpo, fontSize: tamanho.valor, color: cor.textoPrimario }}>
         {valor}
       </Text>
     </View>
@@ -203,19 +190,15 @@ export function CvDocumento({
 }) {
   registarFontes();
   const d = t.detalhe;
-  const contactoUrl = `https://www.evdigital.eu/${lang}/consultants/${consultor.slug}/contacto`;
-  // Sem email nem outras ligações (decisão do dono): só a ligação ao formulário do site.
+  const perfilUrl = `https://www.evdigital.eu/${lang}/consultants/${consultor.slug}`;
+  // Sem email nem outras ligações (decisão do dono): só a ligação à página do consultor.
   const contactos = [
     consultor.phone ? { valor: consultor.phone } : null,
     consultor.location ? { valor: consultor.location } : null,
-    // Contacto pelo formulário do site (o CV público não mostra email por defeito).
-    { valor: "evdigital.eu/contacto", href: contactoUrl },
+    // Ligação à página do consultor no site (o CV público não mostra email por defeito).
+    { valor: `evdigital.eu/consultants/${consultor.slug}`, href: perfilUrl },
   ].filter((c): c is { valor: string; href?: string } => c !== null);
 
-  const salarios = [
-    { termo: d.contrato, valor: formatarEuros(consultor.contract_monthly_eur, lang) },
-    { termo: d.freelancer, valor: formatarEuros(consultor.freelance_hourly_eur, lang) },
-  ].filter((s): s is { termo: string; valor: string } => s.valor !== null);
   const listaCompetencias = competencias(consultor.skills);
   const apresentacao = paragrafos(consultor.bio);
   const idiomas = itensPerfil(consultor.languages);
@@ -335,14 +318,6 @@ export function CvDocumento({
         {/* Corpo: lateral 148 + principal. */}
         <View style={{ flexDirection: "row", gap: 24, marginTop: GAP_PAGINA }}>
           <View style={{ width: 148, gap: GAP_PAGINA }}>
-            {salarios.length > 0 ? (
-              <View style={{ gap: 4 }}>
-                <TituloSecao>{d.salario}</TituloSecao>
-                {salarios.map((s) => (
-                  <Facto key={s.termo} termo={s.termo} valor={s.valor} mono />
-                ))}
-              </View>
-            ) : null}
             {listaCompetencias.length > 0 ? (
               <View style={{ gap: 4 }}>
                 <TituloSecao>{t.cv.competencias}</TituloSecao>
