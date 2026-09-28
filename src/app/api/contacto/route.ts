@@ -156,7 +156,10 @@ export async function POST(request: Request) {
         referrer_host: asString(body.referrerHost),
       }),
       // O visitante não pode ficar à espera indefinidamente se o backend estiver em baixo.
-      signal: AbortSignal.timeout(10_000),
+      // 15s (não 10s): com reunião marcada, o backend ainda faz uma chamada síncrona ao
+      // Cal.com que pode por si só demorar até 10s (apps/leads/calcom.py:TIMEOUT_SECONDS);
+      // os emails já correm em segundo plano no backend (2026-09-28, apps/leads/views.py).
+      signal: AbortSignal.timeout(15_000),
     });
 
     if (resposta.status === 429) {
