@@ -18,9 +18,6 @@ export const common: typeof Source = {
     closeMenu: "Close menu",
   },
   footer: {
-    description:
-      "An IT company. We build a digital presence for those who don't have one yet, and custom solutions for those who need more than a website.",
-    navigation: "Navigation",
     legal: "Legal",
     privacy: "Privacy",
     terms: "Terms",

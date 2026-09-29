@@ -16,9 +16,6 @@ export const common = {
     closeMenu: "Fechar menu",
   },
   footer: {
-    description:
-      "Empresa de IT. Construímos presença digital para quem ainda não a tem, e soluções à medida para quem já precisa de mais do que um site.",
-    navigation: "Navegação",
     legal: "Legal",
     privacy: "Privacidade",
     terms: "Termos",
