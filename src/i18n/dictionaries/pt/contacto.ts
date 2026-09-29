@@ -7,10 +7,11 @@ export const contacto = {
   },
   page: {
     title: "Vamos conversar",
+    subtitle: "Sem compromisso e sem custo. Respondemos em até 24h úteis.",
   },
   steps: {
     describe: "Fale-nos do que precisa",
-    meeting: "Deseja marcar uma reunião?",
+    meeting: "Deseja marcar já uma reunião?",
     summary: "Resumo",
   },
   form: {
@@ -41,7 +42,7 @@ export const contacto = {
     honeypotLabel: "Não preencher",
   },
   meeting: {
-    question: "Deseja marcar uma reunião?",
+    question: "Deseja marcar já uma reunião?",
     hint: "É opcional. Sem compromisso.",
     yes: "Sim, quero marcar",
     no: "Não, só quero enviar a mensagem",
@@ -76,7 +77,7 @@ export const contacto = {
   result: {
     successTitle: "Mensagem enviada.",
     successText:
-      "Recebemos o seu pedido e respondemos em breve. Enviámos também uma confirmação para o seu email.",
+      "Recebemos o seu pedido e respondemos em 24h úteis. Enviámos também uma confirmação para o seu email.",
     meetingConfirmedText: "A reunião ficou marcada. Enviámos a confirmação para o seu email.",
     partialTitle: "Mensagem enviada.",
     partialText:

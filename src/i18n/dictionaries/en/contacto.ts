@@ -9,10 +9,11 @@ export const contacto: typeof Source = {
   },
   page: {
     title: "Let's talk",
+    subtitle: "No commitment and no cost. We reply within 24 business hours.",
   },
   steps: {
     describe: "Tell us what you need",
-    meeting: "Would you like to book a meeting?",
+    meeting: "Would you like to book a meeting now?",
     summary: "Summary",
   },
   form: {
@@ -43,7 +44,7 @@ export const contacto: typeof Source = {
     honeypotLabel: "Do not fill in",
   },
   meeting: {
-    question: "Would you like to book a meeting?",
+    question: "Would you like to book a meeting now?",
     hint: "Optional. No commitment.",
     yes: "Yes, I'd like to book",
     no: "No, just send the message",
@@ -77,7 +78,7 @@ export const contacto: typeof Source = {
   result: {
     successTitle: "Message sent.",
     successText:
-      "We've received your request and will reply shortly. We've also sent a confirmation to your email.",
+      "We've received your request and will reply within 24 business hours. We've also sent a confirmation to your email.",
     meetingConfirmedText: "Your meeting is booked. We've sent the confirmation to your email.",
     partialTitle: "Message sent.",
     partialText: "We couldn't automatically confirm the meeting. We'll contact you to arrange a time.",

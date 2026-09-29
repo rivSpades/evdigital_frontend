@@ -34,11 +34,15 @@ import { erroDoEmail } from "@/lib/email";
 // de 704 com o conteúdo do passo e, no fundo, só a acção que avança.
 //
 // Copy: só frases dos dicionários (o React manda, design-guardrails.md §8). Ficam de fora,
-// por não terem frase no React: o subtítulo da página, os subtítulos dos passos 1 e 3, a
-// legenda "A seguir: ...", "Exemplo: ..." (o exemplo continua como placeholder), o resumo de
-// erros do passo 1, "Alterar", o fuso ("horas de Lisboa, o seu fuso"), "30 min" e "Não
-// precisa de fazer mais nada.". Avisos com duas frases no React dividem-se em título e
-// descrição do ds/feedback/notice pela primeira frase.
+// por não terem frase no React: os subtítulos dos passos 1 e 3, a legenda "A seguir: ...",
+// "Exemplo: ..." (o exemplo continua como placeholder), o resumo de erros do passo 1,
+// "Alterar", o fuso ("horas de Lisboa, o seu fuso"), "30 min" e "Não precisa de fazer mais
+// nada.". Avisos com duas frases no React dividem-se em título e descrição do
+// ds/feedback/notice pela primeira frase.
+//
+// Subtítulo da página (passo 1 só, redução de fricção junto ao anúncio "Fale connosco" que
+// aterra em /contacto): contacto.page.subtitle, dedicado (não o metadata.description, que
+// é só para o <meta> de SEO/partilha) — 2026-09-29, análise de conversão.
 //
 // O campo "O que precisa" lista o catálogo inteiro (`servicos`, vindo de `getAllServices`
 // no Server Component pai), agrupado por família, depois de "Ainda não sei".
@@ -662,6 +666,12 @@ export function ContactoWizard({
   return (
     <div className="flex flex-col">
       {introducao}
+
+      {passo === "descrever" ? (
+        <p className="max-w-[640px] pb-lg font-body text-body text-text-secondary lg:max-w-[680px] lg:text-body-lg">
+          {t.page.subtitle}
+        </p>
+      ) : null}
 
       <div className="flex flex-col lg:flex-row lg:items-start lg:gap-lg">
         {/* Coluna de passos (>= lg). */}

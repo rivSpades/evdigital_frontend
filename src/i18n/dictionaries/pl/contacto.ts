@@ -9,10 +9,11 @@ export const contacto: typeof Source = {
   },
   page: {
     title: "Porozmawiajmy",
+    subtitle: "Bez zobowiązań i bez kosztów. Odpowiadamy w ciągu 24 godzin roboczych.",
   },
   steps: {
     describe: "Proszę opisać, czego Państwo potrzebują",
-    meeting: "Czy chcą Państwo umówić rozmowę?",
+    meeting: "Czy chcą Państwo już teraz umówić rozmowę?",
     summary: "Podsumowanie",
   },
   form: {
@@ -43,7 +44,7 @@ export const contacto: typeof Source = {
     honeypotLabel: "Nie wypełniać",
   },
   meeting: {
-    question: "Czy chcą Państwo umówić rozmowę?",
+    question: "Czy chcą Państwo już teraz umówić rozmowę?",
     hint: "Opcjonalnie. Bez zobowiązań.",
     yes: "Tak, chcę umówić termin",
     no: "Nie, chcę tylko wysłać wiadomość",
@@ -78,7 +79,7 @@ export const contacto: typeof Source = {
   result: {
     successTitle: "Wiadomość wysłana.",
     successText:
-      "Otrzymaliśmy Państwa zapytanie i wkrótce odpowiemy. Wysłaliśmy również potwierdzenie na Państwa adres e-mail.",
+      "Otrzymaliśmy Państwa zapytanie i odpowiemy w ciągu 24 godzin roboczych. Wysłaliśmy również potwierdzenie na Państwa adres e-mail.",
     meetingConfirmedText:
       "Rozmowa została umówiona. Wysłaliśmy potwierdzenie na Państwa adres e-mail.",
     partialTitle: "Wiadomość wysłana.",
