@@ -15,7 +15,7 @@ import { Ligacao } from "@/components/ui/ligacao";
 import { LinhaResumo } from "@/components/ui/linha-resumo";
 import { Notice } from "@/components/ui/notice";
 import { OpcaoRadio } from "@/components/ui/opcao-radio";
-import { PassoAssistente, ProgressoCompacto, type EstadoPasso } from "@/components/ui/passo-assistente";
+import { PassoAssistente, type EstadoPasso } from "@/components/ui/passo-assistente";
 import { Select, type SelectOption } from "@/components/ui/select";
 import { intlLocale, type Locale } from "@/i18n/config";
 import LocaleLink from "@/i18n/locale-link";
@@ -689,13 +689,7 @@ export function ContactoWizard({
         </ol>
 
         <div className="flex min-w-0 flex-1 flex-col">
-          <ProgressoCompacto
-            className="lg:hidden"
-            numero={passoNumero}
-            total={TOTAL_PASSOS}
-            titulo={passos[passoNumero - 1].titulo}
-          />
-          {/* O título do passo não se vê (o «1/3» e a lista de passos já o dizem), mas o h2 recebe
+          {/* O título do passo não se vê (a lista de passos já o diz; em mobile não há progresso), mas o h2 recebe
               o foco ao mudar de passo. O contentor esconde-o à vista sem misturar classes
               (o `cn` do projecto não resolve conflitos entre `w-full` e `sr-only`). */}
           <div className="sr-only">
