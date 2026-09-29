@@ -93,17 +93,7 @@ export default async function Privacidade({ params }: PageProps<"/[lang]/privaci
 
         <SecaoLeitura titulo={t.rights.title}>
           <p>{t.rights.p1}</p>
-          <p>
-            {t.rights.p2Before}
-            <a
-              href={t.rights.authorityUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t.rights.authorityLinkLabel}
-            </a>
-            {t.rights.p2After}
-          </p>
+          <p>{t.rights.p2}</p>
         </SecaoLeitura>
 
         <SecaoLeitura titulo={t.security.title}>

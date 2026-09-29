@@ -107,11 +107,7 @@ export const institucional: typeof Source = {
     rights: {
       title: "Your rights",
       p1: "You can ask us, at any time and without giving a reason, to: access the data we hold about you, correct it, delete it, restrict what we do with it, object to its processing, or receive it in a format you can take elsewhere.",
-      p2Before:
-        "Just ask through the contact form or, if you have an account, in a request in the Client Area. We reply within one month. If you believe we have not handled the matter as we should, you can lodge a complaint with the Portuguese data protection authority, the Comissão Nacional de Proteção de Dados (",
-      authorityLinkLabel: "cnpd.pt",
-      authorityUrl: "https://www.cnpd.pt",
-      p2After: ").",
+      p2: "Just ask through the contact form or, if you have an account, in a request in the Client Area. We reply within one month. If you believe we have not handled the matter as we should, you can also lodge a complaint with the data protection authority competent for your country of residence.",
     },
     security: {
       title: "Security",
@@ -159,7 +155,7 @@ export const institucional: typeof Source = {
     },
     law: {
       title: "Governing law",
-      p1: "Portuguese law applies. In the event of a consumer dispute, you may turn to the competent alternative dispute resolution bodies.",
+      p1: "The law applicable to the contract applies, taking into account the user's place of residence. In the event of a consumer dispute, you may turn to the alternative dispute resolution bodies competent for your place of residence.",
     },
   },
 };

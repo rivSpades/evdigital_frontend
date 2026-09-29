@@ -105,11 +105,7 @@ export const institucional = {
     rights: {
       title: "Os seus direitos",
       p1: "Pode pedir-nos, a qualquer momento e sem justificar: aceder aos dados que temos sobre si, corrigi-los, apagá-los, limitar o que fazemos com eles, opor-se ao tratamento, ou recebê-los num formato que possa levar para outro lado.",
-      p2Before:
-        "Basta pedir pelo formulário de contacto ou, se tem conta, num pedido na Área de Cliente. Respondemos no prazo de um mês. Se achar que não tratámos o assunto como devíamos, pode apresentar queixa à Comissão Nacional de Proteção de Dados (",
-      authorityLinkLabel: "cnpd.pt",
-      authorityUrl: "https://www.cnpd.pt",
-      p2After: ").",
+      p2: "Basta pedir pelo formulário de contacto ou, se tem conta, num pedido na Área de Cliente. Respondemos no prazo de um mês. Se achar que não tratámos o assunto como devíamos, pode também apresentar queixa junto da autoridade de proteção de dados competente no seu país de residência.",
     },
     security: {
       title: "Segurança",
@@ -157,7 +153,7 @@ export const institucional = {
     },
     law: {
       title: "Lei aplicável",
-      p1: "Aplica-se a lei portuguesa. Em caso de litígio de consumo, pode recorrer às entidades de resolução alternativa de litígios competentes.",
+      p1: "Aplica-se a lei aplicável ao contrato, tendo em conta o local de residência do utilizador. Em caso de litígio de consumo, pode recorrer às entidades de resolução alternativa de litígios competentes na sua área de residência.",
     },
   },
 };

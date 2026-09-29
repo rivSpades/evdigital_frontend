@@ -107,11 +107,7 @@ export const institucional: typeof Source = {
     rights: {
       title: "Państwa prawa",
       p1: "Mogą Państwo w każdej chwili i bez podawania powodu zażądać od nas: dostępu do danych, które o Państwu posiadamy, ich sprostowania, usunięcia, ograniczenia ich przetwarzania, wniesienia sprzeciwu wobec przetwarzania lub otrzymania ich w formacie, który można przenieść gdzie indziej.",
-      p2Before:
-        "Wystarczy zgłosić to przez formularz kontaktowy lub, jeśli mają Państwo konto, w zgłoszeniu w Strefie Klienta. Odpowiadamy w ciągu jednego miesiąca. Jeśli uznają Państwo, że sprawa nie została załatwiona należycie, mogą Państwo złożyć skargę do portugalskiego organu ochrony danych, Comissão Nacional de Proteção de Dados (",
-      authorityLinkLabel: "cnpd.pt",
-      authorityUrl: "https://www.cnpd.pt",
-      p2After: ").",
+      p2: "Wystarczy zgłosić to przez formularz kontaktowy lub, jeśli mają Państwo konto, w zgłoszeniu w Strefie Klienta. Odpowiadamy w ciągu jednego miesiąca. Jeśli uznają Państwo, że sprawa nie została załatwiona należycie, mogą Państwo także złożyć skargę do organu ochrony danych właściwego dla kraju Państwa zamieszkania.",
     },
     security: {
       title: "Bezpieczeństwo",
@@ -159,7 +155,7 @@ export const institucional: typeof Source = {
     },
     law: {
       title: "Prawo właściwe",
-      p1: "Zastosowanie ma prawo portugalskie. W przypadku sporu konsumenckiego mogą Państwo skorzystać z właściwych podmiotów pozasądowego rozwiązywania sporów.",
+      p1: "Zastosowanie ma prawo właściwe dla umowy, z uwzględnieniem miejsca zamieszkania użytkownika. W przypadku sporu konsumenckiego mogą Państwo skorzystać z podmiotów pozasądowego rozwiązywania sporów właściwych dla miejsca Państwa zamieszkania.",
     },
   },
 };
