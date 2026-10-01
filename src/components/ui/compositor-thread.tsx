@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useLayoutEffect, useRef, type KeyboardEvent } from "react";
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle, SendHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ErroCampo } from "@/components/ui/erro-campo";
 import { LigacaoBotao } from "@/components/ui/ligacao";
@@ -39,6 +39,7 @@ export function CompositorThread({
   onCancel,
   linhas = 3,
   enterEnvia = false,
+  envioEmIcone = false,
   error,
   sendError,
 }: {
@@ -58,6 +59,12 @@ export function CompositorThread({
   linhas?: number;
   /** Enter envia e Shift+Enter quebra a linha (conversa curta); por omissão Ctrl/Cmd+Enter. */
   enterEnvia?: boolean;
+  /**
+   * Envio como botão de ícone (avião de papel, 44×44, redondo) à direita do campo, na mesma
+   * linha, como nos chats habituais (assistente). `submitLabel` passa a ser só o nome
+   * acessível; em espera o ícone troca por um spinner. Por omissão: botão com texto por baixo.
+   */
+  envioEmIcone?: boolean;
   /** Erro do campo (ex. sem texto). */
   error?: string;
   /** Erro do envio (ex. rede). */
@@ -108,7 +115,12 @@ export function CompositorThread({
         }
       }}
     >
-      <div className="flex w-full flex-col gap-xs">
+      <div
+        className={cn(
+          "flex w-full gap-xs",
+          envioEmIcone ? "flex-row items-end gap-sm" : "flex-col",
+        )}
+      >
         <textarea
           ref={ref}
           id={id}
@@ -124,6 +136,7 @@ export function CompositorThread({
           onFocus={ajustar}
           onKeyDown={onKeyDown}
           className={cn(
+            envioEmIcone && "min-w-0 flex-1",
             "block w-full resize-none overflow-hidden rounded-none border-0 border-b bg-transparent px-0 py-[10px] transition-colors",
             "font-body text-body leading-[var(--line-height-body)] text-text-primary placeholder:text-text-tertiary",
             error
@@ -134,41 +147,72 @@ export function CompositorThread({
             "outline-none! focus-visible:outline-none!",
           )}
         />
-        <div className={cn("flex items-center gap-sm", onCancel ? "justify-between" : "justify-end")}>
-          {onCancel ? (
-            <LigacaoBotao variant="discreta" disabled={busy} onClick={onCancel}>
-              {cancelLabel}
-            </LigacaoBotao>
-          ) : null}
-          <Button
+        {envioEmIcone ? (
+          <button
             type="submit"
-            size="md"
-            disabled={busy}
+            aria-label={submitLabel}
             aria-busy={busy || undefined}
-            className="tracking-[var(--letter-spacing-label)]"
+            disabled={busy || !value.trim()}
+            className={cn(
+              "mb-2xs flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-pill transition-colors",
+              "bg-accent-primary text-text-on-accent hover:bg-accent-primary-hover active:bg-accent-primary-pressed",
+              "disabled:cursor-not-allowed disabled:bg-bg-disabled disabled:text-text-disabled",
+              "focus-visible:ring-[3px] focus-visible:ring-border-focus focus-visible:ring-offset-2 focus-visible:ring-offset-bg-surface focus-visible:outline-none",
+            )}
           >
-            <span className="grid">
-              <span className={cn("col-start-1 row-start-1", busy && "invisible")}>
-                {submitLabel}
-              </span>
-              <span
-                aria-hidden={!busy}
-                className={cn(
-                  "col-start-1 row-start-1 flex items-center justify-center gap-xs",
-                  !busy && "invisible",
-                )}
+            {busy ? (
+              <LoaderCircle
+                size={20}
+                strokeWidth={2}
+                aria-hidden
+                className="animate-spin motion-reduce:animate-none"
+              />
+            ) : (
+              <SendHorizontal size={20} strokeWidth={2} aria-hidden />
+            )}
+          </button>
+        ) : null}
+        {envioEmIcone && !onCancel ? null : (
+          <div
+            className={cn("flex items-center gap-sm", onCancel ? "justify-between" : "justify-end")}
+          >
+            {onCancel ? (
+              <LigacaoBotao variant="discreta" disabled={busy} onClick={onCancel}>
+                {cancelLabel}
+              </LigacaoBotao>
+            ) : null}
+            {envioEmIcone ? null : (
+              <Button
+                type="submit"
+                size="md"
+                disabled={busy}
+                aria-busy={busy || undefined}
+                className="tracking-[var(--letter-spacing-label)]"
               >
-                <LoaderCircle
-                  size={16}
-                  strokeWidth={2}
-                  aria-hidden
-                  className="animate-spin motion-reduce:animate-none"
-                />
-                {busyLabel}
-              </span>
-            </span>
-          </Button>
-        </div>
+                <span className="grid">
+                  <span className={cn("col-start-1 row-start-1", busy && "invisible")}>
+                    {submitLabel}
+                  </span>
+                  <span
+                    aria-hidden={!busy}
+                    className={cn(
+                      "col-start-1 row-start-1 flex items-center justify-center gap-xs",
+                      !busy && "invisible",
+                    )}
+                  >
+                    <LoaderCircle
+                      size={16}
+                      strokeWidth={2}
+                      aria-hidden
+                      className="animate-spin motion-reduce:animate-none"
+                    />
+                    {busyLabel}
+                  </span>
+                </span>
+              </Button>
+            )}
+          </div>
+        )}
       </div>
       {error ? <ErroCampo id={erroId}>{error}</ErroCampo> : null}
       {sendError ? <Notice id={falhouId} tone="error" role="alert" title={sendError} /> : null}

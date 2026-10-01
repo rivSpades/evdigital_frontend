@@ -30,7 +30,7 @@ import type { Mensagem, Rascunho } from "./tipos";
 //   cookies), NÃO modal: a página fica usável à esquerda. Cantos a direito, contorno hairline,
 //   sombra de profundidade. Abaixo de lg: ecrã inteiro, modal, por cima da barra e dos cookies.
 // - Cabeçalho (72/64): título Sora, «Nova conversa» (só com conversa) e fechar (44).
-// - Corpo: transcrição (`Fala`), ancorada ao fim; só acompanha as falas novas se o visitante
+// - Corpo: transcrição (`Fala`) a começar no topo; quando enche, rola e só acompanha as falas novas se o visitante
 //   já estava no fim (ou se foi ele que falou).
 // - Rodapé: aviso de IA (até «Entendi») por cima do compositor; com o resumo à espera o
 //   compositor recolhe; indisponível/limite trocam o compositor por um aviso com «Ir para o
@@ -321,7 +321,7 @@ export function PainelAssistente({
         </header>
 
         <div ref={corpoRef} onScroll={aoRolar} className="min-h-0 flex-1 overflow-y-auto">
-          <div className="flex min-h-full flex-col justify-end gap-lg p-lg">
+          <div className="flex min-h-full flex-col gap-lg p-lg">
             {vazia ? (
               <>
                 <p className="font-heading text-body-lg leading-[var(--line-height-title)] font-semibold tracking-[var(--letter-spacing-title)] text-text-primary">
@@ -421,6 +421,7 @@ export function PainelAssistente({
                   busy={aResponder}
                   linhas={1}
                   enterEnvia
+                  envioEmIcone
                 />
               </form>
             )}
