@@ -12,11 +12,9 @@ import { cn } from "@/lib/cn";
 // A coluna (4 a 12 em lg) é do contentor da página.
 // `compactoMobile` (override da página Serviços em mobile, nó IVvUk): sem padding vertical
 // abaixo de lg e o botão com a largura do rótulo.
-// `stickyMobile` (ficha de serviço, decisão do dono 2026-09-28: uma só CTA por página, só no
-// fecho): abaixo de md o botão fica colado ao fundo do ecrã enquanto o fecho está por vir,
-// título e texto continuam em fluxo normal (mesmo padrão de components/ui/folha.tsx e do
-// fecho de /consultants/[slug]). `data-barra-fixa` avisa o scroll-to-top para subir acima
-// da barra.
+// `semAcaoMobile` (Serviços e ficha de serviço, pedido do dono 2026-10-01): abaixo de md a
+// acção sai do fecho, porque a página põe o mesmo botão numa barra sticky própria
+// (components/ui/barra-acao-fixa.tsx), colada ao fundo do ecrã durante toda a página.
 
 export function FechoPagina({
   titulo,
@@ -25,7 +23,7 @@ export function FechoPagina({
   acao,
   href,
   compactoMobile = false,
-  stickyMobile = false,
+  semAcaoMobile = false,
   className,
 }: {
   titulo?: string;
@@ -34,7 +32,7 @@ export function FechoPagina({
   acao: string;
   href: string;
   compactoMobile?: boolean;
-  stickyMobile?: boolean;
+  semAcaoMobile?: boolean;
   className?: string;
 }) {
   return (
@@ -48,14 +46,7 @@ export function FechoPagina({
         </h2>
       ) : null}
       <p className="font-body text-body text-text-secondary lg:text-body-lg">{texto}</p>
-      <div
-        data-barra-fixa={stickyMobile || undefined}
-        className={cn(
-          "flex pt-xs",
-          stickyMobile &&
-            "max-md:sticky max-md:bottom-0 max-md:z-10 max-md:-mx-lg max-md:border-t max-md:border-border-default max-md:bg-bg-base max-md:px-lg max-md:py-md max-md:pb-[calc(var(--spacing-md)+env(safe-area-inset-bottom))]",
-        )}
-      >
+      <div className={cn("flex pt-xs", semAcaoMobile && "max-md:hidden")}>
         <ButtonLink
           href={href}
           size="action"

@@ -4,6 +4,7 @@ import { Nav } from "@/components/layout/nav";
 import { BarraPagina } from "@/components/layout/barra-pagina";
 import { Footer } from "@/components/layout/footer";
 import { FamiliaAvancada, FamiliaInicial } from "@/components/servicos/familia-servicos";
+import { BarraAcaoFixa } from "@/components/ui/barra-acao-fixa";
 import { FechoPagina } from "@/components/ui/fecho-pagina";
 import { getDictionary } from "@/i18n/dictionaries";
 import { hasLocale } from "@/i18n/config";
@@ -18,6 +19,8 @@ import { pageMetadata } from "@/i18n/metadata";
 // - Secção · fecho: ds/layout/fecho-pagina sem título, nas colunas 4 a 12 em lg (a Margem
 //   vazia), padding-bottom $space-3xl ($space-2xl em mobile). O texto é o do fecho da
 //   Início (home.finalCta.body), o mesmo que o .pen usa aqui.
+// - Em mobile (< md) «Fale connosco» vive numa barra sticky (ui/barra-acao-fixa.tsx) em vez
+//   de no fecho; a partir de md a acção volta ao fecho.
 // Sem scroll reveal (só a Início anima).
 
 export async function generateMetadata({
@@ -58,9 +61,12 @@ export default async function Servicos({ params }: { params: Promise<{ lang: str
               acao={common.cta}
               href="/contacto"
               compactoMobile
+              semAcaoMobile
               className="lg:col-span-9 lg:col-start-4"
             />
           </section>
+
+          <BarraAcaoFixa href="/contacto" label={common.cta} />
         </div>
       </main>
 

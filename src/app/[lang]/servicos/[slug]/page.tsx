@@ -7,6 +7,7 @@ import { Nav } from "@/components/layout/nav";
 import { BarraPagina } from "@/components/layout/barra-pagina";
 import { Footer } from "@/components/layout/footer";
 import { Accordion } from "@/components/ui/accordion";
+import { BarraAcaoFixa } from "@/components/ui/barra-acao-fixa";
 import { FechoPagina } from "@/components/ui/fecho-pagina";
 import { Ligacao } from "@/components/ui/ligacao";
 import { LinhaTexto, ListaTexto } from "@/components/ui/linha-texto";
@@ -33,7 +34,7 @@ type Props = { params: Promise<{ lang: string; slug: string }> };
 //   ($font-size-display-narrow em mobile), resultado body-lg (body) com 760 de largura.
 //   Padding [$space-xl, 0, $space-4xl, 0] ([$space-lg, 0, $space-3xl, 0] em mobile).
 //   Sem CTA aqui (decisão do dono, 2026-09-28): uma só «Fale connosco» por ficha, no fecho,
-//   sticky ao fundo do ecrã em mobile (ver fecho-pagina.tsx `stickyMobile`).
+//   sticky ao fundo do ecrã em mobile durante toda a ficha (ui/barra-acao-fixa.tsx).
 // - pagamentos (só Loja online) e "como funciona" (só `genericProcess`): componentes
 //   próprios em components/servicos/.
 // - "O que poderá incluir": família A como a Loja online (título $font-size-title e duas
@@ -369,10 +370,15 @@ export default async function ServicoPage({ params }: Props) {
               texto={t.ficha.ctaTexto}
               acao={t.ficha.marcarConversa}
               href={`/contacto?servico=${servico.slug}`}
-              stickyMobile
+              semAcaoMobile
               className="lg:col-span-9 lg:col-start-4"
             />
           </section>
+
+          <BarraAcaoFixa
+            href={`/contacto?servico=${servico.slug}`}
+            label={t.ficha.marcarConversa}
+          />
         </div>
       </main>
 
