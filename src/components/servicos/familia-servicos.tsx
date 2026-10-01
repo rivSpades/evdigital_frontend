@@ -9,14 +9,20 @@ import { getAllServices } from "@/lib/content";
 // frontmatter: família A com a frase `summary`, família B com a frase `outcome` (as que o
 // .pen mostra em cada registo).
 //
+// - Cada grupo abre com uma régua grossa ($border-width-thick, $border-strong) e
+//   $space-lg até ao título: é a quebra de grupo, distinta das réguas hairline entre
+//   registos. O título do grupo é o nível dominante; o nome do serviço (servico-linha) é
+//   um nível abaixo, para não se confundirem (pedido do dono, 2026-10-01).
 // - "Para quem está a começar" (i4Gr0v / Jb6wQ): título $font-size-headline
-//   ($font-size-title em mobile) $font-weight-heading, a $space-lg do registo ($space-md
-//   em mobile), registo a toda a largura (Título na coluna larga de 368). Padding-bottom
-//   $space-4xl ($space-3xl em mobile).
+//   ($font-size-title em mobile) $font-weight-heading, a $space-lg do registo, registo a
+//   toda a largura (Título na coluna larga de 368). Padding-bottom $space-4xl
+//   ($space-3xl em mobile).
 // - "Para quem já quer ir mais longe" (fHb2w / TRWx9): em lg, título $font-size-title na
 //   Margem (colunas 1 a 3) e registo na coluna principal (4 a 12, Título na coluna de 280);
-//   padding [$space-2xl, 0, $space-3xl, 0]. Em mobile empilha como a primeira.
-// As âncoras #comecar e #avancadas são os destinos das portas da Início.
+//   padding [$space-lg, 0, $space-3xl, 0]. Em mobile empilha como a primeira.
+// As âncoras #comecar e #avancadas são os destinos das portas da Início. `scroll-mt-34`
+// (136) = Nav sticky (72) + BarraPagina sticky (56) + 8: a régua do grupo aterra logo
+// por baixo das duas barras, sem o título ficar tapado.
 
 export async function FamiliaInicial({ lang }: { lang: Locale }) {
   const t = (await getDictionary(lang)).servicos.inicial;
@@ -26,11 +32,11 @@ export async function FamiliaInicial({ lang }: { lang: Locale }) {
     <section
       id="comecar"
       aria-labelledby="servicos-inicial-titulo"
-      className="flex scroll-mt-24 flex-col gap-md pb-3xl lg:gap-lg lg:pb-4xl"
+      className="flex scroll-mt-34 flex-col gap-lg border-t-2 border-border-strong pt-lg pb-3xl lg:pb-4xl"
     >
       <h2
         id="servicos-inicial-titulo"
-        className="font-heading text-title font-semibold tracking-[var(--letter-spacing-title)] text-text-primary lg:text-headline lg:tracking-[var(--letter-spacing-headline)]"
+        className="font-heading text-title leading-[var(--line-height-title)] font-semibold tracking-[var(--letter-spacing-title)] text-text-primary lg:text-headline lg:leading-[var(--line-height-headline)] lg:tracking-[var(--letter-spacing-headline)]"
       >
         {t.titulo}
       </h2>
@@ -56,7 +62,7 @@ export async function FamiliaAvancada({ lang }: { lang: Locale }) {
     <section
       id="avancadas"
       aria-labelledby="servicos-avancado-titulo"
-      className="flex scroll-mt-24 flex-col gap-md pb-3xl lg:grid lg:grid-cols-12 lg:gap-x-lg lg:gap-y-0 lg:pt-2xl"
+      className="flex scroll-mt-34 flex-col gap-lg border-t-2 border-border-strong pt-lg pb-3xl lg:grid lg:grid-cols-12 lg:gap-x-lg lg:gap-y-0"
     >
       <h2
         id="servicos-avancado-titulo"
