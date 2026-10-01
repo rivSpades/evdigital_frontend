@@ -317,7 +317,10 @@ export function PainelAssistente({
         }
       }}
       className={cn(
-        "pointer-events-auto m-0 border-0 bg-transparent p-0 text-text-primary backdrop:bg-bg-overlay-scrim",
+        // Mobile: modal em ecrã inteiro com véu OPACO (a cor do painel). Com o teclado aberto sobra
+        // uma faixa entre o painel e o teclado (barra flutuante do iOS) e, com véu translúcido, a
+        // página aparecia por trás.
+        "pointer-events-auto m-0 border-0 bg-transparent p-0 text-text-primary backdrop:bg-bg-surface",
         "h-dvh max-h-none w-full max-w-none overscroll-contain",
         // lg+: cartão ancorado ao botão do assistente (o dialog está dentro do seu contentor
         // relativo), 16 acima dele, alinhado à direita. Altura 720 limitada ao ecrã: 100dvh
