@@ -274,7 +274,7 @@ export const areaCliente: typeof Source = {
       email: "Email",
       emailNote: "To change your email, contact us.",
       phone: "Phone",
-      phonePlaceholder: "912 345 678",
+      phonePlaceholder: "+44 7700 900123",
       company: "Company",
       companyPlaceholder: "Company name",
       nif: "Tax number",

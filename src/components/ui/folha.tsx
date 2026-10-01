@@ -47,8 +47,9 @@ export function Folha({
             // Mobile (< md): o botão fica colado ao fundo do ecrã enquanto a folha está à vista
             // (pedido do dono, 2026-09-24). A barra é TRANSPARENTE (sem fundo nem régua): só o
             // botão se vê, centrado e a toda a largura da folha, com a área segura do iOS por
-            // baixo.
-            "max-md:sticky max-md:bottom-0 max-md:z-20 max-md:bg-transparent max-md:pt-0 max-md:pb-[calc(var(--spacing-md)+env(safe-area-inset-bottom))]",
+            // baixo. Com o aviso de cookies aberto (fixo ao fundo) o botão sobe para ficar por
+            // cima dele: `--cookie-banner-h` é publicada por ConsentAnalytics.
+            "max-md:sticky max-md:bottom-[var(--cookie-banner-h,0px)] max-md:z-20 max-md:bg-transparent max-md:pt-0 max-md:pb-[calc(var(--spacing-md)+env(safe-area-inset-bottom))]",
             "max-md:[&_a]:w-full max-md:[&_button]:w-full max-md:[&>*]:w-full max-md:[&>*]:justify-center",
           )}
         >

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
 import Link from "@/i18n/locale-link";
@@ -13,7 +13,8 @@ import type { Dictionary } from "@/i18n/dictionaries";
 // (`CookieSettingsLink`) volta a abrir o aviso. Não corre na Área de Cliente (autenticada).
 //
 // Aviso: painel fixo ao fundo, `bg-bg-surface` com régua superior hairline, sem glow, sem
-// barra lateral nem marcador; dispensável só por uma das duas escolhas (banner.md do
+// barra lateral nem marcador; abaixo de md é mais baixo (padding e botões de 36) para não tapar
+// um quarto do ecrã por cima do formulário de contacto (browser QA, 2026-10-01); dispensável só por uma das duas escolhas (banner.md do
 // checklist: não é aviso crítico, mas exige decisão).
 
 const KEY = "ev-cookie-consent";
@@ -83,6 +84,7 @@ export function ConsentAnalytics({
     () => null,
   );
   const [reopened, setReopened] = useState(false);
+  const avisoRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const open = () => setReopened(true);
@@ -110,6 +112,27 @@ export function ConsentAnalytics({
     }
   }, [choice, measurementId]);
 
+  const avisoAberto = !foraDeAlcance && choice !== null && (choice === "" || reopened);
+
+  // Publica a altura do aviso para que a barra de acção sticky dos formulários (Folha) fique
+  // por cima dele em vez de tapada (`--cookie-banner-h`).
+  useEffect(() => {
+    const root = document.documentElement;
+    const aviso = avisoRef.current;
+    if (!avisoAberto || !aviso) {
+      root.style.removeProperty("--cookie-banner-h");
+      return;
+    }
+    const publicar = () => root.style.setProperty("--cookie-banner-h", `${aviso.offsetHeight}px`);
+    publicar();
+    const observer = new ResizeObserver(publicar);
+    observer.observe(aviso);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty("--cookie-banner-h");
+    };
+  }, [avisoAberto]);
+
   if (foraDeAlcance || choice === null) return null;
 
   const decide = (value: "granted" | "denied") => {
@@ -132,10 +155,11 @@ export function ConsentAnalytics({
       )}
       {(choice === "" || reopened) && (
         <section
+          ref={avisoRef}
           aria-label={t.title}
-          className="fixed inset-x-0 bottom-0 z-50 border-t border-border-default bg-bg-surface px-lg py-md md:px-xl"
+          className="fixed inset-x-0 bottom-0 z-50 border-t border-border-default bg-bg-surface px-lg py-sm md:px-xl md:py-md"
         >
-          <div className="mx-auto flex max-w-[var(--grid-max-width)] flex-col gap-md md:flex-row md:items-center md:gap-xl">
+          <div className="mx-auto flex max-w-[var(--grid-max-width)] flex-col gap-sm md:flex-row md:items-center md:gap-xl">
             <div className="flex flex-col gap-xs md:flex-1">
               <p className="font-heading text-body font-semibold text-text-primary">
                 {t.title}
@@ -154,6 +178,7 @@ export function ConsentAnalytics({
               <Button
                 variant="secondary"
                 size="md"
+                className="max-md:h-9"
                 onClick={() => decide("denied")}
               >
                 {t.reject}
@@ -161,6 +186,7 @@ export function ConsentAnalytics({
               <Button
                 variant="secondary"
                 size="md"
+                className="max-md:h-9"
                 onClick={() => decide("granted")}
               >
                 {t.accept}

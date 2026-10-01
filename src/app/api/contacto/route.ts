@@ -111,9 +111,8 @@ export async function POST(request: Request) {
   const erroEmail = erroDoEmail(asString(body.email), v);
   if (erroEmail) campos.email = [erroEmail];
   if (!(NEEDS as readonly string[]).includes(need)) campos.need = [v.needRequired];
-  // A mensagem só é opcional numa lead de consultor (marcação sem texto); o backend aplica a
-  // mesma regra (LeadCreateSerializer). No /contacto continua obrigatória.
-  if (!consultantSlug && !asString(body.message).trim()) campos.message = [v.messageRequired];
+  // A mensagem é opcional (2026-10-01, menos fricção no formulário); o backend aplica a
+  // mesma regra (LeadCreateSerializer).
   if (Object.keys(campos).length > 0) {
     return NextResponse.json({ errors: campos }, { status: 400 });
   }
@@ -178,7 +177,6 @@ export async function POST(request: Request) {
         name: v.nameRequired,
         email: v.emailInvalid,
         need: v.needRequired,
-        message: v.messageRequired,
       };
       const errors: Record<string, string[]> = {};
       for (const campo of Object.keys(doBackend)) {

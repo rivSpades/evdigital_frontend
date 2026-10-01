@@ -36,7 +36,7 @@ export const contacto: typeof Source = {
     emailLabel: "E-mail",
     emailPlaceholder: "imie@firma.pl",
     phoneLabel: "Telefon",
-    phonePlaceholder: "912 345 678",
+    phonePlaceholder: "512 345 678",
     needLabel: "Czego Państwo potrzebują",
     needPlaceholder: "Proszę wybrać opcję",
     messageLabel: "Wiadomość",

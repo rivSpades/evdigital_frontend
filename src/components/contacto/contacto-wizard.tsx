@@ -55,6 +55,10 @@ import { erroDoEmail } from "@/lib/email";
 // Horários (useSlots), a escolha de dia/hora (EscolhaHorario) e o envio (enviarLead) vivem em
 // ficheiros próprios, partilhados com o assistente do consultor (consultor-wizard.tsx).
 //
+// Campos obrigatórios do passo 1: só nome e email. "O que precisa" arranca em "Ainda não sei" e a
+// mensagem é opcional (2026-10-01, análise de conversão: 0 leads em 28 dias de anúncios); o
+// backend (LeadCreateSerializer) aceita a mesma coisa.
+//
 // Micro-interacções do passo 1 (design-guardrails.md §6): o erro de cada campo aparece ao
 // sair dele (blur) ou ao tentar continuar, e some assim que o valor passa a válido; ao
 // tentar continuar com erros (ou ao voltar ao passo 1 com erros do servidor) o foco vai para
@@ -85,7 +89,7 @@ const NEED_BY_SERVICE: Record<string, Need> = {
 const TOTAL_PASSOS = 3;
 
 type Passo = "descrever" | "reuniao" | "resumo";
-type Campo = "nome" | "email" | "assunto" | "mensagem";
+type Campo = "nome" | "email" | "assunto";
 type Erros = Partial<Record<Campo, string>>;
 type Dict = Dictionary["contacto"];
 
@@ -94,7 +98,6 @@ const ORDEM: [string, string][] = [
   ["nome", "nome"],
   ["email", "email"],
   ["assunto", "assunto"],
-  ["mensagem", "mensagem"],
 ];
 
 // Aviso de falha do envio (passo 3): recebe o foco, que não pode ficar em <body> depois de
@@ -102,7 +105,7 @@ const ORDEM: [string, string][] = [
 const ID_AVISO_ENVIO = "contacto-envio-aviso";
 
 function validar(
-  valores: { nome: string; email: string; assunto: string; mensagem: string },
+  valores: { nome: string; email: string; assunto: string },
   t: Dict["form"]["validation"],
 ): Erros {
   const erros: Erros = {};
@@ -113,8 +116,6 @@ function validar(
   if (erroEmail) erros.email = erroEmail;
 
   if (!valores.assunto) erros.assunto = t.needRequired;
-
-  if (!valores.mensagem.trim()) erros.mensagem = t.messageRequired;
 
   return erros;
 }
@@ -186,8 +187,9 @@ export function ContactoWizard({
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
-  // Valor de "O que precisa": um slug de `servicos`, ou "nao_sei".
-  const [assunto, setAssunto] = useState(servicoInicial ?? "");
+  // Valor de "O que precisa": um slug de `servicos`, ou "nao_sei" (por omissão: o visitante
+  // não é obrigado a escolher um produto para pedir contacto).
+  const [assunto, setAssunto] = useState(servicoInicial ?? "nao_sei");
   const [mensagem, setMensagem] = useState("");
   const [erros, setErros] = useState<Erros>({});
 
@@ -218,7 +220,7 @@ export function ContactoWizard({
     tituloFimRef.current?.focus({ preventScroll: true });
   }, [terminado]);
 
-  const valores = { nome, email, assunto, mensagem };
+  const valores = { nome, email, assunto };
 
   // Erro de um só campo com o valor dado (para blur e change).
   const erroDe = (campo: Campo, valor: string) =>
@@ -293,7 +295,6 @@ export function ContactoWizard({
         nome: frase(doBackend.name?.[0], locais.nome),
         email: frase(doBackend.email?.[0], locais.email ?? t.form.validation.emailFormat),
         assunto: frase(doBackend.need?.[0], locais.assunto ?? t.form.validation.needRequired),
-        mensagem: frase(doBackend.message?.[0], locais.mensagem),
       };
       setErros(doServidor);
       // O efeito do passo foca o título; este foco (declarado depois) ganha-lhe.
@@ -502,20 +503,19 @@ export function ContactoWizard({
               />
             </Field>
 
-            <Field htmlFor="mensagem" label={t.form.messageLabel} error={erros.mensagem}>
+            <Field
+              htmlFor="mensagem"
+              label={t.form.messageLabel}
+              optional
+              optionalLabel={optionalLabel}
+            >
               <Textarea
                 id="mensagem"
                 name="mensagem"
                 placeholder={t.form.messagePlaceholder}
                 value={mensagem}
                 className="h-40 py-sm"
-                onChange={(event) => {
-                  setMensagem(event.target.value);
-                  aoMudar(setErros, "mensagem", erroDe("mensagem", event.target.value));
-                }}
-                onBlur={(event) =>
-                  aoSair(setErros, "mensagem", erroDe("mensagem", event.target.value))
-                }
+                onChange={(event) => setMensagem(event.target.value)}
               />
             </Field>
           </div>
@@ -637,7 +637,11 @@ export function ContactoWizard({
               vazio={!telefone}
             />
             <LinhaResumo rotulo={t.summary.needLabel} valor={assuntoRotulo} />
-            <LinhaResumo rotulo={t.summary.messageLabel} valor={mensagem} />
+            <LinhaResumo
+              rotulo={t.summary.messageLabel}
+              valor={mensagem.trim() || t.summary.notProvided}
+              vazio={!mensagem.trim()}
+            />
             <LinhaResumo
               rotulo={t.summary.meetingLabel}
               valor={resumoReuniao ?? t.summary.noMeeting}
@@ -689,10 +693,12 @@ export function ContactoWizard({
         </ol>
 
         <div className="flex min-w-0 flex-1 flex-col">
-          {/* O título do passo não se vê (a lista de passos já o diz; em mobile não há progresso), mas o h2 recebe
-              o foco ao mudar de passo. O contentor esconde-o à vista sem misturar classes
+          {/* O título do passo não se vê (a lista de passos já o diz em lg), mas o h2 recebe o
+              foco ao mudar de passo. Excepção: no passo 2, abaixo de lg, a pergunta e a dica
+              ficam visíveis, senão o ecrã mostra só dois rádios Sim/Não sem contexto (browser
+              QA em mobile, 2026-10-01). O contentor esconde-o à vista sem misturar classes
               (o `cn` do projecto não resolve conflitos entre `w-full` e `sr-only`). */}
-          <div className="sr-only">
+          <div className={passo === "reuniao" ? "lg:sr-only" : "sr-only"}>
             <CabecalhoPasso
               as="h2"
               tamanho="passo"
