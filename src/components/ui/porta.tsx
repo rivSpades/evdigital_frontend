@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, CSSProperties } from "react";
-import { Ligacao } from "@/components/ui/ligacao";
+import { ButtonLink } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 
 // Espelha ds/display/porta (nKv3F) do design-system.pen (direcção "A vez"): uma porta de
@@ -10,7 +10,9 @@ import { cn } from "@/lib/cn";
 //   espaçamento de headline. As aspas são as do .pen (“ ”), via <q>: não fazem parte do
 //   texto do dicionário e o leitor de ecrã lê a frase como citação.
 // - Descrição: $font-body body $text-secondary, no máximo 512 de largura (nó OuuJa)
-// - Ligação: ds/action/ligacao primária com padding-top $space-sm
+// - Acção: botão secundário (size action) com padding-top $space-sm. Era uma ds/action/ligacao
+//   primária, mas a 14 px e sem contorno passava despercebida debaixo do título e da descrição
+//   (feedback do dono, 2026-10-01); o secundário é visível sem competir com o primário do hero.
 //
 // Padding: [$space-xl, $space-md, $space-xl, 0] empilhada (instância mobile) e
 // [$space-2xl, 0] lado a lado (lg). As réguas entre portas são do contentor.
@@ -47,9 +49,14 @@ export function Porta({
       </h3>
       <p className="font-body text-body text-text-secondary lg:max-w-[512px]">{descricao}</p>
       <div className="pt-sm">
-        <Ligacao href={href} className="tracking-[var(--letter-spacing-label)]">
+        <ButtonLink
+          href={href}
+          variant="secondary"
+          size="action"
+          className="tracking-[var(--letter-spacing-label)] max-md:w-full"
+        >
           {ligacao}
-        </Ligacao>
+        </ButtonLink>
       </div>
     </div>
   );
