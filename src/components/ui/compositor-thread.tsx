@@ -154,7 +154,7 @@ export function CompositorThread({
             aria-busy={busy || undefined}
             disabled={busy || !value.trim()}
             className={cn(
-              "mb-2xs flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-pill transition-colors",
+              "flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-pill transition-colors",
               "bg-accent-primary text-text-on-accent hover:bg-accent-primary-hover active:bg-accent-primary-pressed",
               "disabled:cursor-not-allowed disabled:bg-bg-disabled disabled:text-text-disabled",
               "focus-visible:ring-[3px] focus-visible:ring-border-focus focus-visible:ring-offset-2 focus-visible:ring-offset-bg-surface focus-visible:outline-none",

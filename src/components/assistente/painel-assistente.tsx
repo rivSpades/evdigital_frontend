@@ -92,6 +92,23 @@ function useLargo() {
   );
 }
 
+// Área realmente visível (visualViewport): em mobile, quando o teclado abre, o `100dvh` continua
+// a ser o ecrã inteiro e o browser empurra a página, deixando o cabeçalho fora de vista. O painel
+// modal ajusta-se à área visível (altura e deslocamento). Snapshot em texto estável: "altura|topo".
+function subscreverViewport(onChange: () => void) {
+  const vv = window.visualViewport;
+  vv?.addEventListener("resize", onChange);
+  vv?.addEventListener("scroll", onChange);
+  return () => {
+    vv?.removeEventListener("resize", onChange);
+    vv?.removeEventListener("scroll", onChange);
+  };
+}
+function lerViewport() {
+  const vv = window.visualViewport;
+  return vv ? `${Math.round(vv.height)}|${Math.round(vv.offsetTop)}` : "";
+}
+
 export function PainelAssistente({
   t,
   contacto,
@@ -118,6 +135,8 @@ export function PainelAssistente({
   const [indisponivel, setIndisponivel] = useState<string | null>(null);
   const [erroEnvio, setErroEnvio] = useState<ErroEnvio | null>(null);
   const largo = useLargo();
+  const viewport = useSyncExternalStore(subscreverViewport, lerViewport, () => "");
+  const [alturaVisivel, topoVisivel] = viewport.split("|").map(Number);
 
   const atualizar = useCallback((seguinte: Estado) => {
     setEstado(seguinte);
@@ -148,6 +167,16 @@ export function PainelAssistente({
     } else if (dialog.open) {
       dialog.close();
     }
+  }, [aberto, largo]);
+
+  // Modal em mobile: o fundo não rola (nem arrasta o painel quando o teclado abre).
+  useEffect(() => {
+    if (!aberto || largo) return;
+    const anterior = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    return () => {
+      document.documentElement.style.overflow = anterior;
+    };
   }, [aberto, largo]);
 
   // Fechar o painel limpa os avisos de falha (a conversa e o rascunho ficam). Ajuste de
@@ -268,6 +297,11 @@ export function PainelAssistente({
     <dialog
       ref={dialogRef}
       aria-labelledby="assistente-titulo"
+      style={
+        !largo && aberto && alturaVisivel
+          ? { top: topoVisivel, height: alturaVisivel, bottom: "auto" }
+          : undefined
+      }
       onClose={() => {
         if (fechoProgramado.current) {
           fechoProgramado.current = false;
@@ -284,7 +318,7 @@ export function PainelAssistente({
       }}
       className={cn(
         "pointer-events-auto m-0 border-0 bg-transparent p-0 text-text-primary backdrop:bg-bg-overlay-scrim",
-        "h-dvh max-h-none w-full max-w-none",
+        "h-dvh max-h-none w-full max-w-none overscroll-contain",
         // lg+: cartão ancorado ao botão do assistente (o dialog está dentro do seu contentor
         // relativo), 16 acima dele, alinhado à direita. Altura 720 limitada ao ecrã: 100dvh
         // menos o que a pilha subiu (`--reserva`), o botão (56), a folga (16+24) e a barra (72+16).
