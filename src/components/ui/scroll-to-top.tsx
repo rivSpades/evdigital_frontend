@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { ArrowUp } from "lucide-react";
+import { useAssistenteAberto } from "@/components/assistente/estado";
 
 const SHOW_AFTER_PX = 400;
 
@@ -14,13 +15,19 @@ const SHOW_AFTER_PX = 400;
 //   no fim da página foi um erro (2026-09-24): é aí que mais falta faz.
 // - Páginas com uma barra de acção colada ao fundo (position: sticky; ex. «Entre em contacto» em
 //   /consultants/<slug>, só em mobile) marcam-na com `data-barra-fixa`: o botão sobe até ficar
-//   acima dela, também quando a barra assenta em cima do rodapé no fim da página.
+//   acima dela, também quando a barra assenta em cima do rodapé no fim da página. O aviso de
+//   cookies (position: fixed, ao fundo) usa a mesma marca: o botão fica $space-md acima dele
+//   (desenho do assistente no .pen, 2026-10-01).
+// - É também a pilha do botão do assistente (`children`, sempre ancorado em baixo): o botão
+//   fica por cima dele e, com o painel aberto em lg+, passa para a esquerda do botão do assistente;
+//   em mobile o painel é um ecrã inteiro por cima de tudo.
 // - O rodapé muda a cada página (e há páginas sem ele, ex. Área de Cliente), por isso o
 //   observador volta a ligar-se a cada mudança de rota.
 // - Scroll suave, excepto com prefers-reduced-motion: aí é instantâneo.
 
-export function ScrollToTop({ label }: { label: string }) {
+export function ScrollToTop({ label, children }: { label: string; children?: ReactNode }) {
   const pathname = usePathname();
+  const assistenteAberto = useAssistenteAberto();
   const [passouLimite, setPassouLimite] = useState(false);
   // Altura (px) do rodapé que está visível no ecrã, guardada com o caminho em que foi medida:
   // numa página sem rodapé (ou antes da primeira medição) conta como 0, sem ter de repor o
@@ -33,7 +40,8 @@ export function ScrollToTop({ label }: { label: string }) {
     const onScroll = () => {
       setPassouLimite(window.scrollY > SHOW_AFTER_PX);
       const elemento = document.querySelector<HTMLElement>("[data-barra-fixa]");
-      if (!elemento || getComputedStyle(elemento).position !== "sticky") return setBarra(0);
+      const posicao = elemento ? getComputedStyle(elemento).position : "";
+      if (!elemento || (posicao !== "sticky" && posicao !== "fixed")) return setBarra(0);
       const { top, bottom } = elemento.getBoundingClientRect();
       setBarra(bottom > 0 && top < window.innerHeight ? Math.round(window.innerHeight - top) : 0);
     };
@@ -72,19 +80,41 @@ export function ScrollToTop({ label }: { label: string }) {
     window.scrollTo({ top: 0, behavior: reduzir ? "auto" : "smooth" });
   }
 
+  // Acima de uma barra fixa (cookies, acção): $space-md; senão (ou sobre o rodapé): $space-lg.
+  const folga = barra > alturaRodape ? "var(--spacing-md)" : "var(--spacing-lg)";
+
   return (
-    <button
-      type="button"
-      aria-label={label}
-      tabIndex={visible ? 0 : -1}
-      aria-hidden={!visible}
-      onClick={voltarAoTopo}
-      style={{ bottom: `calc(var(--spacing-lg) + ${reservado}px)` }}
-      className={`fixed cursor-pointer right-lg z-40 flex size-12 items-center justify-center rounded-pill bg-accent-primary text-text-on-accent shadow-elevation-2 transition-[opacity,transform,background-color,visibility] duration-200 motion-reduce:transition-none hover:bg-accent-primary-hover active:bg-accent-primary-pressed ${
-        visible ? "translate-y-0 opacity-100" : "pointer-events-none invisible translate-y-2 opacity-0"
+    // Pilha fixa do canto (desenho do assistente no .pen, 2026-10-01): `children` é o botão do
+    // assistente, que fica sempre ancorado em baixo; o «Voltar ao topo» aparece 16 acima dele
+    // (centrado na mesma coluna) e, com o painel aberto em lg+, passa para a esquerda do botão.
+    // A pilha inteira sobe sobre o rodapé e sobre barras fixas (cookies, acção em mobile).
+    // `--reserva` diz ao painel quanto a pilha subiu. O contentor não apanha cliques.
+    <div
+      style={
+        {
+          bottom: `calc(${folga} + ${reservado}px)`,
+          "--reserva": `${reservado}px`,
+        } as CSSProperties
+      }
+      className={`pointer-events-none fixed right-lg z-40 flex items-center gap-md ${
+        assistenteAberto ? "flex-col-reverse lg:flex-row-reverse" : "flex-col-reverse"
       }`}
     >
-      <ArrowUp size={20} aria-hidden="true" />
-    </button>
+      {children}
+      <button
+        type="button"
+        aria-label={label}
+        tabIndex={visible ? 0 : -1}
+        aria-hidden={!visible}
+        onClick={voltarAoTopo}
+        className={`cursor-pointer flex size-12 shrink-0 items-center justify-center rounded-pill bg-accent-primary text-text-on-accent shadow-elevation-2 transition-[opacity,transform,background-color,visibility] duration-200 motion-reduce:transition-none hover:bg-accent-primary-hover active:bg-accent-primary-pressed ${
+          visible
+            ? "pointer-events-auto translate-y-0 opacity-100"
+            : "pointer-events-none invisible translate-y-2 opacity-0"
+        }`}
+      >
+        <ArrowUp size={20} aria-hidden="true" />
+      </button>
+    </div>
   );
 }

@@ -115,6 +115,18 @@ Next.js (App Router) + TypeScript + Tailwind CSS v4 (config CSS-first via `@them
   Detalhe com Apresentação, Competências, Idiomas e Habilitações (`components/consultores/secoes-detalhe.tsx`,
   primitivo novo `ui/linha-detalhe.tsx` = ds/display/linha-detalhe iadD3; `ui/linha-termo.tsx` ganhou
   `colunaFixa`); o CV mostra Idiomas e Habilitações na coluna lateral e não mostra email.
+- **Assistente de chat (2026-10-01), feito em local.** Desenhado no `.pen` (grupo «Ecrã ·
+  Assistente» de «v2 · A vez») e construído a partir dele. Botão flutuante só com ícone (círculo
+  de 56 em accent, `bot-message-square`) na pilha do canto do `ScrollToTop` (`children`): o
+  botão fica ancorado em baixo e o «Voltar ao topo» aparece 16 acima; com o painel aberto em
+  lg+ passa para a esquerda. O painel abre ancorado ao botão (420, lg+, não modal) ou em ecrã
+  inteiro modal (abaixo de lg). Balão «Precisa de ajuda?» aos 10 s de página visível, uma vez
+  por visita (estado só em memória), dispensável, sai aos 20 s. Sem aviso de privacidade no
+  chat. O assistente só propõe o pedido; o visitante revê o resumo e «Enviar pedido» usa
+  `enviarLead` → `/api/contacto` (`origem: "assistente"`, `conversationId`). As conversas são
+  gravadas no backend (`apps/assistant`, 12 meses; ver `backend/Context.md`). Não existe na
+  Área de Cliente nem em rotas `/contacto`. Código em `components/assistente/`.
+  Pendentes: `../docs/plans/active/2026-10-01-assistente-chat.md`.
 - **Fase 4.4b: feito (2026-09-24)**: Projetos, Blog e Sobre migrados no redesenho «A vez»
   (ver abaixo). O gate de validação com utilizador real (PRD Fase 3.4) continua por fazer.
 

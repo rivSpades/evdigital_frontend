@@ -102,7 +102,7 @@ export const institucional: typeof Source = {
     },
     access: {
       title: "Kto ma dostęp",
-      p1: "Wyłącznie EvDigital oraz usługi, z których korzystamy, aby strona działała: wysyłka e-maili, Cal.com, jeśli umówią się Państwo na spotkanie (otrzymuje Państwa imię i nazwisko, adres e-mail, strefę czasową i wybrany termin), oraz Google, jeśli logują się Państwo kontem Google. Dane znajdują się w naszej własnej bazie danych, a gdy się z nami kontaktują Państwo, są wysyłane e-mailem na nasz wewnętrzny adres.",
+      p1: "Wyłącznie EvDigital oraz usługi, z których korzystamy, aby strona działała: wysyłka e-maili, Cal.com, jeśli umówią się Państwo na spotkanie (otrzymuje Państwa imię i nazwisko, adres e-mail, strefę czasową i wybrany termin), Google, jeśli logują się Państwo kontem Google, oraz Groq, który przetwarza wiadomości wpisane w asystencie czatu na stronie (może je przetwarzać poza Unią Europejską). Przechowujemy rozmowę w naszej bazie danych przez 12 miesięcy, aby ulepszać asystenta i obsłużyć Państwa zapytanie, bez powiązania jej z adresem IP. Dane znajdują się w naszej własnej bazie danych, a gdy się z nami kontaktują Państwo, są wysyłane e-mailem na nasz wewnętrzny adres.",
     },
     rights: {
       title: "Państwa prawa",

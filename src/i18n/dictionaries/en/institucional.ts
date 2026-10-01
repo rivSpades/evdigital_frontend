@@ -102,7 +102,7 @@ export const institucional: typeof Source = {
     },
     access: {
       title: "Who has access",
-      p1: "Only EvDigital and the services we use to make the website work: email delivery, Cal.com if you book a meeting (it receives your name, email, time zone and the time slot you choose) and Google if you sign in with your Google account. The data is stored in our own database and is sent by email to our internal address when you contact us.",
+      p1: "Only EvDigital and the services we use to make the website work: email delivery, Cal.com if you book a meeting (it receives your name, email, time zone and the time slot you choose), Google if you sign in with your Google account, and Groq, which processes the messages you write in the website chat assistant (it may process them outside the European Union). We keep the conversation in our database for 12 months, to improve the assistant and follow up on your request, without linking it to your IP address. The data is stored in our own database and is sent by email to our internal address when you contact us.",
     },
     rights: {
       title: "Your rights",

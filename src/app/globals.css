@@ -226,3 +226,31 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Balão «Precisa de ajuda?» do assistente (ds/overlay/balao-assistente): entrada 240 ms
+   (opacidade, 8px a partir do botão, escala 0.96 a 1), dois acenos de 4px uma só vez 1,2 s
+   depois, saída 160 ms. Com prefers-reduced-motion só opacidade (120 ms). */
+@keyframes balao-entrada {
+  from { opacity: 0; transform: translateX(8px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes balao-aceno {
+  0%, 50%, 100% { transform: translateX(0); }
+  25%, 75% { transform: translateX(-4px); }
+}
+@keyframes balao-saida {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateX(8px) scale(0.96); }
+}
+@keyframes balao-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes balao-fade-out { from { opacity: 1; } to { opacity: 0; } }
+.balao-entra {
+  animation:
+    balao-entrada 240ms ease-out both,
+    balao-aceno 600ms ease-in-out 1.2s 1 forwards;
+}
+.balao-sai { animation: balao-saida 160ms ease-in both; }
+@media (prefers-reduced-motion: reduce) {
+  .balao-entra { animation: balao-fade-in 120ms linear both; }
+  .balao-sai { animation: balao-fade-out 120ms linear both; }
+}

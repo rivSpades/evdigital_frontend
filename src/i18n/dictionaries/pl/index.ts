@@ -8,5 +8,6 @@ import { blog } from "./blog";
 import { areaCliente } from "./areaCliente";
 import { erros } from "./erros";
 import { consultores } from "./consultores";
+import { assistente } from "./assistente";
 
-export const pl = { common, home, servicos, contacto, institucional, projetos, blog, areaCliente, erros, consultores };
+export const pl = { common, home, servicos, contacto, institucional, projetos, blog, areaCliente, erros, consultores, assistente };

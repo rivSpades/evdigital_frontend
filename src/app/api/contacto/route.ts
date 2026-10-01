@@ -48,6 +48,10 @@ type Payload = {
   meeting?: { start?: unknown; timeZone?: unknown } | unknown;
   /** Lead da página de um consultor (/consultants/<slug>/contacto). */
   consultantSlug?: unknown;
+  /** Origem da lead: só "assistente" (chat do site) muda o `source` gravado no backend. */
+  origem?: unknown;
+  /** Conversa do assistente que originou a lead (UUID gerado pelo browser). */
+  conversationId?: unknown;
   /** Canal de aquisição (ver src/lib/atribuicao.ts) — só texto informativo, sem validação. */
   utmSource?: unknown;
   utmMedium?: unknown;
@@ -57,6 +61,8 @@ type Payload = {
 
 // Slug de consultor (`<slug:slug>` do Django). Um valor mal formado conta como ausente: a
 // lead passa a ser uma lead normal e a mensagem volta a ser obrigatória.
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 const SLUG_CONSULTOR = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function asString(value: unknown): string {
@@ -142,13 +148,16 @@ export async function POST(request: Request) {
         need: (NEEDS as readonly string[]).includes(need) ? need : "",
         service: (SERVICES as readonly string[]).includes(service) ? service : "",
         message: asString(body.message).trim(),
-        source: "site-contacto",
+        source: asString(body.origem) === "assistente" ? "assistente" : "site-contacto",
         lang,
         website: asString(body.website),
         elapsed_seconds:
           typeof body.elapsedSeconds === "number" ? body.elapsedSeconds : undefined,
         meeting,
         ...(consultantSlug ? { consultant_slug: consultantSlug } : {}),
+        ...(UUID.test(asString(body.conversationId))
+          ? { conversation_id: asString(body.conversationId) }
+          : {}),
         utm_source: asString(body.utmSource),
         utm_medium: asString(body.utmMedium),
         utm_campaign: asString(body.utmCampaign),

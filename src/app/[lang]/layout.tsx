@@ -3,6 +3,7 @@ import { Sora, Inter, JetBrains_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { getDictionary } from "@/i18n/dictionaries";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
+import { Assistente } from "@/components/assistente/assistente";
 import { hasLocale, htmlLang, locales } from "@/i18n/config";
 import { hostDoAmbiente } from "@/i18n/area-cliente-href";
 import { AreaClienteHostProvider } from "@/i18n/area-cliente-host";
@@ -53,7 +54,8 @@ export default async function RootLayout({
 }: LayoutProps<"/[lang]">) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
-  const { common } = await getDictionary(lang);
+  const { common, assistente, contacto } = await getDictionary(lang);
+  const clientesHost = process.env.CLIENTES_URL ? new URL(process.env.CLIENTES_URL).host : undefined;
 
   return (
     <html
@@ -68,17 +70,20 @@ export default async function RootLayout({
         <AreaClienteHostProvider value={hostDoAmbiente(false)}>
           {children}
         </AreaClienteHostProvider>
-        <ScrollToTop label={common.scrollToTop} />
+        <ScrollToTop label={common.scrollToTop}>
+          <Assistente
+            t={assistente}
+            contacto={contacto}
+            lang={lang}
+            clientesHost={clientesHost}
+          />
+        </ScrollToTop>
         {/* Canal de aquisição da lead — ver capturar-atribuicao.tsx e lib/atribuicao.ts. */}
         <CapturarAtribuicao />
         {/* GA4 só com consentimento e fora da Área de Cliente (ver consent-analytics.tsx). */}
         <ConsentAnalytics
           measurementId={process.env.GA_MEASUREMENT_ID}
-          clientesHost={
-            process.env.CLIENTES_URL
-              ? new URL(process.env.CLIENTES_URL).host
-              : undefined
-          }
+          clientesHost={clientesHost}
           t={common.cookies}
         />
       </body>

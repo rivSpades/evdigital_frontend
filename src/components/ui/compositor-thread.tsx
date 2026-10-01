@@ -37,6 +37,8 @@ export function CompositorThread({
   busy,
   cancelLabel,
   onCancel,
+  linhas = 3,
+  enterEnvia = false,
   error,
   sendError,
 }: {
@@ -49,8 +51,13 @@ export function CompositorThread({
   submitLabel: string;
   busyLabel: string;
   busy: boolean;
-  cancelLabel: string;
-  onCancel: () => void;
+  /** Sem `onCancel` não há «Cancelar» (ex. conversa do assistente) e Esc não faz nada. */
+  cancelLabel?: string;
+  onCancel?: () => void;
+  /** Linhas iniciais do campo (por omissão 3; o assistente usa 1). */
+  linhas?: number;
+  /** Enter envia e Shift+Enter quebra a linha (conversa curta); por omissão Ctrl/Cmd+Enter. */
+  enterEnvia?: boolean;
   /** Erro do campo (ex. sem texto). */
   error?: string;
   /** Erro do envio (ex. rede). */
@@ -82,7 +89,9 @@ export function CompositorThread({
   useLayoutEffect(ajustar, [value, ajustar]);
 
   function onKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
-    if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+    const enviarComEnter = enterEnvia && event.key === "Enter" && !event.shiftKey;
+    if (enviarComEnter && event.nativeEvent.isComposing) return;
+    if (enviarComEnter || (event.key === "Enter" && (event.ctrlKey || event.metaKey))) {
       event.preventDefault();
       if (!busy) event.currentTarget.form?.requestSubmit();
     }
@@ -93,7 +102,7 @@ export function CompositorThread({
     <div
       className="flex w-full flex-col gap-xs"
       onKeyDown={(event) => {
-        if (event.key === "Escape") {
+        if (event.key === "Escape" && onCancel) {
           event.preventDefault();
           onCancel();
         }
@@ -104,7 +113,7 @@ export function CompositorThread({
           ref={ref}
           id={id}
           name={id}
-          rows={3}
+          rows={linhas}
           value={value}
           readOnly={busy}
           aria-label={ariaLabel}
@@ -125,10 +134,12 @@ export function CompositorThread({
             "outline-none! focus-visible:outline-none!",
           )}
         />
-        <div className="flex items-center justify-between gap-sm">
-          <LigacaoBotao variant="discreta" disabled={busy} onClick={onCancel}>
-            {cancelLabel}
-          </LigacaoBotao>
+        <div className={cn("flex items-center gap-sm", onCancel ? "justify-between" : "justify-end")}>
+          {onCancel ? (
+            <LigacaoBotao variant="discreta" disabled={busy} onClick={onCancel}>
+              {cancelLabel}
+            </LigacaoBotao>
+          ) : null}
           <Button
             type="submit"
             size="md"

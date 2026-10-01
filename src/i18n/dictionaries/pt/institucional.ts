@@ -100,7 +100,7 @@ export const institucional = {
     },
     access: {
       title: "Quem tem acesso",
-      p1: "Só a EvDigital e os serviços que usamos para o site funcionar: o envio de email, o Cal.com, se marcar uma reunião (recebe o seu nome, email, fuso horário e o horário que escolher) e o Google, se entrar com a sua conta Google. Os dados ficam numa base de dados nossa e são enviados por email para o nosso endereço interno quando nos contacta.",
+      p1: "Só a EvDigital e os serviços que usamos para o site funcionar: o envio de email, o Cal.com, se marcar uma reunião (recebe o seu nome, email, fuso horário e o horário que escolher), o Google, se entrar com a sua conta Google, e a Groq, que processa as mensagens que escrever no assistente de conversa do site (pode tratá-las fora da União Europeia). Guardamos a conversa na nossa base de dados durante 12 meses, para melhorar o assistente e dar seguimento ao seu pedido, sem a associar ao seu endereço IP. Os dados ficam numa base de dados nossa e são enviados por email para o nosso endereço interno quando nos contacta.",
     },
     rights: {
       title: "Os seus direitos",

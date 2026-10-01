@@ -21,6 +21,10 @@ export type PedidoLead = {
   meeting?: Reuniao;
   /** Lead da página de um consultor: a mensagem passa a ser opcional. */
   consultantSlug?: string;
+  /** Lead criada pelo resumo do assistente de chat (não pelo formulário). */
+  origem?: "assistente";
+  /** Conversa do assistente de onde veio o pedido (liga a lead à transcrição). */
+  conversationId?: string;
 };
 
 export type ResultadoEnvio =
@@ -58,7 +62,11 @@ export async function enviarLead(pedido: PedidoLead): Promise<ResultadoEnvio> {
     const reuniaoConfirmada = Boolean(dados.meeting_confirmed);
     // Conversão do GA4 (evento-chave `generate_lead`): só parâmetros sem dados pessoais.
     trackEvent("generate_lead", {
-      lead_source: pedido.consultantSlug ? "consultor" : "contacto",
+      lead_source: pedido.consultantSlug
+        ? "consultor"
+        : pedido.origem === "assistente"
+          ? "assistente"
+          : "contacto",
       service: pedido.service || undefined,
       meeting_confirmed: reuniaoConfirmada,
     });

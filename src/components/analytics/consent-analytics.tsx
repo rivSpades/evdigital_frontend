@@ -157,6 +157,8 @@ export function ConsentAnalytics({
         <section
           ref={avisoRef}
           aria-label={t.title}
+          data-barra-fixa
+          data-aviso-cookies
           className="fixed inset-x-0 bottom-0 z-50 border-t border-border-default bg-bg-surface px-lg py-sm md:px-xl md:py-md"
         >
           <div className="mx-auto flex max-w-[var(--grid-max-width)] flex-col gap-sm md:flex-row md:items-center md:gap-xl">

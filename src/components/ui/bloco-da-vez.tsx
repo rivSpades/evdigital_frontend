@@ -38,6 +38,7 @@ export function BlocoDaVez({
   titleId,
   reveal = false,
   lado = false,
+  compacto = false,
   frase = "normal",
   fraseTom = "primario",
   acao,
@@ -50,6 +51,8 @@ export function BlocoDaVez({
   titleId?: string;
   reveal?: boolean;
   lado?: boolean;
+  /** Sempre a variante mobile (--mobile do .pen), mesmo em ecrãs largos: o assistente, que vive numa coluna de 480. */
+  compacto?: boolean;
   frase?: "normal" | "display";
   fraseTom?: "primario" | "secundario";
   acao?: ReactNode;
@@ -65,7 +68,10 @@ export function BlocoDaVez({
           "font-heading",
           frase === "display"
             ? "text-headline leading-[var(--line-height-display)] font-bold tracking-[var(--letter-spacing-headline)] lg:text-display lg:tracking-[var(--letter-spacing-display)]"
-            : "text-title-sm font-semibold tracking-[var(--letter-spacing-title)] md:text-title",
+            : cn(
+                "text-title-sm font-semibold tracking-[var(--letter-spacing-title)]",
+                !compacto && "md:text-title",
+              ),
           fraseTom === "secundario" ? "text-text-secondary" : "text-text-primary",
           fact ? "[--reveal-i:2]" : "[--reveal-i:1]",
         )}
@@ -83,7 +89,9 @@ export function BlocoDaVez({
         "flex w-full flex-col gap-sm rounded-[var(--radius-none)] border-t border-border-default",
         lado
           ? "py-lg md:py-xl lg:flex-row lg:gap-[var(--space-layout-gutter-wide)] lg:py-2xl"
-          : "py-lg md:py-xl",
+          : compacto
+            ? "py-lg"
+            : "py-lg md:py-xl",
         className,
       )}
     >
