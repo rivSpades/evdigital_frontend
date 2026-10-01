@@ -73,7 +73,6 @@ export async function generateMetadata({
     openGraph: {
       ...pageMetadata(lang, `/consultants/${dados.slug}`).openGraph,
       type: "profile",
-      siteName: "EvDigital",
       title: dados.name,
       description: dados.headline,
       url: `${base}/${lang}/consultants/${dados.slug}`,

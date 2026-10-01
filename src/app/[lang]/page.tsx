@@ -37,10 +37,11 @@ export async function generateMetadata({
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  const { common, home } = await getDictionary(hasLocale(lang) ? lang : defaultLocale);
+  const locale = hasLocale(lang) ? lang : defaultLocale;
+  const { common, home } = await getDictionary(locale);
   return (
     <>
-      <OrganizationJsonLd description={common.siteDescription} />
+      <OrganizationJsonLd lang={locale} description={common.siteDescription} />
       <FaqPageJsonLd items={home.faq.items} />
       <Nav currentPath="/" />
 

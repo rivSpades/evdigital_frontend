@@ -1,3 +1,5 @@
+import { siteName } from "@/i18n/metadata";
+import type { Locale } from "@/i18n/config";
 import { SITE_ORIGIN } from "@/lib/site-origin";
 
 function JsonLd({ data }: { data: unknown }) {
@@ -128,14 +130,15 @@ export function ArticleJsonLd({
 
 // Dados estruturados (schema.org) da organização. Só factos já públicos no site; sem
 // morada nem contactos que não estejam publicados.
-export function OrganizationJsonLd({ description }: { description: string }) {
+export function OrganizationJsonLd({ lang, description }: { lang: Locale; description: string }) {
   const data = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "Organization",
         "@id": `${SITE_ORIGIN}/#organization`,
-        name: "EvDigital",
+        name: siteName[lang],
+        alternateName: "EvDigital",
         url: SITE_ORIGIN,
         logo: `${SITE_ORIGIN}/email/logo.png`,
         description,
@@ -143,7 +146,8 @@ export function OrganizationJsonLd({ description }: { description: string }) {
       {
         "@type": "WebSite",
         "@id": `${SITE_ORIGIN}/#website`,
-        name: "EvDigital",
+        name: siteName[lang],
+        alternateName: "EvDigital",
         url: SITE_ORIGIN,
         publisher: { "@id": `${SITE_ORIGIN}/#organization` },
         inLanguage: ["pt-PT", "en", "pl"],
