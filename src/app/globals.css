@@ -5,6 +5,42 @@ body {
   font-feature-settings: "cv11", "ss01";
 }
 
+/* Barras de scroll (design-guardrails §6b): tema escuro nativo, finas, neutras e sem setas.
+   Polegar em $border-strong (hover $text-tertiary no WebKit), pista transparente (na página,
+   a cor da própria página), polegar em pílula como os controlos interactivos. Nunca verde: o
+   verde é só de botão, foco e ligação. Vale para a página e para qualquer área com scroll
+   (ex. o corpo do chat do assistente). */
+:root {
+  color-scheme: dark;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) transparent;
+}
+html {
+  scrollbar-color: var(--color-border-strong) var(--color-bg-base);
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+html::-webkit-scrollbar-track {
+  background: var(--color-bg-base);
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border-strong);
+  background-clip: content-box;
+  border: 3px solid transparent;
+  border-radius: var(--radius-pill);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-text-tertiary);
+}
+
 /* Cursor de mão em tudo o que é clicável. O Tailwind 4 deixou de o pôr nos botões, por
    isso vive aqui, numa só regra, em vez de repetido (e esquecido) componente a componente.
    Em @layer base para qualquer utilitário (cursor-not-allowed, cursor-default, etc.) o
@@ -253,4 +289,23 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .balao-entra { animation: balao-fade-in 120ms linear both; }
   .balao-sai { animation: balao-fade-out 120ms linear both; }
+}
+
+/* Sugestões de ação do assistente (ds/display/sugestoes-chat): cada linha entra com opacidade e
+   4px de subida em 180 ms, escalonada 70 ms; com prefers-reduced-motion só opacidade e todas
+   ao mesmo tempo. */
+@keyframes sugestao-entra {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes sugestao-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.sugestao-entra {
+  animation: sugestao-entra 180ms ease-out both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sugestao-entra { animation: sugestao-fade 180ms linear both; animation-delay: 0ms; }
 }
