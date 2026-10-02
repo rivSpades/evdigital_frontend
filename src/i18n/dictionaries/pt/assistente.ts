@@ -8,7 +8,8 @@ export const assistente = {
   balloon: "Precisa de ajuda?",
   dismissHint: "Dispensar a sugestão",
   close: "Fechar o assistente",
-  intro: "Pergunte-nos sobre os serviços. Se quiser, passamos o seu pedido à equipa.",
+  intro: "Em que posso ajudar?",
+  suggestionsLabel: "Sugestões de resposta",
   suggestions: ["Que serviços oferecem?", "Como funciona o processo?", "Quero falar com a equipa"],
   authors: { you: "Você", assistant: "Assistente" },
   composer: {
@@ -18,7 +19,6 @@ export const assistente = {
     sending: "A enviar",
   },
   thinking: "A escrever",
-  newConversation: "Nova conversa",
   contactLink: "Ir para o contacto",
   summary: {
     alter: "Alterar",

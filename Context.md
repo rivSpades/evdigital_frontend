@@ -125,7 +125,9 @@ Next.js (App Router) + TypeScript + Tailwind CSS v4 (config CSS-first via `@them
   chat. O assistente só propõe o pedido; o visitante revê o resumo e «Enviar pedido» usa
   `enviarLead` → `/api/contacto` (`origem: "assistente"`, `conversationId`). As conversas são
   gravadas no backend (`apps/assistant`, 12 meses; ver `backend/Context.md`). Não existe na
-  Área de Cliente nem em rotas `/contacto`. Código em `components/assistente/`.
+  Área de Cliente nem em rotas `/contacto`. Código em `components/assistente/`. Sugestões de
+  ação por baixo da última resposta (`sugestoes-chat.tsx`, o mesmo componente das perguntas
+  iniciais; só da última resposta, escondidas a escrever/resumo/enviado/indisponível/limite).
   Pendentes: `../docs/plans/active/2026-10-01-assistente-chat.md`.
 - **Fase 4.4b: feito (2026-09-24)**: Projetos, Blog e Sobre migrados no redesenho «A vez»
   (ver abaixo). O gate de validação com utilizador real (PRD Fase 3.4) continua por fazer.

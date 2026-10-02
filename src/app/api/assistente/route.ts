@@ -53,6 +53,15 @@ function rascunhoValido(valor: unknown) {
   };
 }
 
+// Sugestões de ação (botões rápidos): no máximo 3 frases curtas, só texto. O backend já as limpou.
+function sugestoesValidas(valor: unknown, max = 3): string[] {
+  if (!Array.isArray(valor)) return [];
+  return valor
+    .filter((s): s is string => typeof s === "string" && s.trim().length > 0 && s.length <= 80)
+    .map((s) => s.trim())
+    .slice(0, max);
+}
+
 export async function POST(request: Request) {
   const apiUrl = process.env.LEADS_API_URL;
   const apiKey = process.env.LEADS_API_KEY;
@@ -107,6 +116,8 @@ export async function POST(request: Request) {
         browser_lang: asString(body.browserLang).slice(0, 16),
         knowledge: conhecimentoDoSite(lang),
         lead_sent: body.leadSent === true,
+        // Sugestões já mostradas, para o assistente não as repetir.
+        previous_suggestions: sugestoesValidas(body.previousSuggestions, 12),
         // Id da conversa (UUID do browser): o backend grava a troca nesta conversa.
         ...(UUID.test(asString(body.conversationId))
           ? { conversation_id: asString(body.conversationId) }
@@ -136,9 +147,16 @@ export async function POST(request: Request) {
       );
     }
 
-    const dados: { answer?: string; lead_draft?: Record<string, unknown> | null } =
-      await resposta.json();
-    return NextResponse.json({ answer: dados.answer ?? "", leadDraft: rascunhoValido(dados.lead_draft) });
+    const dados: {
+      answer?: string;
+      lead_draft?: Record<string, unknown> | null;
+      suggestions?: unknown;
+    } = await resposta.json();
+    return NextResponse.json({
+      answer: dados.answer ?? "",
+      leadDraft: rascunhoValido(dados.lead_draft),
+      suggestions: sugestoesValidas(dados.suggestions),
+    });
   } catch (erro) {
     // Nunca registar o corpo do pedido: contém a conversa (dados pessoais).
     console.error("Falha a contactar o backend do assistente:", erro);

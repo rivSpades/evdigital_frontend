@@ -7,7 +7,8 @@ export const assistente: typeof Source = {
   balloon: "Need help?",
   dismissHint: "Dismiss the suggestion",
   close: "Close the assistant",
-  intro: "Ask us about our services. If you like, we pass your request on to the team.",
+  intro: "How can I help?",
+  suggestionsLabel: "Suggested replies",
   suggestions: ["What services do you offer?", "How does the process work?", "I want to talk to the team"],
   authors: { you: "You", assistant: "Assistant" },
   composer: {
@@ -17,7 +18,6 @@ export const assistente: typeof Source = {
     sending: "Sending",
   },
   thinking: "Typing",
-  newConversation: "New conversation",
   contactLink: "Go to contact",
   summary: {
     alter: "Edit",

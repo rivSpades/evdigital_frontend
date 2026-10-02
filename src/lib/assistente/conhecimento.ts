@@ -28,8 +28,7 @@ export function conhecimentoDoSite(lang: Locale): string {
   if (guardado) return guardado;
 
   const cabecalho = [
-    `Contact page: /${lang}/contacto. ${CONTACTO[lang].page.subtitle}`,
-    `Service pages: /${lang}/servicos/<slug>.`,
+    `Reply time: ${CONTACTO[lang].page.subtitle}`,
   ].join("\n");
 
   // Resposta geral do site (Home): como trabalhamos e as FAQ sobre preço, prazos e suporte.

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Fragment,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -8,12 +9,11 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { ArrowRight, X } from "lucide-react";
+import { X } from "lucide-react";
 import { trackEvent } from "@/components/analytics/track";
 import { AProcurar } from "@/components/ui/a-procurar";
 import { ButtonLink } from "@/components/ui/button";
 import { CompositorThread } from "@/components/ui/compositor-thread";
-import { LigacaoBotao } from "@/components/ui/ligacao";
 import { Notice } from "@/components/ui/notice";
 import { enviarLead } from "@/components/contacto/enviar-lead";
 import type { Locale } from "@/i18n/config";
@@ -21,6 +21,7 @@ import type { Dictionary } from "@/i18n/dictionaries";
 import { cn } from "@/lib/cn";
 import { definirAssistenteAberto } from "./estado";
 import { Fala } from "./fala";
+import { SugestoesChat } from "./sugestoes-chat";
 import { ResumoPedido, type ErroEnvio } from "./resumo-pedido";
 import type { Mensagem, Rascunho } from "./tipos";
 
@@ -46,13 +47,21 @@ const FIM_PX = 48;
 type Estado = {
   messages: Mensagem[];
   rascunho: Rascunho | null;
+  /** Índice da mensagem depois da qual se mostra o resumo (fica no seu lugar na conversa). */
+  rascunhoApos: number;
   enviado: boolean;
   /** UUID da conversa, gerado aqui: o servidor grava as trocas e liga a lead a esta conversa. */
   conversationId: string;
 };
 
 function novoEstado(): Estado {
-  return { messages: [], rascunho: null, enviado: false, conversationId: crypto.randomUUID() };
+  return {
+    messages: [],
+    rascunho: null,
+    rascunhoApos: -1,
+    enviado: false,
+    conversationId: crypto.randomUUID(),
+  };
 }
 
 function ler(): Estado {
@@ -63,6 +72,12 @@ function ler(): Estado {
     return {
       messages: Array.isArray(d.messages) ? d.messages : [],
       rascunho: d.rascunho && typeof d.rascunho === "object" ? d.rascunho : null,
+      rascunhoApos:
+        typeof d.rascunhoApos === "number"
+          ? d.rascunhoApos
+          : d.rascunho
+            ? (Array.isArray(d.messages) ? d.messages.length : 0) - 1
+            : -1,
       enviado: d.enviado === true,
       conversationId: typeof d.conversationId === "string" ? d.conversationId : crypto.randomUUID(),
     };
@@ -213,6 +228,17 @@ export function PainelAssistente({
   const turnos = estado.messages.filter((m) => m.role === "user").length;
   const noLimite = turnos >= MAX_TURNOS;
   const vazia = estado.messages.length === 0;
+  const posResumo = Math.min(Math.max(estado.rascunhoApos, 0), estado.messages.length - 1);
+  // Sugestões de ação: só as da última resposta e só com a conversa em curso (não a escrever,
+  // nem com o resumo do pedido, nem enviado, nem indisponível ou no limite).
+  const mostrarSugestoes =
+    ultima?.role === "assistant" &&
+    (ultima.suggestions?.length ?? 0) > 0 &&
+    !aResponder &&
+    !estado.rascunho &&
+    !estado.enviado &&
+    indisponivel === null &&
+    !noLimite;
   const aEspera = estado.rascunho !== null && !estado.enviado;
   const semCompositor = aEspera || indisponivel !== null || noLimite;
 
@@ -233,14 +259,19 @@ export function PainelAssistente({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           lang,
-          messages,
+          messages: messages.map(({ role, content }) => ({ role, content })),
           browserLang: navigator.language,
           leadSent: antes.enviado,
+          previousSuggestions: antes.messages.flatMap((m) => m.suggestions ?? []).slice(-12),
           conversationId: antes.conversationId,
         }),
       });
-      const dados: { answer?: string; leadDraft?: Rascunho | null; message?: string } =
-        await resposta.json().catch(() => ({}));
+      const dados: {
+        answer?: string;
+        leadDraft?: Rascunho | null;
+        suggestions?: string[];
+        message?: string;
+      } = await resposta.json().catch(() => ({}));
 
       if (!resposta.ok || !dados.answer) {
         setIndisponivel(dados.message ?? t.errors.unavailable);
@@ -248,8 +279,14 @@ export function PainelAssistente({
       }
       atualizar({
         ...antes,
-        messages: [...messages, { role: "assistant", content: dados.answer }],
+        messages: [
+          ...messages,
+          { role: "assistant", content: dados.answer, suggestions: dados.suggestions ?? [] },
+        ],
         rascunho: antes.enviado ? antes.rascunho : (dados.leadDraft ?? antes.rascunho),
+        // O resumo fica na conversa no sítio onde apareceu; uma nova proposta muda-o para a
+        // última resposta.
+        rascunhoApos: dados.leadDraft && !antes.enviado ? messages.length : antes.rascunhoApos,
       });
     } catch {
       setIndisponivel(t.errors.unavailable);
@@ -283,14 +320,6 @@ export function PainelAssistente({
     } else {
       setErroEnvio({ titulo: contacto.result.failedTitle, texto: contacto.result.failedText });
     }
-  }
-
-  function novaConversa() {
-    atualizar(novoEstado());
-    setIndisponivel(null);
-    setErroEnvio(null);
-    setTexto("");
-    noFim.current = true;
   }
 
   return (
@@ -342,11 +371,6 @@ export function PainelAssistente({
           >
             {t.title}
           </h2>
-          {!vazia || estado.rascunho ? (
-            <LigacaoBotao variant="discreta" onClick={novaConversa}>
-              {t.newConversation}
-            </LigacaoBotao>
-          ) : null}
           <button
             type="button"
             onClick={fechar}
@@ -364,42 +388,53 @@ export function PainelAssistente({
                 <p className="font-heading text-body-lg leading-[var(--line-height-title)] font-semibold tracking-[var(--letter-spacing-title)] text-text-primary">
                   {t.intro}
                 </p>
-                <ul className="border-t border-border-default">
-                  {t.suggestions.map((sugestao) => (
-                    <li key={sugestao}>
-                      <button
-                        type="button"
-                        onClick={() => void enviar(sugestao)}
-                        className="group flex min-h-11 w-full cursor-pointer items-center justify-between gap-lg border-b border-border-default py-md text-left font-body text-label font-medium text-text-primary transition-colors hover:text-text-secondary"
-                      >
-                        <span>{sugestao}</span>
-                        <ArrowRight
-                          aria-hidden
-                          className="size-5 shrink-0 text-text-secondary"
-                          strokeWidth={1.5}
-                        />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+                <SugestoesChat
+                  itens={t.suggestions}
+                  rotulo={t.suggestionsLabel}
+                  onEscolher={(frase) => void enviar(frase)}
+                />
               </>
             ) : (
               <div className="flex flex-col gap-lg" aria-live="polite">
                 {estado.messages.map((m, i) => (
-                  <Fala
-                    key={i}
-                    papel={m.role}
-                    autor={
-                      estado.messages[i - 1]?.role === m.role
-                        ? undefined
-                        : m.role === "user"
-                          ? t.authors.you
-                          : t.authors.assistant
-                    }
-                  >
-                    {m.content}
-                  </Fala>
+                  <Fragment key={i}>
+                    <Fala
+                      papel={m.role}
+                      autor={
+                        estado.messages[i - 1]?.role === m.role
+                          ? undefined
+                          : m.role === "user"
+                            ? t.authors.you
+                            : t.authors.assistant
+                      }
+                    >
+                      {m.content}
+                    </Fala>
+                    {estado.rascunho && i === posResumo ? (
+                      <ResumoPedido
+                        rascunho={estado.rascunho}
+                        enviado={estado.enviado}
+                        aEnviar={aEnviar}
+                        erro={erroEnvio}
+                        t={t}
+                        contacto={contacto}
+                        onGuardar={(rascunho) => atualizar({ ...estado, rascunho })}
+                        onEnviar={() => void enviarPedido()}
+                        onCancelar={() =>
+                          atualizar({ ...estado, rascunho: null, rascunhoApos: -1 })
+                        }
+                      />
+                    ) : null}
+                  </Fragment>
                 ))}
+                {mostrarSugestoes ? (
+                  <SugestoesChat
+                    entrada
+                    itens={ultima.suggestions ?? []}
+                    rotulo={t.suggestionsLabel}
+                    onEscolher={(frase) => void enviar(frase)}
+                  />
+                ) : null}
                 {aResponder ? (
                   <div className="flex flex-col gap-2xs">
                     <p className="font-mono text-caption text-text-tertiary">
@@ -410,20 +445,6 @@ export function PainelAssistente({
                 ) : null}
               </div>
             )}
-
-            {estado.rascunho ? (
-              <ResumoPedido
-                rascunho={estado.rascunho}
-                enviado={estado.enviado}
-                aEnviar={aEnviar}
-                erro={erroEnvio}
-                t={t}
-                contacto={contacto}
-                onGuardar={(rascunho) => atualizar({ ...estado, rascunho })}
-                onEnviar={() => void enviarPedido()}
-                onCancelar={() => atualizar({ ...estado, rascunho: null })}
-              />
-            ) : null}
           </div>
         </div>
 
